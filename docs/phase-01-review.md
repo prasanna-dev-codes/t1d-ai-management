@@ -1,8 +1,8 @@
 # Phase 01 review — Engineering foundation
 
-Date: 2026-11-01. **Local infrastructure verified; ready for commit review. Hosted CI is blocked pending commit/push approval; browser and development-advisory limits remain.** Phase 02 has not started. No clinical validation, medical-device certification or production suitability is claimed.
+Date: 2026-11-01. **Approved foundation commit pushed; backend and frontend hosted CI both PASS for the exact commit. The final verification documentation update is approved for publication; browser and development-advisory limits remain.** Phase 02 has not started. No clinical validation, medical-device certification or production suitability is claimed.
 
-The initial implementation evidence below is historical. The final infrastructure verification section supersedes its missing-Docker statements; it does not turn unexecuted hosted CI or browser checks into passes.
+Earlier sections preserve historical implementation and approval checkpoints. The final infrastructure section supersedes missing-Docker statements, and the latest approved commit/hosted CI section supersedes prior commit/push/CI BLOCKED or NOT RUN statuses. Browser checks remain unverified.
 
 ## Authorization, preflight and preservation
 Started on `main`, tracking `origin/main`. Phase 00's six tracked modifications and 33 new files were already present and uncommitted; all were preserved. Read repository instructions, requirements, architecture, data model, API contracts, safety/privacy, standards, roadmap and all five ADRs before implementation. No unrelated application code existed. No new Git repository, commits, staging, pushes, remote changes, dataset acquisition or production deployment performed.
@@ -243,3 +243,51 @@ GitHub CLI authentication is **PASS** through the macOS keyring when accessed ou
 
 ### Final staged review checkpoint
 `git add -- <reviewed source/docs/configuration paths>` prepared **87 files** for the requested reviewed foundation commit. `git diff --cached --check` passed. `git status --short --branch` shows the reviewed additions/modifications staged on `main`, with no deletions or untracked source files remaining. `git diff --cached --name-only` excludes the actual credential file, dependency/cache/build directories and unchanged tracked `.DS_Store`. Generated-password and credential-pattern checks were repeated against the actual index content before the approval request. The working tree has no unstaged reviewed-file changes after this note is staged. No commit or push has occurred; hosted CI remains **BLOCKED/NOT RUN pending approval**.
+
+
+## Approved commit and hosted CI verification — 2026-11-01
+
+### PASS — Final sensitive-artifact check and approved publication
+The user explicitly approved committing the 87 staged files with the specified message and pushing to the existing private `origin/main`. Immediately before committing, `git diff --cached --check` passed. A staged-content scan checked all 87 actual index blobs for the generated local passwords, private-key/token/access-key patterns, actual `.env` files, health-data fixture formats, model/database payloads and ignored dependency/build/cache artifacts. No flagged artifact was staged. Only non-secret `.env.example` templates were included. The actual credential file remained ignored with mode 0600. This is scoped scan/review evidence, not a claim that automated scanning proves all possible sensitive information absent.
+
+Executed successfully:
+
+```sh
+git commit -m 'Initialize Phase 00–01 research foundation and verify local stores'
+git rev-parse HEAD
+git push origin main
+```
+
+- Commit SHA: **`c53ae897e49bf187c67e0c8f06ab8c5c3dd2cff4`**.
+- Commit message: **Initialize Phase 00–01 research foundation and verify local stores**.
+- Approved snapshot: **87 files**, 12,866 insertions and 68 deletions.
+- Private repository: `prasanna-dev-codes/t1d-ai-management`; pushed branch: `main`; origin configuration unchanged.
+- Push output confirmed `646e418..c53ae89 main -> main`. The worktree was clean and `main` synchronized with `origin/main` after the push, before this review update.
+
+### PASS — Exact-SHA workflow trigger and terminal hosted results
+Identified the `push` event run with:
+
+```sh
+gh run list --commit c53ae897e49bf187c67e0c8f06ab8c5c3dd2cff4 --json databaseId,headSha,status,conclusion,url,name,event --limit 10
+gh run watch 41286157202 --exit-status --interval 10
+gh run view 41286157202 --json headSha,status,conclusion,url,event,createdAt,updatedAt,jobs
+```
+
+- Workflow: **Phase 01 foundation**, run **41286157202**, attempt 1.
+- [Verified hosted workflow](https://github.com/prasanna-dev-codes/t1d-ai-management/actions/runs/41286157202).
+- API `headSha` exactly matches **`c53ae897e49bf187c67e0c8f06ab8c5c3dd2cff4`**; this was not an older run or a local substitute.
+- Observed lifecycle: queued → in progress → **completed**; final overall conclusion: **success**. `gh run watch --exit-status` exited **0**.
+- Created **13:17:05 IST**; final update **13:18:19 IST**, 2026-11-01 (converted from GitHub's UTC timestamps).
+- [Backend job 124787766225](https://github.com/prasanna-dev-codes/t1d-ai-management/actions/runs/41286157202/job/124787766225): **PASS / completed / success**, **16 seconds**. Python setup, uv install/cache, frozen workspace install, Ruff lint/format, strict mypy, generated-contract check and pytest all succeeded. Hosted logs confirm **38 tests passed** and mypy checked **12 source files**.
+- [Frontend job 124787766574](https://github.com/prasanna-dev-codes/t1d-ai-management/actions/runs/41286157202/job/124787766574): **PASS / completed / success**, **1 minute 9 seconds**. Node setup, `npm ci`, ESLint, strict TypeScript, frontend tests and Next.js build all succeeded. Hosted logs confirm **14 tests passed across two test files**; the build log confirms successful compilation. The colored test-summary line was inspected directly after an overly narrow log matcher did not recognize its formatting.
+
+**FAIL:** neither hosted job failed; no root-cause fix, assertion change, workflow modification, rerun or additional code commit was necessary. Full run/job conclusions and selected log summaries were inspected after terminal completion.
+
+### Outstanding notices and limits
+Hosted annotations warn that action versions targeting Node.js 20 are being run on Node.js 24, and that `ubuntu-latest` is migrating to Ubuntu 26. These are observed non-failing maintenance notices, not failed checks. Future action/runner pin updates should be reviewed separately; none was silently added to the approved commit.
+
+Hosted `npm ci` also reports the previously disclosed **16 moderate development-tool vulnerabilities**, deprecated transitive ESLint 9.39.5 and whatwg-encoding 3.1.1. CI success does not close those advisories or establish clinical/security validation. No forced dependency downgrade/override was applied.
+
+**APPROVED documentation publication:** the user subsequently approved committing only this final verification document with message `Document successful Phase 01 Docker and GitHub CI verification` and pushing it to `origin/main`. A final scope and sensitive-information check is required before that commit. No additional source/workflow changes or Phase 02 work are authorized.
+
+**NOT RUN / outside scope:** real-browser review, TimescaleDB/pgvector integration, identity/grant/consent implementation, patient-data ingestion and all Phase 02 work. The extension/governance/identity decisions and explicit human approval remain prerequisites to Phase 02. Hosted CI is now verified and no longer an outstanding execution blocker for this SHA.
