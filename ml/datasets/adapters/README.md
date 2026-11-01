@@ -1,0 +1,3 @@
+# Future authorized dataset adapters
+
+The typed boundary is `t1d_api.data.datasets.DatasetAdapter` with `ImportManifest` and `CanonicalRecord`. It carries source/release/license/access, schema/unit/time mapping versions, keyed subject pseudonymization and split provenance. `require_acquisition_authority` fails without explicit permission and verified terms; a synthetic label is not a real dataset permission. Adapters must yield input records for the same deterministic ingestion validation, never write around it. No external connector, download, health dataset, embedding or training pipeline is implemented.

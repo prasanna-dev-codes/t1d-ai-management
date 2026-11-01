@@ -45,3 +45,9 @@ Threat-model broken object authorization, credential theft, malicious media, dat
 Applicable jurisdiction, study setting, intended users and consent model are undecided. Expert review must determine medical-device/software classification, research ethics requirements, applicable privacy law (including relevant Indian or other jurisdictional rules), data residency/transfer restrictions, provider contracts and permitted clinical claims. No certification, exemption or compliance conclusion is asserted.
 
 Before clinical feature implementation: approve operational safety policy/thresholds and test matrix. Before simulation: approve protocol, uncertainty assumptions, reviewer authority and output restrictions. Before real data: establish access/ethics/license/governance evidence. Before deployment: approve threat model, controls, synthetic recovery evidence and exact settings. These gates preserve the existing policy; they do not grant approval themselves.
+
+## Phase 02 implementation evidence
+
+The synthetic event slice enforces explicit units/timezones, deterministic validation, append-only revisions, current consent/grants and forced patient-scoped RLS under a non-owner runtime role. Model/derived inputs are quarantined; planned insulin remains historical plan metadata and is never interpreted as administration. No settings/dosing/safety-policy execution or real enrollment exists. These are engineering controls, not clinical validation.
+
+Operational logs/errors omit medical values, URLs and credentials; protected audits store operation/reference metadata. Failure audits use a separate transaction after rollback, with a redacted availability event if the database cannot record them. Encryption at rest, production IdP, regulated audit export, erasure policy, backup restoration and clinical deployment are unverified prerequisites. See [governance](data-governance.md) and [review](phase-02-review.md) for trust boundaries and exact local tests.

@@ -90,7 +90,8 @@ def test_authenticator_interface_is_replaceable_only_in_tests() -> None:
         result = client.get("/api/v1/auth/session")
         assert result.status_code == 200
         assert result.json()["roles"] == ["researcher"]
-    assert "synthetic" not in str(app.openapi()).lower()
+    assert "SyntheticAuthenticator" not in str(app.openapi())
+    assert "synthetic-untrusted-token" not in str(app.openapi())
 
 
 def test_expired_principal_is_rejected() -> None:
@@ -145,7 +146,7 @@ def test_cors_exact_origins_and_preflight() -> None:
                 "/api/v1/health/live",
                 headers={
                     "Origin": "http://localhost:3000",
-                    "Access-Control-Request-Method": "POST",
+                    "Access-Control-Request-Method": "DELETE",
                 },
             ).status_code
             == 400
@@ -236,6 +237,11 @@ def test_no_future_phase_routes_or_test_bypass() -> None:
         "/api/v1/health/live",
         "/api/v1/health/ready",
         "/api/v1/auth/session",
+        "/api/v1/patients/{patient_id}/cgm-readings",
+        "/api/v1/patients/{patient_id}/meals",
+        "/api/v1/patients/{patient_id}/insulin-events",
+        "/api/v1/patients/{patient_id}/activity-events",
+        "/api/v1/patients/{patient_id}/audit-events",
     }
     with TestClient(create_app(Settings(environment="test"))) as client:
         assert client.get("/docs").status_code == 404

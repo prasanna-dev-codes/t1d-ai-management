@@ -1,6 +1,6 @@
 # Development roadmap
 
-Status: The attached project brief replaces the earlier provisional ten-step scaffold with this authoritative 12-phase plan. **Current phase: 01, authorized by the user on 2026-11-01; Phase 02 is not authorized.** Durations are planning estimates for three students, not commitments; dataset permissions, compute availability and external review may extend them. Suggested roles are A (backend/data/security), B (vision/nutrition/UI), C (forecasting/evaluation); rotate review and avoid single-person knowledge ownership.
+Status: The attached project brief replaces the earlier provisional ten-step scaffold with this authoritative 12-phase plan. **Current phase: 02, explicitly authorized by the user on 2026-11-01; Phase 03 is not authorized.** Durations are planning estimates for three students, not commitments; dataset permissions, compute availability and external review may extend them. Suggested roles are A (backend/data/security), B (vision/nutrition/UI), C (forecasting/evaluation); rotate review and avoid single-person knowledge ownership.
 
 Each phase requires implemented-scope tests or Phase 00 documentation checks, documented limitations, no unresolved blocker for that phase, and explicit user approval before progression. Safety/authorization/unit validation accompanies every feature from its introduction; it is never postponed until Phase 08. Conditional research extensions can be formally deferred with rationale rather than silently treated as delivered.
 
@@ -158,3 +158,7 @@ flowchart LR
 ```
 
 Cross-links identify technical dependencies, not permission to skip phase gates or implement phases concurrently. Full-range schedule should be revisited after Phase 01 measurements and dataset/clinical-review availability. Phase 08 simulation can remain deferred without changing the non-negotiable safety boundaries, but that deferral requires documented review before advancing dependent capabilities.
+
+## Phase 02 implementation review
+
+The isolated database/revision/RLS design was approved explicitly. See [Phase 02 review](phase-02-review.md) for local evidence, deferred migrations and hosted CI status. Completion remains subject to human review; do not progress to Phase 03 automatically.

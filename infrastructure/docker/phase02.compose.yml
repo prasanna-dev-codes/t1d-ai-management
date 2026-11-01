@@ -1,0 +1,25 @@
+# Separate Phase 02 project; never mount the Phase 01 PostgreSQL volume here.
+name: t1d-ai-phase02
+services:
+  postgres:
+    image: timescale/timescaledb:2.29.0-pg17-oss@sha256:1a34ea7d1472a57a8d6384a492ffece6d20e4079e81b765833675077cf98b207
+    environment:
+      POSTGRES_USER: t1d_migrator
+      POSTGRES_DB: t1d_phase02
+      POSTGRES_PASSWORD: ${PHASE02_ADMIN_PASSWORD:?Generate a unique migration password}
+      T1D_RUNTIME_PASSWORD: ${PHASE02_RUNTIME_PASSWORD:?Generate a separate runtime password}
+      TIMESCALEDB_TELEMETRY: "off"
+    ports:
+      - "127.0.0.1:5434:5432"
+    volumes:
+      - phase02_data:/var/lib/postgresql/data
+      - ./phase02-bootstrap.sql:/docker-entrypoint-initdb.d/020-runtime.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "PGPASSWORD=$${T1D_RUNTIME_PASSWORD} psql -h postgres -U t1d_runtime -d t1d_phase02 -w -Atc 'SELECT 1' >/dev/null 2>&1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+    restart: "no"
+volumes:
+  phase02_data:

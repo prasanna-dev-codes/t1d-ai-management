@@ -36,3 +36,7 @@ PostgreSQL failure means no authoritative validation and blocks retrieval. Neo4j
 
 ## Privacy and oversight
 Use least-privilege scoped DB roles, protected object references, encryption, audit of access, consent-bound retention and no public graph browser. Review explanations for inadvertent identifying details. Dataset/embedding model permissions, retention periods, graph schema constraints, ranking weights, deletion of training influence and clinician-reviewed episode definitions remain unresolved before Phase 05 implementation.
+
+## Phase 02 prerequisite implementation
+
+Authorized bounded EventRepository histories now reconstruct event revisions available by an explicit cutoff, under current consent/grant and forced RLS. Quarantined latest revisions suppress older versions. These plain structured queries are not semantic retrieval. pgvector is capability-verified but no embeddings/index/search exist; Neo4j remains untouched and no episode/graph projection is populated. See [temporal integrity](temporal-integrity.md).

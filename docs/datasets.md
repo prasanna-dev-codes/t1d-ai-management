@@ -31,3 +31,7 @@ After acquisition outside Git, inventory exact fields and missingness, audit ide
 
 ## Evaluation separation
 Use synthetic fixtures for software contracts; never cite their performance as clinical evidence. Group food images by dish/recipe/source. Split metabolic data by patient for generalization and by time for within-patient personalization, with overlap purging. Exclude outcomes unavailable at each prediction cutoff from features and retrieval. Record absent original knowledge-times as a study limitation. No downloading, model training, dataset-size claims, or permission verification occurs in Phase 00.
+
+## Phase 02 adapter boundary
+
+No external dataset was acquired. The implemented DatasetAdapter protocol and ImportManifest live in `t1d_api.data.datasets`; identity/version/license reference, explicit false-by-default rights gates, mapping versions, HMAC pseudonymization and split metadata are supported. This is an interface, not a vendor connector or license verification service. See [governance](data-governance.md). Authored deterministic synthetic fixtures include two pseudonymous markers, missing readings, duplicate events and revision descriptors; they carry no physiological/model-validity claim.

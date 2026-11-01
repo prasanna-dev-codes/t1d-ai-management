@@ -23,3 +23,5 @@ Measured retrieval value fails to justify complexity, compatibility/license cons
 
 ## Verification and approval boundary
 [Requirements](../requirements.md), [architecture](../architecture.md), and [roadmap](../roadmap.md) define phase acceptance. No runtime, license, clinical validation, operational setting, or future-phase implementation is approved solely by this record. Changes to shared architecture require explicit approval and an ADR update/successor.
+
+Phase 02 implementation details are specified by the explicitly approved [ADR-006](ADR-006-phase02-isolated-timescale-and-rls.md): separate pinned publisher database, new volume/port, revision registry and non-owner RLS. The authoritative-store direction above is retained.

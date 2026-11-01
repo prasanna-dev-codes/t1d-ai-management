@@ -7,6 +7,7 @@ from typing import Any
 
 from pydantic import BaseModel
 from t1d_api.contracts import ErrorResponse, LivenessResponse, ReadinessResponse, SessionResponse
+from t1d_api.data.schemas import CGMReceipt, EventReceipt, MealReceipt
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "packages/shared-contracts"
@@ -50,6 +51,9 @@ def artifacts() -> dict[Path, str]:
         ReadinessResponse,
         ErrorResponse,
         SessionResponse,
+        CGMReceipt,
+        MealReceipt,
+        EventReceipt,
     ]
     for model in models:
         schema = model.model_json_schema(mode="serialization")
@@ -84,7 +88,7 @@ def main() -> None:
                 raise SystemExit(f"Contract drift: regenerate {path.relative_to(ROOT)}")
         else:
             path.write_text(content)
-    print("Phase 01 contracts match backend schemas" if options.check else "Contracts generated")
+    print("Shared contracts match backend schemas" if options.check else "Contracts generated")
 
 
 if __name__ == "__main__":

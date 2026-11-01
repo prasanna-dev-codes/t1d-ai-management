@@ -19,6 +19,8 @@ dev = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra --strict-markers"
+pythonpath = ["apps/api/src"]
+markers = ["integration: isolated PostgreSQL integration tests"]
 
 [tool.ruff]
 target-version = "py312"
@@ -31,4 +33,4 @@ select = ["E", "F", "I", "UP", "B", "ASYNC"]
 [tool.mypy]
 python_version = "3.12"
 strict = true
-files = ["apps/api/src", "tests", "scripts"]
+files = ["apps/api/src", "tests", "scripts", "infrastructure/migrations"]

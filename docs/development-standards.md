@@ -1,6 +1,6 @@
 # Development standards
 
-Status: Phase 00 engineering standards retained; Phase 01 toolchain and minimal backend/frontend are implemented. See [local development](local-development.md) for prerequisites, setup, environment variables, run/shutdown commands, health routes, troubleshooting and limitations.
+Status: Phase 00 engineering standards retained; Phase 01 toolchain/minimal backend/frontend and the approved Phase 02 synthetic data slice are implemented. See [local development](local-development.md) for prerequisites, setup, environment variables, run/shutdown commands, health routes, troubleshooting and limitations.
 
 ## Workflow and boundaries
 Read [architecture](architecture.md), [roadmap](roadmap.md), relevant [requirements](requirements.md), and [repository instructions](../AGENTS.md) before editing. Scope each branch and PR to one phase and one reviewable change. Use `phase-01/short-purpose` style branch names. Do not commit or push automatically. Preserve unrelated work. Architecture changes need explicit approval and an ADR; clinical policy, dosage logic, and deployment settings need human approval before modification.
@@ -44,3 +44,9 @@ Document changes to units, schema semantics, ownership, missing-data behavior, m
 
 ## Phase 01 execution guide
 Use [local development](local-development.md) as the operational command reference and [Phase 01 review](phase-01-review.md) as the evidence register. Optional stores are not API readiness dependencies until explicitly wired and probed. No production identity or runtime dev-principal bypass is implemented. Test-only dependency overrides must remain in tests.
+
+## Phase 02 checks and migration discipline
+
+Keep unit/regression checks separate from actual PostgreSQL integration tests: `uv run --frozen --no-sync pytest -q --ignore=tests/integration` and `uv run --frozen --no-sync python scripts/run_database_tests.py`. A default pytest run may skip database tests when runner-only configuration is absent; skips are not integration success. Run Ruff check/format, strict mypy, contract export --check, frontend lint/typecheck/tests/build. CI has distinct backend/database/frontend jobs; never report hosted success from local results.
+
+The database runner owns an ephemeral RAM container and creates fresh synthetic databases; no named development volume is attached. Schema upgrade/downgrade tests target only these databases. Initial migration SQL is frozen after persistent application; later changes require a new migration. Never print env files, rendered Compose configuration, SQL exception parameters or connection strings. The runner redacts generated passwords, and sensitive fixture fields are excluded from repr. No real patient fixtures or production auth bypass are permitted.

@@ -3,7 +3,16 @@ name = "t1d-api"
 version = "0.1.0"
 description = "Typed research infrastructure API"
 requires-python = ">=3.12,<3.13"
-dependencies = ["fastapi==0.162.0", "pydantic==2.14.2", "pydantic-settings==2.16.2", "uvicorn==0.54.0", "starlette==1.10.0"]
+dependencies = [
+    "fastapi==0.162.0",
+    "pydantic==2.14.2",
+    "pydantic-settings==2.16.2",
+    "uvicorn==0.54.0",
+    "starlette==1.10.0",
+    "sqlalchemy==2.0.55",
+    "alembic==1.20.1",
+    "psycopg[binary]==3.3.6",
+]
 
 [build-system]
 requires = ["hatchling==1.33.0"]

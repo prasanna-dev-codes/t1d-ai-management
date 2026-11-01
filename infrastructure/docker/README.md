@@ -39,3 +39,7 @@ Host PostgreSQL TCP on 5433 and Neo4j HTTP on 7475 accepted the generated passwo
 Read-only PostgreSQL cluster identity and Neo4j database identity, plus actual named-volume mounts, remained unchanged across `restart --timeout 30` followed by `up -d --wait --wait-timeout 180`. No application rows, graph nodes, marker files, schemas or volumes were created/deleted for the test. PostgreSQL contained zero user tables and Neo4j zero nodes. This verifies a container restart, not backup/restore or recreation. Services were left running and healthy.
 
 The initial local `.env` was generated with two distinct random 256-bit values, exclusive creation and mode 0600; no values are committed. New developers should create their own credentials. Never overwrite an existing file or reset existing volumes implicitly. Runtime inventory confirmed TimescaleDB/pgvector are absent; the later extension compatibility gate remains open.
+
+## Approved isolated Phase 02 store
+
+`phase02.compose.yml` adds a separate publisher-digest-pinned PostgreSQL/TimescaleDB/pgvector project on loopback 5434 with a new volume. It does not replace the Phase 01 project or reuse its volume. `.env.phase02.example` is blank; `scripts/setup_phase02_env.py` creates ignored distinct mode-0600 local credentials without printing/overwriting them. See [database operations](../../docs/database-operations.md), [approved ADR](../../docs/decisions/ADR-006-phase02-isolated-timescale-and-rls.md) and [review](../../docs/phase-02-review.md). Never use volume-reset commands for migration tests.

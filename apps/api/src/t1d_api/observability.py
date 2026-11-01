@@ -12,7 +12,9 @@ class SafeJsonFormatter(logging.Formatter):
             "level": record.levelname,
             "component": "api",
             "version": "0.1.0",
-            "event": "request_completed",
+            "event": record.msg
+            if record.msg in {"request_completed", "audit_unavailable"}
+            else "request_completed",
         }
         for key in ("correlation_id", "status_code", "duration_ms"):
             value = getattr(record, key, None)

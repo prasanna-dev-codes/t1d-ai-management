@@ -1,4 +1,4 @@
-name: Phase 01 foundation
+name: Research foundation
 on:
   push:
   pull_request:
@@ -28,7 +28,22 @@ jobs:
       - run: uv run --frozen --no-sync ruff format --check .
       - run: uv run --frozen --no-sync mypy
       - run: uv run --frozen --no-sync python scripts/export_contracts.py --check
-      - run: uv run --frozen --no-sync pytest -q
+      - name: Unit and Phase 01 regression tests
+        run: uv run --frozen --no-sync pytest -q --ignore=tests/integration
+  database:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned uv
+        run: python -m pip install uv==0.13.6
+      - run: uv sync --frozen --all-packages
+      - name: Verify pinned TimescaleDB and pgvector, migrate, and test isolation
+        run: uv run --frozen --no-sync python scripts/run_database_tests.py
+
   frontend:
     runs-on: ubuntu-latest
     timeout-minutes: 15

@@ -1,6 +1,6 @@
 # System architecture
 
-Status: Phase 00 design baseline. Five tiers and the modular-monolith direction are specified by the project brief; implementation and operational settings are not approved by this document. See [requirements](requirements.md) and [ADRs](decisions/README.md).
+Status: Phase 00 design baseline with Phase 01 foundation and the approved Phase 02 data slice implemented; see the Phase 02 section below. Five tiers and the modular-monolith direction are specified by the project brief; implementation and operational settings are not approved by this document. See [requirements](requirements.md) and [ADRs](decisions/README.md).
 
 ## Components and responsibilities
 1. **Tier 1 — Vision-to-Nutrition Intelligence:** validate images; detect/segment/classify foods; estimate portions; map versioned nutrient references; return uncertainty and human-correction requirements. Experimental Fat/Protein Unit work is optional research, not a treatment formula.
@@ -129,3 +129,11 @@ Proposed local topology: a web process, API process, PostgreSQL/extensions, opti
 
 ## Phase 01 foundation status
 The user approved a limited Phase 01 timing addition on 2026-11-01: a minimal web connectivity shell and optional local PostgreSQL/Neo4j configuration. This does not implement the Tier 5 clinical workflows or later database/graph features. The API has only health and a fail-closed session-read boundary; optional stores are not connected to enabled API capabilities. Plain PostgreSQL is a documented local fallback while exact TimescaleDB/pgvector image compatibility is unverified. This note records the approved scope addition without changing the five-tier design, database authority or clinical boundaries.
+
+## Phase 02 implemented data slice
+
+See [ADR-006](decisions/ADR-006-phase02-isolated-timescale-and-rls.md). An isolated PostgreSQL 17.10/TimescaleDB 2.29.0/pgvector 0.8.1 instance is the authoritative structured research store. Phase 01 PostgreSQL/Neo4j remain separate. Only CGM is a hypertable; vector capability is enabled but unused. No derived graph, embedding, forecast, worker or clinical simulation is implemented.
+
+FastAPI routers validate transport and inject the existing principal/database; data schemas enforce explicit units/provenance; DataService owns atomic ingestion, revisions, audit and reconstruction; EventRepository applies patient-scoped point-in-time SQL; db models/session and frozen Alembic SQL own persistence, constraints, RLS and role checks. Sessions are scoped to operations/requests with bounded pooling/timeouts; process liveness stays independent of configured database readiness. The frontend remains the connectivity shell.
+
+EventRevision separates UUID identity from time-inclusive CGM keys, preserves original source revisions and server knowledge times, and references immutable typed payloads. DataSource, Study, ConsentRecord and AccessGrant support explicit authorization/provenance. Audit and outbox records contain references instead of duplicated clinical payloads. Four speculative canonical entities are explicitly deferred in [data model](data-model.md). No production identity provider or real research data is authorized by these structures.

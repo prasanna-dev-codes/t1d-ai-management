@@ -1,6 +1,6 @@
-# Phase 01 local development
+# Local development — Phase 01 foundation and Phase 02 data slice
 
-Research engineering foundation only. No clinical inference, patient ingestion, real sessions, datasets or deployment. The user approved a minimal connectivity shell and optional local stores in Phase 01 on 2026-11-01; full clinical UI and data work remain at their original phases.
+Research-only engineering foundation. Phase 02 adds authenticated synthetic event ingestion; no clinical inference, real sessions, external datasets or deployment exists. The user approved a minimal connectivity shell and optional local stores in Phase 01 on 2026-11-01; full clinical UI and data work remain at their original phases.
 
 ## Prerequisites and first-time setup
 Use Python 3.12 (tested 3.12.14), Node.js 24 (tested 24.11.1), npm 11 (tested 11.6.2), Git, and uv 0.13.6. Python 3.14 is not the selected project interpreter. `.python-version`, `.nvmrc`, package engines and manifests document the chosen families. Docker Engine with the Compose plugin is optional; Docker 29.9.2/Compose v5.6.1 and ARM64 stores were subsequently verified. No large ML packages are needed.
@@ -97,3 +97,9 @@ Follow [infrastructure setup](../infrastructure/docker/README.md). Compose uses 
 - **Browser unavailable:** UI state/client behavior are covered by DOM tests and served HTML checks; visual/mobile/browser integration and accessibility beyond semantic checks still require real-browser review.
 - **No Docker:** backend and frontend run independently. Do not report container health or extension support as verified.
 - **Clinical/data boundaries:** no patient accounts, clinical tables, ingestion, ML, retrieval, forecasting, doses, treatment protocols or production deployment exist. Identity provider, data governance and clinical policies remain for later approved work.
+
+## Phase 02 database-enabled development
+
+The initial sections above document retained Phase 01 setup. Current optional synthetic data operations, separate ignored credentials, migration commands, runtime-role checks and isolated tests are in [database operations](database-operations.md). Export synthetic fixtures with `uv run --frozen --no-sync python scripts/generate_synthetic_data.py --seed 42 --count 12 --output /tmp/t1d-synthetic-phase02.json`; the command refuses an existing output and does not connect to any database. Default authentication still denies all patient routes.
+
+If this local filesystem produces duplicate generated `.next` files, remove only `apps/web/.next` and rerun build/typecheck. If editable Python installation cannot resolve the package, reinstall `t1d-api` with `uv sync --frozen --all-packages --no-editable --reinstall-package t1d-api --cache-dir .uv-cache`; do not weaken tests or type checking. Linux CI starts from a clean checkout/environment. No external datasets or Phase 03 services are needed.

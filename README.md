@@ -1,6 +1,6 @@
 # T1D AI — AI-Powered Type 1 Diabetes Management System
 
-Academic research and engineering prototype for three Computer Engineering students. **Current status: Phase 01 engineering foundation, ready for human review with documented verification limits.** A local FastAPI backend and minimal Next.js connectivity shell are implemented. Optional local PostgreSQL/Neo4j stores passed ARM64 startup, authentication and restart/persistence verification; hosted CI still awaits an approved push. No clinical functionality, health dataset, trained model, production identity provider or deployment exists. Phase 00 documentation is retained.
+Academic research and engineering prototype for three Computer Engineering students. **Current status: Phase 02 synthetic data infrastructure, awaiting human review.** FastAPI, the minimal Next.js connectivity shell and an isolated PostgreSQL/TimescaleDB/pgvector store support scoped, audited event ingestion and point-in-time history. Authentication remains fail-closed. No real patient dataset, inference, dosing, production identity provider or deployment exists. Phase 00/01 evidence is retained; hosted CI for the Phase 02 changes is NOT RUN. See [Phase 02 review](docs/phase-02-review.md) and [database operations](docs/database-operations.md).
 
 ## Problem and research objectives
 Meal composition, historical metabolic context and future glucose trajectories are uncertain and heterogeneous. The project will investigate how food-image analysis, human corrections, personalized historical retrieval and time-series forecasting can support interpretable research review. Objectives are to measure food/nutrient estimation error, compare leakage-safe 30/60/90/120-minute forecasting baselines, quantify uncertainty and abstention, and make evidence and limitations traceable. Model complexity and historical similarity are not assumed to improve prediction or imply physiological equivalence.
@@ -20,7 +20,7 @@ Use a modular monolith with independently organized domain modules. PostgreSQL o
 ## Planned technology stack
 Backend: Python 3.12+, FastAPI, Pydantic v2, SQLAlchemy and Alembic. Web: Next.js, TypeScript, Tailwind CSS and shadcn/ui. Data: PostgreSQL, TimescaleDB, pgvector, Neo4j and S3-compatible storage. Research: PyTorch, scikit-learn, XGBoost, ONNX Runtime, MLflow and Pandera. Verification: pytest, Ruff, mypy and later Playwright. Integration direction: Docker Compose/GitHub Actions; Redis/workers only if justified. Observability: structured logging, with OpenTelemetry/Sentry conditional on redaction and governance approval.
 
-Only Phase 01 backend/frontend/test dependencies are installed and locked in `uv.lock` and `package-lock.json`; see the exact-version register. Data, ML and later infrastructure selections remain planned, with compatibility/licensing verification outstanding. EfficientNet-B0, YOLO, Gemini and advanced time-series architectures are candidates to evaluate. See [technology register](docs/technology-stack.md).
+Phase 01 frontend/backend dependencies and Phase 02 SQLAlchemy/Alembic/Psycopg are installed and locked in `uv.lock` and `package-lock.json`; see the exact-version register. The approved isolated database combination is verified locally; ML and later infrastructure selections remain planned. EfficientNet-B0, YOLO, Gemini and advanced time-series architectures are candidates to evaluate. See [technology register](docs/technology-stack.md).
 
 ## Repository layout
 ```text
@@ -29,7 +29,7 @@ README.md                    Current status and navigation
 .editorconfig / .gitignore   Whitespace and local-artifact conventions
 apps/api/                    FastAPI foundation, settings and auth boundary
 apps/web/                    Minimal research shell and connectivity state
-packages/shared-contracts/   Generated Phase 01 response schemas and types
+packages/shared-contracts/   Generated health/error/ingestion receipt schemas and types
 services/vision/             Future Tier 1 image domain module
 services/nutrition/          Future Tier 1 portion/nutrient domain module
 services/memory/             Future Tier 2 retrieval domain module

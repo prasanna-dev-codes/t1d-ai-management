@@ -1,5 +1,6 @@
 """Application factory with isolated configuration and deterministic boundaries."""
 
+import asyncio
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
 from time import perf_counter
@@ -23,6 +24,10 @@ from t1d_api.contracts import (
     ReadinessResponse,
     SessionResponse,
 )
+from t1d_api.data.errors import DataError
+from t1d_api.data.router import router as data_router
+from t1d_api.data.service import failure_audit
+from t1d_api.db.session import Database
 from t1d_api.observability import request_logger
 from t1d_api.readiness import Runtime
 
@@ -46,9 +51,26 @@ def error_response(
     return JSONResponse(body.model_dump(mode="json"), status_code=status, headers=headers)
 
 
-def create_app(settings: Settings | None = None, runtime: Runtime | None = None) -> FastAPI:
+def create_app(
+    settings: Settings | None = None,
+    runtime: Runtime | None = None,
+    database: Database | None = None,
+) -> FastAPI:
     config = settings if settings is not None else Settings()
     state = runtime if runtime is not None else Runtime()
+    db = (
+        database
+        if database is not None
+        else Database(config.database_url.get_secret_value())
+        if config.database_url is not None
+        else None
+    )
+    if db is not None:
+
+        async def database_probe() -> bool:
+            return await asyncio.to_thread(db.check)
+
+        state.probes = (*state.probes, database_probe)
     logger = request_logger()
 
     @asynccontextmanager
@@ -58,6 +80,8 @@ def create_app(settings: Settings | None = None, runtime: Runtime | None = None)
             yield
         finally:
             state.started = False
+            if db is not None:
+                db.close()
 
     app = FastAPI(
         title="T1D AI Research Foundation",
@@ -67,9 +91,29 @@ def create_app(settings: Settings | None = None, runtime: Runtime | None = None)
         redoc_url=None,
         openapi_url="/openapi.json" if config.environment == "development" else None,
     )
+    app.state.database = db
     app.state.settings = config
     app.state.runtime = state
     app.state.authenticator = DenyAllAuthenticator()
+
+    @app.exception_handler(DataError)
+    async def data_error(request: Request, exc: DataError) -> JSONResponse:
+        # Services audit transactional failures. Parsing/transport failures are separate.
+        if db is not None and exc.code in {"INVALID_INPUT", "PAYLOAD_TOO_LARGE"}:
+            await asyncio.to_thread(
+                failure_audit,
+                db,
+                getattr(request.state, "principal_id", None),
+                "validation",
+                exc.code,
+                request.state.correlation_id,
+            )
+        return error_response(
+            request,
+            exc.status,
+            exc.code,
+            "Research data operation unavailable" if exc.status >= 500 else "Request rejected",
+        )
 
     @app.exception_handler(StarletteHTTPException)
     async def http_error(request: Request, exc: StarletteHTTPException) -> JSONResponse:
@@ -81,19 +125,60 @@ def create_app(settings: Settings | None = None, runtime: Runtime | None = None)
             503: ("NOT_READY", "Service unavailable"),
         }
         code, message = codes.get(exc.status_code, ("REQUEST_FAILED", "Request failed"))
+        if db is not None and exc.status_code == 401:
+            await asyncio.to_thread(
+                failure_audit, db, None, "auth", "UNAUTHENTICATED", request.state.correlation_id
+            )
         return error_response(request, exc.status_code, code, message)
 
     @app.exception_handler(RequestValidationError)
     async def invalid_request(request: Request, exc: RequestValidationError) -> JSONResponse:
         # Do not echo input, context, path values, or custom validator messages.
-        return error_response(request, 422, "VALIDATION_ERROR", "Request validation failed")
+        errors = exc.errors()
+        if any(e["loc"][-1] in {"glucose_unit", "amount_unit", "portion_unit"} for e in errors):
+            code = "INVALID_UNIT"
+        elif any(e["type"] == "missing" and "provenance" in e["loc"] for e in errors):
+            code = "MISSING_PROVENANCE"
+        elif any(
+            e["loc"][-1]
+            in {
+                "event_time",
+                "recorded_at",
+                "start_at",
+                "end_at",
+                "delivery_start",
+                "delivery_end",
+                "cutoff",
+            }
+            for e in errors
+        ):
+            code = "INVALID_TIMESTAMP"
+        else:
+            code = "VALIDATION_ERROR"
+        if db is not None:
+            await asyncio.to_thread(
+                failure_audit,
+                db,
+                getattr(request.state, "principal_id", None),
+                "validation",
+                "INVALID_UNIT" if code == "INVALID_UNIT" else "INVALID_INPUT",
+                request.state.correlation_id,
+            )
+        details = []
+        for error in exc.errors()[:20]:
+            indices = [v for v in error["loc"] if isinstance(v, int)]
+            if indices:
+                details.append(
+                    ErrorDetail(field=f"body.records[{indices[0]}]", reason="invalid_record")
+                )
+        return error_response(request, 422, code, "Request validation failed", details)
 
     app.add_middleware(
         CORSMiddleware,
         allow_origins=config.cors_origins,
         allow_credentials=False,
-        allow_methods=["GET"],
-        allow_headers=["Authorization", "X-Request-ID"],
+        allow_methods=["GET", "POST"],
+        allow_headers=["Authorization", "X-Request-ID", "X-Study-ID", "Idempotency-Key"],
         expose_headers=["X-Request-ID"],
     )
 
@@ -173,4 +258,5 @@ def create_app(settings: Settings | None = None, runtime: Runtime | None = None)
         )
 
     app.include_router(router)
+    app.include_router(data_router)
     return app

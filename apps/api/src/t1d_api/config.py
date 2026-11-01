@@ -3,12 +3,38 @@
 from typing import Literal
 from urllib.parse import urlsplit
 
-from pydantic import Field, field_validator, model_validator
+from pydantic import Field, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from sqlalchemy.engine import make_url
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix="T1D_", extra="forbid", frozen=True)
+    model_config = SettingsConfigDict(
+        env_prefix="T1D_", extra="forbid", frozen=True, hide_input_in_errors=True
+    )
+
+    database_url: SecretStr | None = None
+
+    @field_validator("database_url")
+    @classmethod
+    def database_boundary(cls, value: SecretStr | None) -> SecretStr | None:
+        if value is not None:
+            try:
+                url = make_url(value.get_secret_value())
+                if (
+                    url.drivername != "postgresql+psycopg"
+                    or url.username != "t1d_runtime"
+                    or not url.password
+                    or url.host not in {"127.0.0.1", "localhost"}
+                    or (
+                        url.database != "t1d_phase02"
+                        and not (url.database or "").startswith("t1d_test_")
+                    )
+                ):
+                    raise ValueError()
+            except Exception as exc:
+                raise ValueError("Explicit isolated runtime database URL required") from exc
+        return value
 
     environment: Literal["development", "test", "production"] = "development"
     api_host: Literal["127.0.0.1", "localhost", "::1"] = "127.0.0.1"

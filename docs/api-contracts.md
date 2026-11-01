@@ -1,6 +1,6 @@
 # Proposed API contracts
 
-Status: Phase 01 implements only GET `/api/v1/health/live`, GET `/api/v1/health/ready`, and a fail-closed GET `/api/v1/auth/session` boundary; all other routes remain proposed and unimplemented. Prefix `/api/v1`. [Data model](data-model.md) types are authoritative for field meaning. Request/response schemas below are proposals to become Pydantic/OpenAPI contracts in Phase 01 and feature phases.
+Status: Phase 01 health/session routes and Phase 02 structured ingestion/plain-history/audit routes are implemented. Later vision/retrieval/forecast/simulation routes below remain proposals. Exact current fields are Pydantic/OpenAPI models; [ingestion](data-ingestion.md) records the implemented subset and limits.
 
 ## Common transport rules
 UUID identifiers, UTC RFC 3339 timestamps, explicit units, finite numbers, and versioned provenance are mandatory. Patient routes require authenticated subject, current study/patient grant, and consent; do not trust a body `patient_id` instead of authorization. Foreign or missing resources return indistinguishable `404` responses where appropriate. Research simulation requires additional researcher/clinician scope and an independently approved protocol. Cookies require CSRF protection; the identity/session provider and deployment-specific transport remain **Pending approval**. No bespoke password database is selected.
@@ -78,3 +78,9 @@ Illustrative abstention, not an implemented result or approved threshold:
 
 ## Contract implementation gate
 Phase 01 must settle identity/session handling, grant model, validation/error enums, and OpenAPI generation for its limited endpoints. Later phases finalize job expiry/cancellation, upload/batch bounds, supported device profiles, settings approval flows, and retention. No clinical thresholds or exact performance limits are implied by these illustrative schemas. Contract tests must cover ownership, unit mismatch, temporal leakage, idempotency, conflicting revisions, failures, and abstention.
+
+## Phase 02 implemented routes and contract refinements
+
+Under `/api/v1/patients/{patient_id}`, POST/GET `/cgm-readings`, `/meals`, `/insulin-events`, `/activity-events`, plus GET `/audit-events` are implemented. POSTs return CGMReceipt/MealReceipt/EventReceipt; histories return HistoryPage with a validated metadata envelope and JSON payload preserving decimals as strings, plus nullable next_cursor. GET histories require cutoff; limit defaults to 100 and is bounded 1–200. AuditPage is current scoped audit history and does not accept a retrospective clinical cutoff. All require a trusted principal, X-Study-ID and current grant/consent; POSTs also require researcher/clinician role, write grant and Idempotency-Key. The runtime default remains deny-all.
+
+Phase 02 corrections use `revision` and `supersedes_id`, refining the earlier proposed expected_revision field: the exact next revision/predecessor is checked under a source-chain lock. Unknown body fields fail validation. Receipt schemas/types are generated into shared-contracts; no patient UI consumes these yet. Operational limits are 100 records, 1 MiB and 50 components/meal. Invalid JSON/input yields a redacted 422, unsupported/missing units 422, opaque inaccessible scope 404, conflict 409, oversized body 413 and dependency/configuration failure 503. Source/version approval, quality warnings and all-or-nothing semantics are described in data-ingestion.md. No 429 rate limiter or deployment media/upload policy is claimed.

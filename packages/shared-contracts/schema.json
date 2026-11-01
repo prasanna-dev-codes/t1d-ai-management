@@ -1,5 +1,47 @@
 {
   "$defs": {
+    "CGMReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted": {
+          "title": "Accepted",
+          "type": "integer"
+        },
+        "duplicates": {
+          "title": "Duplicates",
+          "type": "integer"
+        },
+        "reading_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": "Reading Ids",
+          "type": "array"
+        },
+        "received_at": {
+          "format": "date-time",
+          "title": "Received At",
+          "type": "string"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "accepted",
+        "duplicates",
+        "received_at",
+        "warnings",
+        "reading_ids"
+      ],
+      "title": "CGMReceipt",
+      "type": "object"
+    },
     "ErrorBody": {
       "additionalProperties": false,
       "properties": {
@@ -65,6 +107,48 @@
       "title": "ErrorResponse",
       "type": "object"
     },
+    "EventReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted": {
+          "title": "Accepted",
+          "type": "integer"
+        },
+        "duplicates": {
+          "title": "Duplicates",
+          "type": "integer"
+        },
+        "event_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": "Event Ids",
+          "type": "array"
+        },
+        "received_at": {
+          "format": "date-time",
+          "title": "Received At",
+          "type": "string"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "accepted",
+        "duplicates",
+        "received_at",
+        "warnings",
+        "event_ids"
+      ],
+      "title": "EventReceipt",
+      "type": "object"
+    },
     "LivenessResponse": {
       "additionalProperties": false,
       "properties": {
@@ -76,6 +160,48 @@
         }
       },
       "title": "LivenessResponse",
+      "type": "object"
+    },
+    "MealReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted": {
+          "title": "Accepted",
+          "type": "integer"
+        },
+        "duplicates": {
+          "title": "Duplicates",
+          "type": "integer"
+        },
+        "meal_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": "Meal Ids",
+          "type": "array"
+        },
+        "received_at": {
+          "format": "date-time",
+          "title": "Received At",
+          "type": "string"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "accepted",
+        "duplicates",
+        "received_at",
+        "warnings",
+        "meal_ids"
+      ],
+      "title": "MealReceipt",
       "type": "object"
     },
     "ReadinessResponse": {

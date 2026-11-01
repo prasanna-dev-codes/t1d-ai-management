@@ -36,4 +36,5 @@ async def require_principal(
     principal = await authenticator.authenticate(request)
     if principal is None or principal.expires_at <= datetime.now(UTC):
         raise HTTPException(status_code=401)
+    request.state.principal_id = principal.subject_id
     return principal
