@@ -1,6 +1,6 @@
 # Development roadmap
 
-Status: The attached project brief replaces the earlier provisional ten-step scaffold with this authoritative 12-phase plan. **Current phase: 02, explicitly authorized by the user on 2026-11-01; Phase 03 is not authorized.** Durations are planning estimates for three students, not commitments; dataset permissions, compute availability and external review may extend them. Suggested roles are A (backend/data/security), B (vision/nutrition/UI), C (forecasting/evaluation); rotate review and avoid single-person knowledge ownership.
+Status: The attached project brief replaces the earlier provisional ten-step scaffold with this authoritative 12-phase plan. **Current phase: 03, explicitly requested by the user on 2026-11-01; dataset-independent implementation is authorized; cloud execution/data acquisition/substantial training await the revised approval checkpoint. Phase 04 is not authorized.** Durations are planning estimates for three students, not commitments; dataset permissions, compute availability and external review may extend them. Suggested roles are A (backend/data/security), B (vision/nutrition/UI), C (forecasting/evaluation); rotate review and avoid single-person knowledge ownership.
 
 Each phase requires implemented-scope tests or Phase 00 documentation checks, documented limitations, no unresolved blocker for that phase, and explicit user approval before progression. Safety/authorization/unit validation accompanies every feature from its introduction; it is never postponed until Phase 08. Conditional research extensions can be formally deferred with rationale rather than silently treated as delivered.
 
@@ -162,3 +162,7 @@ Cross-links identify technical dependencies, not permission to skip phase gates 
 ## Phase 02 implementation review
 
 The isolated database/revision/RLS design was approved explicitly. See [Phase 02 review](phase-02-review.md) for local evidence, deferred migrations and hosted CI status. Completion remains subject to human review; do not progress to Phase 03 automatically.
+
+## Phase 03 preflight checkpoint
+
+The new Phase 03 brief authorizes preflight, taxonomy/split proposals and the mandatory dataset/training decision gate. See [preflight](phase-03-preflight.md) and [current review](phase-03-review.md). No dataset/weight acquisition or substantial training is approved by a phase-status change; no automatic Phase 04 progression.

@@ -8,6 +8,12 @@ export type CGMReceipt = {
   readonly reading_ids: Array<string>;
 };
 
+export type Candidate = {
+  readonly canonical_id: string;
+  readonly label: string;
+  readonly score: number;
+};
+
 export type ErrorBody = {
   readonly code: string;
   readonly message: string;
@@ -32,6 +38,13 @@ export type EventReceipt = {
   readonly event_ids: Array<string>;
 };
 
+export type ImageQuality = {
+  readonly status: "accepted" | "warning";
+  readonly width: number;
+  readonly height: number;
+  readonly warnings: Array<"COLOR_PROFILE_NOT_APPLIED" | "RGB_CONVERTED" | "ALPHA_COMPOSITED_WHITE">;
+};
+
 export type LivenessResponse = {
   readonly status: "alive";
 };
@@ -44,6 +57,15 @@ export type MealReceipt = {
   readonly meal_ids: Array<string>;
 };
 
+export type ModelInfo = {
+  readonly model_id: string;
+  readonly version: string;
+  readonly taxonomy_version: string;
+  readonly preprocessing_version: "rgb-letterbox224-v1";
+  readonly dataset_version: string;
+  readonly calibration_status: "temperature_scaled" | "uncalibrated";
+};
+
 export type ReadinessResponse = {
   readonly status: "ready";
 };
@@ -54,4 +76,26 @@ export type SessionResponse = {
   readonly subject_id: string;
   readonly roles: Array<Role>;
   readonly expires_at: string;
+};
+
+export type VisionAvailability = {
+  readonly experimental: true;
+  readonly available: boolean;
+  readonly supported_tasks: Array<"single_label_classification" | "multi_label_classification" | "detection" | "semantic_segmentation" | "instance_segmentation">;
+  readonly model: ModelInfo | null;
+  readonly reason_code: "MODEL_UNAVAILABLE" | "MODEL_READY";
+};
+
+export type VisionResult = {
+  readonly prediction_id: string;
+  readonly status: "review_required" | "abstained";
+  readonly experimental: true;
+  readonly task: "single_label_classification" | "multi_label_classification" | "detection" | "semantic_segmentation" | "instance_segmentation";
+  readonly model: ModelInfo;
+  readonly image_quality: ImageQuality;
+  readonly candidates: Array<Candidate>;
+  readonly review_required: true;
+  readonly reason_codes: Array<"LOW_CONFIDENCE" | "AMBIGUOUS_CLASS" | "HUMAN_REVIEW_REQUIRED" | "UNSUPPORTED_CAPABILITY">;
+  readonly processing_ms: number;
+  readonly completed_at: string;
 };

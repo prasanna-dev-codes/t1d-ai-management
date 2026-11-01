@@ -242,6 +242,8 @@ def test_no_future_phase_routes_or_test_bypass() -> None:
         "/api/v1/patients/{patient_id}/insulin-events",
         "/api/v1/patients/{patient_id}/activity-events",
         "/api/v1/patients/{patient_id}/audit-events",
+        "/api/v1/patients/{patient_id}/vision/model",
+        "/api/v1/patients/{patient_id}/vision/analyses",
     }
     with TestClient(create_app(Settings(environment="test"))) as client:
         assert client.get("/docs").status_code == 404

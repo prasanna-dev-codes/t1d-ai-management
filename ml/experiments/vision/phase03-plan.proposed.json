@@ -1,0 +1,167 @@
+{
+  "schema_version": "1.0.0",
+  "plan_id": "phase03-classification-2026-11-01-proposed",
+  "approval_status": "revised_cloud_proposal_pending_approval",
+  "acquisition_authorized": false,
+  "pretrained_weights_authorized": false,
+  "training_authorized": false,
+  "api_design_authorized": true,
+  "primary_dataset_candidate": null,
+  "indian80_training": "blocked_pending_rights_evidence",
+  "segmentation_initial_scope": "interface_and_annotation_evaluation_tools_only; trained segmentation unavailable",
+  "data_root": null,
+  "storage": {
+    "strategy": "cloud-first; no full corpus on Mac",
+    "cloud_provider": null,
+    "cloud_persistent_root": null,
+    "local_os_reserve_gib": 10,
+    "maximum_local_handoff_mib": 700,
+    "cloud_full_workflow_free_gib_planning_allowance": 30,
+    "cloud_development_subset_mib_proposed": 200,
+    "planning_estimate_not_measured": true,
+    "automatic_cleanup_authorized": false,
+    "preferred_cloud_provider": "kaggle",
+    "provider_preference_is_execution_approval": false
+  },
+  "models": [
+    "efficientnet_b0",
+    "mobilenet_v3_small"
+  ],
+  "pretrained_weights": [
+    "EfficientNet_B0_Weights.IMAGENET1K_V1",
+    "MobileNet_V3_Small_Weights.IMAGENET1K_V1"
+  ],
+  "initial_seeds": [
+    42
+  ],
+  "followup_seeds_requiring_budget_review": [
+    137,
+    2026
+  ],
+  "split": {
+    "official_test": "sealed, preserve publisher test membership",
+    "official_train_group_fractions": {
+      "train": "0.80",
+      "validation": "0.10",
+      "calibration": "0.10"
+    },
+    "group_priority": [
+      "source_meal_or_session",
+      "exact_file_hash",
+      "decoded_pixel_hash",
+      "reviewed_near_duplicate_component"
+    ],
+    "cross_official_split_overlap_action": "exclude implicated training groups; preserve and report official test; never move test examples into training",
+    "source_groups_missing_action": "record limitation; do not claim session independence"
+  },
+  "training": {
+    "input_shape": [
+      3,
+      224,
+      224
+    ],
+    "resize": "aspect-preserving letterbox; original files untouched",
+    "normalization": "ImageNet mean/std explicitly versioned",
+    "batch_size": 32,
+    "num_workers": 0,
+    "device": "cloud single GPU only after approved environment/pilot; local M4 lightweight tests/CPU ONNX, no substantial local training",
+    "precision": "float32 initially; mixed precision only after compatibility tests",
+    "head_epochs": 2,
+    "maximum_finetune_epochs": 8,
+    "optimizer": "AdamW",
+    "head_learning_rate": 0.001,
+    "finetune_learning_rate": 0.0001,
+    "weight_decay": 0.0001,
+    "scheduler": "cosine per training stage",
+    "gradient_clip_norm": 1.0,
+    "early_stopping_patience": 3,
+    "selection": "validation macro-F1, tie-break validation NLL; test never selects model",
+    "class_weight_policy": "explicit inverse-frequency from training groups only",
+    "throughput_pilot_batches": 20,
+    "pilot_minutes_cap": 10,
+    "per_model_hours_cap": 6,
+    "total_initial_hours_cap": 12,
+    "budget_is_cap_not_runtime_prediction": true,
+    "cpu_or_gpu_compatibility": "probe Python 3.12, driver/VRAM and approved Torch build; do not overwrite provider runtime blindly",
+    "initial_data_scope": "up to 2000 rights-cleared images; 5-12 classes only if independent-group support permits; final choice requires approval",
+    "budget_includes": [
+      "environment/pilot compute",
+      "training",
+      "validation",
+      "calibration",
+      "evaluation/export",
+      "failed/resumed runs"
+    ],
+    "parallel_gpu_runs_authorized": false
+  },
+  "evaluation": {
+    "calibration": "temperature scaling on dedicated calibration groups only",
+    "classification_metrics": [
+      "top1",
+      "top3",
+      "macro_f1",
+      "weighted_f1",
+      "per_class_precision",
+      "per_class_recall",
+      "confusion_matrix",
+      "NLL",
+      "Brier",
+      "ECE",
+      "risk_coverage"
+    ],
+    "intervals": "group-bootstrap where groups/sample size permit; disclose small-class uncertainty",
+    "ood_claim": "none until independent development and untouched challenge data validate it",
+    "review_required": "always true; thresholds are research operating points, not clinical clearance",
+    "onnx_tolerance": {
+      "rtol": 0.0001,
+      "atol": 1e-05,
+      "status": "proposed, must measure actual drift before artifact acceptance"
+    }
+  },
+  "api_proposal": {
+    "path": "/api/v1/patients/{patient_id}/vision/analyses",
+    "mode": "synchronous, ephemeral image bytes, no image/job/meal persistence",
+    "model_status_path": "/api/v1/patients/{patient_id}/vision/model",
+    "auth": "existing principal/current study-patient grant/consent; deny-all default; test-only adapters remain tests",
+    "formats": [
+      "JPEG",
+      "PNG"
+    ],
+    "upload_bytes_cap": 8388608,
+    "decoded_pixels_cap": 16000000,
+    "inference_deadline_seconds": 5,
+    "inference_workers": 1,
+    "queue_capacity": 0,
+    "deadline_mechanism": "terminate/restart dedicated inference process; not merely abandon a running thread",
+    "audit": "protected operation/model/result metadata and correlation only; no image bytes/EXIF/raw paths",
+    "capabilities": "single-label classification only after empirical evaluation; other output types explicitly unavailable",
+    "approval_status": "approved_by_user",
+    "worker_rss_bytes": 1073741824,
+    "upload_read_deadline_seconds": 10,
+    "memory_mechanism": "input/pixel caps plus sampled RSS watchdog; not a hard OS RSS reservation on macOS"
+  },
+  "dependency_gate": "Base decoder/numerical/ONNX/CPU runtime installed and software-tested locally; Torch/Torchvision/onnxscript optional, not installed or GPU-qualified. Separate train-cpu source prevents accidental CPU-only cloud training.",
+  "dataset_independent_implementation_authorized": true,
+  "pretrained_weights_conditionally_approved": true,
+  "cloud_execution_authorized": false,
+  "paid_services_authorized": false,
+  "local_full_dataset_download_authorized": false,
+  "indian_dataset_audit_candidates": [
+    "rasoi",
+    "indian_thali",
+    "indianfoodnet30",
+    "khana"
+  ],
+  "food101_role": "optional_general_classification_benchmark_and_pipeline_validation_only",
+  "taxonomy_status": "provisional_nontrainable_until_coverage_audit",
+  "dependencies_pinned": {
+    "torch": "2.15.0",
+    "torchvision": "0.29.2",
+    "Pillow": "13.0.0",
+    "numpy": "2.5.4",
+    "onnx": "1.23.2",
+    "onnxruntime": "1.31.1",
+    "psutil": "7.2.2",
+    "onnxscript": "0.7.2"
+  }
+}

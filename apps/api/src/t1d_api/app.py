@@ -1,6 +1,7 @@
 """Application factory with isolated configuration and deterministic boundaries."""
 
 import asyncio
+import threading
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
 from time import perf_counter
@@ -13,6 +14,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.responses import Response
+from t1d_vision.contracts import VisionFault
+from t1d_vision.runtime import VisionRuntime
 
 from t1d_api.auth import DenyAllAuthenticator, Principal, require_principal
 from t1d_api.config import Settings
@@ -30,6 +33,8 @@ from t1d_api.data.service import failure_audit
 from t1d_api.db.session import Database
 from t1d_api.observability import request_logger
 from t1d_api.readiness import Runtime
+from t1d_api.vision_router import VisionProvider
+from t1d_api.vision_router import router as vision_router
 
 
 def error_response(
@@ -55,6 +60,7 @@ def create_app(
     settings: Settings | None = None,
     runtime: Runtime | None = None,
     database: Database | None = None,
+    vision_provider: VisionProvider | None = None,
 ) -> FastAPI:
     config = settings if settings is not None else Settings()
     state = runtime if runtime is not None else Runtime()
@@ -95,6 +101,21 @@ def create_app(
     app.state.settings = config
     app.state.runtime = state
     app.state.authenticator = DenyAllAuthenticator()
+    app.state.vision_provider = (
+        vision_provider
+        if vision_provider is not None
+        else VisionRuntime(config.vision_artifact_dir)
+    )
+    app.state.vision_admission = threading.BoundedSemaphore(1)
+
+    @app.exception_handler(VisionFault)
+    async def vision_error(request: Request, exc: VisionFault) -> JSONResponse:
+        return error_response(
+            request,
+            exc.status,
+            exc.code,
+            "Vision operation unavailable" if exc.status >= 500 else "Vision request rejected",
+        )
 
     @app.exception_handler(DataError)
     async def data_error(request: Request, exc: DataError) -> JSONResponse:
@@ -259,4 +280,5 @@ def create_app(
 
     app.include_router(router)
     app.include_router(data_router)
+    app.include_router(vision_router)
     return app

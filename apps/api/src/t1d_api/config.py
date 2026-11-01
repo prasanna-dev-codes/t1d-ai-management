@@ -1,5 +1,6 @@
 """Validated process configuration. No clinical or credential defaults."""
 
+from pathlib import Path
 from typing import Literal
 from urllib.parse import urlsplit
 
@@ -14,6 +15,14 @@ class Settings(BaseSettings):
     )
 
     database_url: SecretStr | None = None
+    vision_artifact_dir: Path | None = Field(default=None, repr=False)
+
+    @field_validator("vision_artifact_dir")
+    @classmethod
+    def vision_root(cls, value: Path | None) -> Path | None:
+        if value is not None and not value.is_absolute():
+            raise ValueError("Absolute local artifact root required")
+        return value
 
     @field_validator("database_url")
     @classmethod

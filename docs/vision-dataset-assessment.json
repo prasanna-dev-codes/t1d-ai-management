@@ -1,0 +1,287 @@
+{
+  "schema_version": "1.0.0",
+  "assessment_date": "2026-11-01",
+  "status": "revised_cloud_first_no_dataset_acquisition_approved",
+  "axes": [
+    "indian_food_relevance",
+    "label_quality",
+    "multi_food_support",
+    "segmentation_support",
+    "licensing_suitability",
+    "annotation_consistency",
+    "reproducibility",
+    "storage_feasibility",
+    "generalization_limits"
+  ],
+  "ratings_are": "qualitative assessment, not empirical scores",
+  "datasets": [
+    {
+      "id": "food101",
+      "name": "Food-101",
+      "release": "2014 publication; archive revision/checksum not yet pinned",
+      "source": "https://data.vision.ee.ethz.ch/cvl/datasets_extra/food-101/",
+      "facts": {
+        "images": 101000,
+        "classes": 101,
+        "official_train": 75750,
+        "official_test": 25250,
+        "published_download_gb": 5
+      },
+      "license_access_status": "PENDING: primary landing page does not establish image-use/redistribution terms; archive agreement review required.",
+      "approved_for_acquisition": false,
+      "approved_for_training": false,
+      "comparison": {
+        "indian_food_relevance": "Limited Indian coverage; general dish benchmark, not an Indian-meal validation set.",
+        "label_quality": "Provider reports intentionally noisy training and manually reviewed test labels.",
+        "multi_food_support": "Single image-level dish label; no verified component detection.",
+        "segmentation_support": "No mask annotations established.",
+        "licensing_suitability": "Conditional candidate; do not assign an open license without evidence.",
+        "annotation_consistency": "Official labels/splits; original files and duplicates not inspected.",
+        "reproducibility": "Official split reproducible after file hashes/version are pinned.",
+        "storage_feasibility": "No full local download permitted; optional cloud benchmark only after rights/storage approval.",
+        "generalization_limits": "Curated web photographs; mixed meals, hidden ingredients and Indian household distribution unvalidated."
+      }
+    },
+    {
+      "id": "indian80",
+      "name": "Indian Food Images Dataset",
+      "release": "Kaggle version 5, dataset ID 1243366",
+      "source": "https://www.kaggle.com/api/v1/datasets/view/iamsouravbanerjee/indian-food-images-dataset",
+      "facts": {
+        "reported_images": 4000,
+        "reported_classes": 80,
+        "metadata_total_bytes": 376716405
+      },
+      "license_access_status": "BLOCKED: metadata licenseName is Other (specified in description); description identifies Google Images, without a clear rights grant.",
+      "approved_for_acquisition": false,
+      "approved_for_training": false,
+      "comparison": {
+        "indian_food_relevance": "High topical relevance; regional coverage has not been audited.",
+        "label_quality": "Class-folder labels reported; annotation review and quality not verified.",
+        "multi_food_support": "No verified multi-object annotations.",
+        "segmentation_support": "No verified masks.",
+        "licensing_suitability": "Not cleared for training or redistribution; user approval cannot supply third-party rights.",
+        "annotation_consistency": "No source/session groups or recipe-level consistency established.",
+        "reproducibility": "Version is identifiable; image hashes and release contents not inspected.",
+        "storage_feasibility": "Metadata reports 376716405 bytes; expanded size unknown; no archive acquired.",
+        "generalization_limits": "Small web collection; source overlap, regional bias, duplicate leakage and dish ambiguity unknown."
+      }
+    },
+    {
+      "id": "uec256",
+      "name": "UECFOOD-256",
+      "release": "Author project/paper; downloadable release not pinned",
+      "source": "https://foodcam.mobi/dataset256.html",
+      "facts": {
+        "classes_reported_by_authors": 256,
+        "image_count": null,
+        "archive_bytes": null
+      },
+      "license_access_status": "UNVERIFIED: original distribution inaccessible in this inspection; do not transfer FoodPix terms to a different dataset.",
+      "approved_for_acquisition": false,
+      "approved_for_training": false,
+      "comparison": {
+        "indian_food_relevance": "Cuisine coverage for Indian meals not verified.",
+        "label_quality": "Source release not inspected.",
+        "multi_food_support": "Detection candidate; bounding-box format/coverage must be verified from original annotations.",
+        "segmentation_support": "Do not treat boxes as masks.",
+        "licensing_suitability": "Blocked pending original access/use/redistribution terms.",
+        "annotation_consistency": "Unverified; no claim about annotation counts.",
+        "reproducibility": "Needs stable source release, checksum and grouped split evidence.",
+        "storage_feasibility": "Size unknown; no mirror substituted.",
+        "generalization_limits": "Author FoodCam256 material describes world-food categories; target-domain validation absent."
+      }
+    },
+    {
+      "id": "foodseg103",
+      "name": "FoodSeg103",
+      "release": "MM 2021 base benchmark, not the FoodSeg154 extension",
+      "source": "https://github.com/LARC-CMU-SMU/FoodSeg103-Benchmark-v1",
+      "facts": {
+        "base_images_reported": 7118,
+        "classes_as_stated_in_readme": 104,
+        "class_background_mapping_verified": false
+      },
+      "license_access_status": "PARTIAL: repository/project Apache-2.0 statement verified; underlying image rights and redistribution scope not assumed from code license.",
+      "approved_for_acquisition": false,
+      "approved_for_training": false,
+      "comparison": {
+        "indian_food_relevance": "Indian mixed-meal coverage not established.",
+        "label_quality": "Provider reports pixel-level ingredient annotations; no local audit.",
+        "multi_food_support": "Multiple semantic regions per image; not instance identity.",
+        "segmentation_support": "Semantic segmentation candidate only; no fabricated instances.",
+        "licensing_suitability": "Archive/image terms need review before approval.",
+        "annotation_consistency": "Resolve 103-name/104-README label/background convention from release metadata; do not conflate 154 extension.",
+        "reproducibility": "Original zip/version hashes and splits still need pinning.",
+        "storage_feasibility": "Official zip link available; size not verified; no download.",
+        "generalization_limits": "Ingredient semantic labels do not establish dish/portion/instance accuracy."
+      }
+    },
+    {
+      "id": "uecfoodpixcomplete",
+      "name": "UECFoodPixComplete",
+      "release": "Manual release announced 2020-10-22",
+      "source": "https://mm.cs.uec.ac.jp/uecfoodpix/",
+      "facts": {
+        "train_images_reported": 9000,
+        "test_images_reported": 1000,
+        "published_archive_mb": 759,
+        "mask_ids_on_provider_page": 103
+      },
+      "license_access_status": "VERIFIED published restriction: non-commercial research only. Redistribution/model-distribution rights still require review.",
+      "approved_for_acquisition": false,
+      "approved_for_training": false,
+      "comparison": {
+        "indian_food_relevance": "Listed classes appear Japan-oriented; Indian suitability is an assessment, not measured.",
+        "label_quality": "Choose manual Complete release, not GrabCut-generated FoodPix.",
+        "multi_food_support": "Multiple labeled food regions possible; instance identities not established.",
+        "segmentation_support": "Semantic masks, red-channel IDs; table includes background/others/beverage.",
+        "licensing_suitability": "Potential non-commercial research candidate; not automatically approved.",
+        "annotation_consistency": "Original mask files/category counts/void labels must be audited.",
+        "reproducibility": "Provider train/test lists; check shared originals with UEC variants before cross-dataset evaluation.",
+        "storage_feasibility": "Provider reports 759 MB archive; extracted size unmeasured.",
+        "generalization_limits": "Semantic regions are not separate physical portions or nutritional ground truth."
+      }
+    },
+    {
+      "id": "nutrition5k",
+      "name": "Nutrition5k",
+      "release": "CVPR 2021 distribution; repository archived 2026-04-19",
+      "source": "https://github.com/google-research-datasets/Nutrition5k",
+      "facts": {
+        "plates_reported": 5006,
+        "side_videos_per_plate": 4,
+        "published_archive_gb": 181.4,
+        "image_count": null,
+        "dish_class_count": null
+      },
+      "license_access_status": "VERIFIED provider CC BY 4.0 link; attribution obligations apply; not acquired.",
+      "approved_for_acquisition": false,
+      "approved_for_training": false,
+      "comparison": {
+        "indian_food_relevance": "Collected in California cafeterias; Indian generalization not established.",
+        "label_quality": "Measured plate/ingredient data, not an audited dish-class taxonomy.",
+        "multi_food_support": "Mixed plates with ingredient lists; do not infer localized objects.",
+        "segmentation_support": "No instance-mask ground truth established by this inspection.",
+        "licensing_suitability": "Clearer published data terms; still needs acquisition approval and permitted scope.",
+        "annotation_consistency": "Group incremental scans and all views by plate; avoid frame leakage.",
+        "reproducibility": "Official plate splits; exact file release/checksums not inspected.",
+        "storage_feasibility": "181.4 GB archive is incompatible with current disk; exclude from initial acquisition.",
+        "generalization_limits": "Rig/cafeteria distribution; nutrition tasks belong to Phase 04, not this plan."
+      }
+    },
+    {
+      "id": "rasoi",
+      "name": "RASOI Challenge Dataset",
+      "release": "provider metadata inspected 2026-11-01; corpus not acquired",
+      "source": "https://fkg-india.github.io/library/datasets/",
+      "facts": {
+        "image_count": null,
+        "class_count": null,
+        "archive_bytes": null
+      },
+      "license_access_status": "Published CC BY-NC-SA 4.0, noncommercial research, mandatory creator attribution. Exact release, access and source-image governance require audit.",
+      "approved_for_acquisition": false,
+      "approved_for_training": false,
+      "comparison": {
+        "indian_food_relevance": "Direct Indian single-dish/thali relevance.",
+        "label_quality": "Provider recipe labels and boxes; independent audit pending.",
+        "multi_food_support": "Composite thali boxes reported.",
+        "segmentation_support": "Name alone does not establish masks.",
+        "licensing_suitability": "Research candidate with stated restrictions; not approved.",
+        "annotation_consistency": "Inspect standalone versus composite label policies.",
+        "reproducibility": "University links a hashed Kaggle release; public metadata search returned no result.",
+        "storage_feasibility": "Size unknown; cloud-only sample proposed after access clearance.",
+        "generalization_limits": "Regional diversity and source independence unknown."
+      }
+    },
+    {
+      "id": "indian_thali",
+      "name": "Indian Thali Dataset (ITD)",
+      "release": "provider metadata inspected 2026-11-01; corpus not acquired",
+      "source": "https://cvit.iiit.ac.in/research/projects/cvit-projects/indian_thali",
+      "facts": {
+        "images_reported": 7900,
+        "plates_reported": 796,
+        "dish_classes_reported": 50
+      },
+      "license_access_status": "Dataset distribution/license unverified. The paper CC BY 4.0 notice is not treated as a separate archive license.",
+      "approved_for_acquisition": false,
+      "approved_for_training": false,
+      "comparison": {
+        "indian_food_relevance": "Indian cafeteria thalis; high task relevance.",
+        "label_quality": "Authors describe captured plates and dense annotations.",
+        "multi_food_support": "Multiple foods and views; group all views by plate.",
+        "segmentation_support": "Dense masks reported; instance encoding unverified.",
+        "licensing_suitability": "Hold pending actual dataset access/terms.",
+        "annotation_consistency": "Audit class IDs, mask format and plate lineage.",
+        "reproducibility": "Requires pinned release and plate-disjoint split.",
+        "storage_feasibility": "Size unknown; no archive acquired.",
+        "generalization_limits": "One institutional capture setting; not nationwide household validation."
+      }
+    },
+    {
+      "id": "indianfoodnet30",
+      "name": "IndianFoodNet30",
+      "release": "provider metadata inspected 2026-11-01; corpus not acquired",
+      "source": "https://universe.roboflow.com/indianfoodnet/indianfoodnet/dataset/1",
+      "facts": {
+        "overview_original_images": 5446,
+        "version_1_derived_images": 13036,
+        "classes_paper": 30,
+        "training_outputs_per_example": 3
+      },
+      "license_access_status": "Hosted CC BY 4.0; original paper describes Google/Bing collection. Verify underlying image rights and original lineage before use.",
+      "approved_for_acquisition": false,
+      "approved_for_training": false,
+      "comparison": {
+        "indian_food_relevance": "30 Indian categories; coverage audit needed.",
+        "label_quality": "Paper reports model-assisted boxes with manual review.",
+        "multi_food_support": "Detection labels; not single-label by assumption.",
+        "segmentation_support": "Boxes are not semantic or instance masks.",
+        "licensing_suitability": "Conditional rights review, not cleared.",
+        "annotation_consistency": "Original versus derived labels/splits must reconcile.",
+        "reproducibility": "Unaugmented originals and augmentation lineage needed.",
+        "storage_feasibility": "Cloud sample only after rights approval; expanded size unknown.",
+        "generalization_limits": "Do not count augmented derivatives as independent examples."
+      }
+    },
+    {
+      "id": "khana",
+      "name": "Khana",
+      "release": "provider metadata inspected 2026-11-01; corpus not acquired",
+      "source": "https://khana.omkarprabhu.in/",
+      "facts": {
+        "images_reported_lower_bound": 131000,
+        "labels_reported": 80,
+        "published_archive_gb": 6.4
+      },
+      "license_access_status": "Author permits noncommercial research/education but explicitly disclaims image copyright ownership. Third-party rights remain unresolved.",
+      "approved_for_acquisition": false,
+      "approved_for_training": false,
+      "comparison": {
+        "indian_food_relevance": "Broad Indian dish candidate, not exhaustive coverage.",
+        "label_quality": "Web-image labels; independent audit pending.",
+        "multi_food_support": "Classification release; multi-food labels unverified.",
+        "segmentation_support": "Paper task language does not verify mask release.",
+        "licensing_suitability": "Hold pending usable image-rights basis.",
+        "annotation_consistency": "Verify taxonomy, background and duplicate conventions.",
+        "reproducibility": "Need pinned files, checksums and source groups.",
+        "storage_feasibility": "Full corpus cloud-only; no local archive.",
+        "generalization_limits": "Web-image bias and shared-source leakage remain."
+      }
+    }
+  ],
+  "manual_evaluation_proposal": {
+    "status": "not_collected_not_authorized",
+    "images_target": 300,
+    "groups": [
+      "known single dishes",
+      "unsupported/ambiguous dishes",
+      "mixed meals and non-food"
+    ],
+    "rights": "team-owned food-only photographs; no faces, medical records or participant enrollment",
+    "annotation": "two independent annotators with disagreement adjudication; session/meal groups; development and sealed final subsets",
+    "limitation": "small challenge set; cannot establish broad Indian or reliable OOD performance"
+  }
+}

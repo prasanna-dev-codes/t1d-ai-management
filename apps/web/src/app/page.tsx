@@ -13,6 +13,7 @@ export default function Home() {
         <p className="mb-4 text-xs font-semibold tracking-widest text-teal-700 uppercase">Phase 01 / Engineering foundation</p>
         <h1 className="max-w-3xl text-4xl leading-tight font-semibold tracking-tight sm:text-5xl">A foundation for<br className="hidden sm:block" /> careful research.</h1>
         <p className="mt-6 max-w-2xl text-base leading-7 text-slate-600">T1D AI is an academic Type 1 diabetes research project. This local workspace establishes the application shell and backend connection.</p>
+        <Link href="/vision" className="mt-6 inline-block text-sm font-semibold text-teal-800 underline">Open food vision research interface</Link>
         <div className="mt-10 grid gap-6 md:grid-cols-2">
           <BackendStatus />
           <section aria-labelledby="scope-title" className="rounded-2xl bg-slate-900 p-6 text-white sm:p-8">

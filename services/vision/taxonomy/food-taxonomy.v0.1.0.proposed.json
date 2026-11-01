@@ -1,0 +1,226 @@
+{
+  "schema_version": "1.0.0",
+  "taxonomy_version": "0.1.0-proposed",
+  "approval_status": "proposed",
+  "trainable": false,
+  "purpose": "Indian concept proposal; not a trained model vocabulary or nutrient mapping",
+  "categories": [
+    {
+      "id": "category.food",
+      "parent_id": null
+    },
+    {
+      "id": "category.flatbread",
+      "parent_id": "category.food"
+    },
+    {
+      "id": "category.rice_dish",
+      "parent_id": "category.food"
+    },
+    {
+      "id": "category.pulse_preparation",
+      "parent_id": "category.food"
+    },
+    {
+      "id": "category.vegetable_preparation",
+      "parent_id": "category.food"
+    },
+    {
+      "id": "category.steamed_preparation",
+      "parent_id": "category.food"
+    },
+    {
+      "id": "category.griddle_preparation",
+      "parent_id": "category.food"
+    },
+    {
+      "id": "category.fried_snack",
+      "parent_id": "category.food"
+    },
+    {
+      "id": "category.mixed_curry",
+      "parent_id": "category.food"
+    },
+    {
+      "id": "category.other_dish",
+      "parent_id": "category.food"
+    }
+  ],
+  "classes": [
+    {
+      "id": "food.chapati",
+      "label": "Chapati",
+      "parent_id": "category.flatbread",
+      "aliases": [
+        "chapathi",
+        "chappati"
+      ],
+      "support_status": "not_empirically_validated"
+    },
+    {
+      "id": "food.naan",
+      "label": "Naan",
+      "parent_id": "category.flatbread",
+      "aliases": [],
+      "support_status": "not_empirically_validated"
+    },
+    {
+      "id": "food.plain_rice",
+      "label": "Plain cooked rice",
+      "parent_id": "category.rice_dish",
+      "aliases": [
+        "plain rice"
+      ],
+      "support_status": "not_empirically_validated"
+    },
+    {
+      "id": "food.biryani",
+      "label": "Biryani, recipe unspecified",
+      "parent_id": "category.rice_dish",
+      "aliases": [
+        "biriyani"
+      ],
+      "support_status": "not_empirically_validated"
+    },
+    {
+      "id": "food.pulao",
+      "label": "Pulao, recipe unspecified",
+      "parent_id": "category.rice_dish",
+      "aliases": [
+        "pulav"
+      ],
+      "support_status": "not_empirically_validated"
+    },
+    {
+      "id": "food.fried_rice",
+      "label": "Fried rice, recipe unspecified",
+      "parent_id": "category.rice_dish",
+      "aliases": [],
+      "support_status": "not_empirically_validated"
+    },
+    {
+      "id": "food.dal",
+      "label": "Dal, preparation unspecified",
+      "parent_id": "category.pulse_preparation",
+      "aliases": [
+        "daal"
+      ],
+      "support_status": "not_empirically_validated"
+    },
+    {
+      "id": "food.sambar",
+      "label": "Sambar",
+      "parent_id": "category.pulse_preparation",
+      "aliases": [
+        "sambhar"
+      ],
+      "support_status": "not_empirically_validated"
+    },
+    {
+      "id": "food.chana_masala",
+      "label": "Chana masala",
+      "parent_id": "category.pulse_preparation",
+      "aliases": [],
+      "support_status": "not_empirically_validated"
+    },
+    {
+      "id": "food.rajma",
+      "label": "Rajma, preparation unspecified",
+      "parent_id": "category.pulse_preparation",
+      "aliases": [],
+      "support_status": "not_empirically_validated"
+    },
+    {
+      "id": "food.idli",
+      "label": "Idli",
+      "parent_id": "category.steamed_preparation",
+      "aliases": [],
+      "support_status": "not_empirically_validated"
+    },
+    {
+      "id": "food.dosa",
+      "label": "Dosa, variety unspecified",
+      "parent_id": "category.griddle_preparation",
+      "aliases": [
+        "dosai"
+      ],
+      "support_status": "not_empirically_validated"
+    },
+    {
+      "id": "food.mixed_vegetable_curry",
+      "label": "Mixed vegetable curry",
+      "parent_id": "category.vegetable_preparation",
+      "aliases": [],
+      "support_status": "not_empirically_validated"
+    },
+    {
+      "id": "food.samosa",
+      "label": "Samosa, filling unspecified",
+      "parent_id": "category.fried_snack",
+      "aliases": [],
+      "support_status": "not_empirically_validated"
+    },
+    {
+      "id": "food.chicken_curry",
+      "label": "Chicken curry, recipe unspecified",
+      "parent_id": "category.mixed_curry",
+      "aliases": [],
+      "support_status": "not_empirically_validated"
+    },
+    {
+      "id": "food.poha",
+      "label": "Poha, preparation unspecified",
+      "parent_id": "category.other_dish",
+      "aliases": [],
+      "support_status": "not_empirically_validated"
+    },
+    {
+      "id": "food.upma",
+      "label": "Upma, preparation unspecified",
+      "parent_id": "category.other_dish",
+      "aliases": [],
+      "support_status": "not_empirically_validated"
+    },
+    {
+      "id": "food.omelette",
+      "label": "Omelette, ingredients unspecified",
+      "parent_id": "category.other_dish",
+      "aliases": [
+        "omelet"
+      ],
+      "support_status": "not_empirically_validated"
+    }
+  ],
+  "decision_states": [
+    "unknown",
+    "unsupported",
+    "ambiguous",
+    "model_unavailable"
+  ],
+  "ambiguous_aliases": {
+    "roti": [
+      "food.chapati",
+      "unresolved_other_flatbread"
+    ],
+    "curry": [
+      "food.dal",
+      "food.mixed_vegetable_curry",
+      "food.chicken_curry"
+    ],
+    "rice": [
+      "food.plain_rice",
+      "food.biryani",
+      "food.pulao",
+      "food.fried_rice"
+    ]
+  },
+  "mapping_policy": {
+    "dataset_mappings_approved": false,
+    "unmapped_label_action": "unsupported; never silent nearest-name mapping",
+    "class_index_order": "explicit frozen model manifest; never this JSON order",
+    "food101_vocabulary": "Review all original class labels after approved release audit; add distinct canonical concepts before training. This 18-concept proposal is not an exhaustive Food-101 mapping.",
+    "unknown_is_softmax_class": false,
+    "nutrition_equivalence_asserted": false,
+    "regional_alias_policy": "Only reviewer-justified equivalents; ambiguous regional terms stay unresolved."
+  }
+}

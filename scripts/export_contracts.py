@@ -8,6 +8,7 @@ from typing import Any
 from pydantic import BaseModel
 from t1d_api.contracts import ErrorResponse, LivenessResponse, ReadinessResponse, SessionResponse
 from t1d_api.data.schemas import CGMReceipt, EventReceipt, MealReceipt
+from t1d_vision.contracts import VisionAvailability, VisionResult
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "packages/shared-contracts"
@@ -54,6 +55,8 @@ def artifacts() -> dict[Path, str]:
         CGMReceipt,
         MealReceipt,
         EventReceipt,
+        VisionAvailability,
+        VisionResult,
     ]
     for model in models:
         schema = model.model_json_schema(mode="serialization")

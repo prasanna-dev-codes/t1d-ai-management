@@ -28,7 +28,8 @@ jobs:
       - run: uv run --frozen --no-sync ruff format --check .
       - run: uv run --frozen --no-sync mypy
       - run: uv run --frozen --no-sync python scripts/export_contracts.py --check
-      - name: Unit and Phase 01 regression tests
+      - run: uv run --frozen --no-sync python scripts/validate_vision_proposal.py
+      - name: Unit and Phase 01-03 infrastructure regression tests
         run: uv run --frozen --no-sync pytest -q --ignore=tests/integration
   database:
     runs-on: ubuntu-latest

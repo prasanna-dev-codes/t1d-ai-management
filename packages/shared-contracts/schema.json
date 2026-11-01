@@ -42,6 +42,37 @@
       "title": "CGMReceipt",
       "type": "object"
     },
+    "Candidate": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_id": {
+          "maxLength": 128,
+          "pattern": "^food\\.[a-z][a-z0-9_]*$",
+          "title": "Canonical Id",
+          "type": "string"
+        },
+        "label": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[^/\\\\\\x00-\\x1f\\x7f]+$",
+          "title": "Label",
+          "type": "string"
+        },
+        "score": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Score",
+          "type": "number"
+        }
+      },
+      "required": [
+        "canonical_id",
+        "label",
+        "score"
+      ],
+      "title": "Candidate",
+      "type": "object"
+    },
     "ErrorBody": {
       "additionalProperties": false,
       "properties": {
@@ -149,6 +180,49 @@
       "title": "EventReceipt",
       "type": "object"
     },
+    "ImageQuality": {
+      "additionalProperties": false,
+      "properties": {
+        "height": {
+          "minimum": 1,
+          "title": "Height",
+          "type": "integer"
+        },
+        "status": {
+          "enum": [
+            "accepted",
+            "warning"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "warnings": {
+          "items": {
+            "enum": [
+              "COLOR_PROFILE_NOT_APPLIED",
+              "RGB_CONVERTED",
+              "ALPHA_COMPOSITED_WHITE"
+            ],
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        },
+        "width": {
+          "minimum": 1,
+          "title": "Width",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "status",
+        "width",
+        "height",
+        "warnings"
+      ],
+      "title": "ImageQuality",
+      "type": "object"
+    },
     "LivenessResponse": {
       "additionalProperties": false,
       "properties": {
@@ -204,6 +278,54 @@
       "title": "MealReceipt",
       "type": "object"
     },
+    "ModelInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "calibration_status": {
+          "enum": [
+            "temperature_scaled",
+            "uncalibrated"
+          ],
+          "title": "Calibration Status",
+          "type": "string"
+        },
+        "dataset_version": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$",
+          "title": "Dataset Version",
+          "type": "string"
+        },
+        "model_id": {
+          "format": "uuid",
+          "title": "Model Id",
+          "type": "string"
+        },
+        "preprocessing_version": {
+          "const": "rgb-letterbox224-v1",
+          "title": "Preprocessing Version",
+          "type": "string"
+        },
+        "taxonomy_version": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$",
+          "title": "Taxonomy Version",
+          "type": "string"
+        },
+        "version": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "model_id",
+        "version",
+        "taxonomy_version",
+        "preprocessing_version",
+        "dataset_version",
+        "calibration_status"
+      ],
+      "title": "ModelInfo",
+      "type": "object"
+    },
     "ReadinessResponse": {
       "additionalProperties": false,
       "properties": {
@@ -254,6 +376,154 @@
         "expires_at"
       ],
       "title": "SessionResponse",
+      "type": "object"
+    },
+    "VisionAvailability": {
+      "additionalProperties": false,
+      "properties": {
+        "available": {
+          "title": "Available",
+          "type": "boolean"
+        },
+        "experimental": {
+          "const": true,
+          "default": true,
+          "title": "Experimental",
+          "type": "boolean"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ModelInfo"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason_code": {
+          "enum": [
+            "MODEL_UNAVAILABLE",
+            "MODEL_READY"
+          ],
+          "title": "Reason Code",
+          "type": "string"
+        },
+        "supported_tasks": {
+          "items": {
+            "enum": [
+              "single_label_classification",
+              "multi_label_classification",
+              "detection",
+              "semantic_segmentation",
+              "instance_segmentation"
+            ],
+            "type": "string"
+          },
+          "title": "Supported Tasks",
+          "type": "array"
+        }
+      },
+      "required": [
+        "available",
+        "supported_tasks",
+        "model",
+        "reason_code"
+      ],
+      "title": "VisionAvailability",
+      "type": "object"
+    },
+    "VisionResult": {
+      "additionalProperties": false,
+      "properties": {
+        "candidates": {
+          "items": {
+            "$ref": "#/$defs/Candidate"
+          },
+          "maxItems": 5,
+          "title": "Candidates",
+          "type": "array"
+        },
+        "completed_at": {
+          "format": "date-time",
+          "title": "Completed At",
+          "type": "string"
+        },
+        "experimental": {
+          "const": true,
+          "default": true,
+          "title": "Experimental",
+          "type": "boolean"
+        },
+        "image_quality": {
+          "$ref": "#/$defs/ImageQuality"
+        },
+        "model": {
+          "$ref": "#/$defs/ModelInfo"
+        },
+        "prediction_id": {
+          "format": "uuid",
+          "title": "Prediction Id",
+          "type": "string"
+        },
+        "processing_ms": {
+          "minimum": 0,
+          "title": "Processing Ms",
+          "type": "number"
+        },
+        "reason_codes": {
+          "items": {
+            "enum": [
+              "LOW_CONFIDENCE",
+              "AMBIGUOUS_CLASS",
+              "HUMAN_REVIEW_REQUIRED",
+              "UNSUPPORTED_CAPABILITY"
+            ],
+            "type": "string"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "title": "Reason Codes",
+          "type": "array"
+        },
+        "review_required": {
+          "const": true,
+          "default": true,
+          "title": "Review Required",
+          "type": "boolean"
+        },
+        "status": {
+          "enum": [
+            "review_required",
+            "abstained"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "task": {
+          "enum": [
+            "single_label_classification",
+            "multi_label_classification",
+            "detection",
+            "semantic_segmentation",
+            "instance_segmentation"
+          ],
+          "title": "Task",
+          "type": "string"
+        }
+      },
+      "required": [
+        "prediction_id",
+        "status",
+        "task",
+        "model",
+        "image_quality",
+        "candidates",
+        "reason_codes",
+        "processing_ms",
+        "completed_at"
+      ],
+      "title": "VisionResult",
       "type": "object"
     }
   },
