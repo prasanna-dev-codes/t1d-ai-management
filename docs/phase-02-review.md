@@ -1,6 +1,6 @@
 # Phase 02 implementation and verification review
 
-Date: 2026-11-01. **Locally verified; user approved commit/push subject to final staged review.** Phase 03 has not begun. Hosted Phase 02 GitHub Actions: **NOT RUN at this pre-commit snapshot**. Baseline HEAD is `ef903a7d9b12a637b3f2f63f4d3dc91fa77642ec` on `main`, newer than the brief's Phase 01 reference. Post-push SHA and hosted results will be recorded after observation; this document cannot contain its own future commit hash.
+Date: 2026-11-01. **PASS — local and actual hosted verification completed successfully.** Implementation commit **`b7e80289037c3d0b3313bacdc3b8ba73b0b197da`**, message `Implement Phase 02 clinical research data platform`, was pushed to private `origin/main`; the remote branch was verified at the same SHA. [Research foundation run 41294557565](https://github.com/prasanna-dev-codes/t1d-ai-management/actions/runs/41294557565) was triggered by that push at **2026-11-01 09:46:20 UTC**, completed successfully by **2026-11-01 09:47:18 UTC**, and reports this exact head SHA. Backend, database integration and frontend all passed. No corrective commit was needed. Baseline before implementation: `ef903a7d9b12a637b3f2f63f4d3dc91fa77642ec`. Phase 03 has not begun. The user approved committing and pushing this final verification documentation; Phase 03 remains unauthorized.
 
 ## A. Architecture summary
 
@@ -75,15 +75,23 @@ Commands from repository root after frozen environment setup; `.venv/bin/*` is t
 
 Total automated test cases: **105 PASS (62 backend unit/regression + 29 database + 14 frontend)**. Initial intermediate SQL/driver/validation/type/format failures were corrected and affected checks rerun. **FAIL found and corrected:** duplicate generated `.next/types/routes.d 2.ts` caused frontend type checking to fail; deleting only generated `.next` and rebuilding restored typecheck/build. The Python editable-path issue was resolved locally by frozen normal-wheel reinstall, not weakening source checks. Phase 01 CORS/route assertions were explicitly expanded for authorized POST routes; default-auth and forbidden-method checks remain.
 
-## I. CI status
+## I. CI status — hosted PASS
 
-**PASS locally:** workflow syntax/inspection; backend lint/type/contracts/unit tests, isolated database tests and frontend checks. CI has separate backend/database/frontend jobs; the database job starts its own pinned-image RAM container, generates temporary credentials, migrates and tests without committed credentials or data volumes. Local ARM64 uses the manifest's native image; hosted Ubuntu will use AMD64.
+Approved implementation commit: **`b7e80289037c3d0b3313bacdc3b8ba73b0b197da`**. Private remote: `origin/main` in `prasanna-dev-codes/t1d-ai-management`. Actual [Research foundation workflow](https://github.com/prasanna-dev-codes/t1d-ai-management/actions/runs/41294557565), run **41294557565**, event **push**, was observed queued and then **completed / success** with matching head SHA. Created **2026-11-01 09:46:20 UTC**; final workflow update **09:47:18 UTC**. Job metadata and actual successful logs were inspected, rather than inferring hosted success from local checks.
 
-**NOT RUN:** hosted Phase 02 workflow, AMD64 runtime execution and hosted job results. **Commit/push approved by the user:** final staged checks must pass before triggering that workflow. No Phase 02 commit SHA/workflow URL exists yet. Historical Phase 01 CI is not evidence for these changes; do not claim GitHub CI passed. After the approved push, monitor actual runs for the exact pushed SHA and seek approval before pushing corrective commits.
+- **PASS — [backend](https://github.com/prasanna-dev-codes/t1d-ai-management/actions/runs/41294557565/job/124812557677)**, job `124812557677`: started `2026-11-01T09:46:24Z`, completed `2026-11-01T09:46:47Z`; all job steps succeeded. Logs confirm **62 tests passed**.
+- **PASS — [database](https://github.com/prasanna-dev-codes/t1d-ai-management/actions/runs/41294557565/job/124812557847)**, job `124812557847`: started `2026-11-01T09:46:24Z`, completed `2026-11-01T09:47:11Z`; all job steps succeeded. Logs confirm **29 tests passed**.
+- **PASS — [frontend](https://github.com/prasanna-dev-codes/t1d-ai-management/actions/runs/41294557565/job/124812557820)**, job `124812557820`: started `2026-11-01T09:46:24Z`, completed `2026-11-01T09:47:17Z`; all job steps succeeded. Logs confirm **14 tests passed**.
+
+Backend also passed frozen uv installation, Ruff lint/format, strict mypy and shared-contract checks. Database ran the pinned image's actual extension/migration/RLS/constraint/recovery/concurrency suite in isolated RAM-backed infrastructure. Frontend passed clean npm installation, lint, type checking, tests and production build. Hosted setup logs show the Linux Python **x64** toolcache path, confirming the architecture of the hosted execution; the database runner uses the same multi-platform image digest without platform override. SQL versions listed in section C are the separately recorded local observations; no unprinted hosted PostgreSQL patch string is invented.
+
+**105 hosted tests PASS: 62 backend + 29 database + 14 frontend.** No failed hosted job, corrective code change, rerun or additional push was needed. Final counts above are verified from the actual hosted logs.
+
+The implementation repository was clean immediately after commit/push. The user approved publication of this post-CI verification report, which references the already pushed and verified implementation SHA. Phase 03 remains unauthorized.
 
 ## J. Open issues and limitations
 
-- Hosted AMD64 workflow remains unverified until the approved implementation commit is pushed and its actual run completes.
+- No outstanding local/hosted implementation-check failure. Publication of this final verification documentation is approved.
 - PostgreSQL 17.10 patch/security review before any deployment; pin/image/extension upgrades require repeat chunk/RLS/compatibility tests.
 - Production IdP, real enrollment/legally valid consent, dataset rights, encryption/keys, qualified clinical review, retention/erasure, privileged-admin accountability, durable external audit, backup restore and deployment are not implemented or validated.
 - No settings/episode/prediction/safety-evaluation persistence, clinical thresholds/FPU/dosing, graph/vector retrieval, embeddings, forecasting or vision. Deferrals are deliberate, not claimed delivered features.
@@ -102,13 +110,14 @@ Total automated test cases: **105 PASS (62 backend unit/regression + 29 database
 - PASS — Phase 01 backend/frontend regressions; lint, strict typing, contracts and build.
 - PASS — integration tests use isolated disposable infrastructure; persistent Phase 01 preserved.
 - PASS — implementation documentation/deferrals; no real clinical dataset or treatment logic.
-- NOT RUN — hosted Phase 02 GitHub Actions/AMD64 runtime; backup restore, production security or clinical validation.
-- NOT RUN — final hosted verification, pending execution of the approved commit/push after staged checks.
+- PASS — actual hosted backend/database/frontend workflow for the exact implementation SHA, including Linux x64 database execution.
+- NOT RUN — backup restore, production security validation, real enrollment/data import and clinical validation; these are future scope/governance gates.
+- BLOCKED — none of the implemented Phase 02 local/hosted checks. Further phases and additional commit/push actions require their applicable approval.
 - FAIL — no outstanding failing local implementation check; material resolved failures are disclosed above.
 
 ## L. Phase 03 readiness
 
-The user approved committing/pushing Phase 02; progression is not authorized. Before Vision-to-Nutrition work: run/verify hosted CI, explicitly authorize Phase 03, select authorized image datasets/license/taxonomy and grouped evaluation/splits, define malformed/unsupported-image handling and provenance/unknown-food contracts, and agree model/reference evaluation assumptions. Classification must not claim portion/nutrition accuracy or bypass confirmation/clinical safety boundaries. No Phase 03 implementation has begun.
+Phase 02 implementation is committed/pushed and actual hosted CI passed; progression is not authorized. Before Vision-to-Nutrition work: explicitly authorize Phase 03, select authorized image datasets/license/taxonomy and grouped evaluation/splits, define malformed/unsupported-image handling and provenance/unknown-food contracts, and agree model/reference evaluation assumptions. Classification must not claim portion/nutrition accuracy or bypass confirmation/clinical safety boundaries. No Phase 03 implementation has begun.
 
 ## Closing verification and local performance sample
 
@@ -120,7 +129,7 @@ One local ARM64 20-record synthetic marker batch: ingestion **220.439 ms**, boun
 
 Persistent verification observed migration **0002_runtime_chunk_guard**, **16** application tables, **16** forced-RLS tables and **40** public indexes; authenticated readiness survived restart with identical cluster identity. Patient count is **0**. Phase 01's identity/table count remained unchanged.
 
-## Complete working-tree inventory
+## Implementation change inventory — committed in b7e8028
 
 ### Created (36)
 
@@ -211,3 +220,12 @@ The cached whitespace check initially **FAIL**ed on SQLAlchemy-generated trailin
 Final pre-commit local rerun: **62 backend tests, 29 disposable database tests and 14 frontend tests PASS**, plus Ruff, formatting, strict mypy, contract generation, frontend lint/typecheck. Phase 01 Compose/frontend source/package lock are unchanged; both Phase 01 containers remain healthy on their original loopback ports. The staged guard migration, runtime unsafe-chunk-ACL readiness check and direct chunk read/write isolation regression are included. Hosted results remain NOT RUN until the resulting commit's actual run is observed.
 
 Final staged checks before commit: **PASS** — `git diff --cached --check`, 63-file inventory, sensitive-artifact scan, blank-template-only env review and chunk-guard/regression inclusion. Fresh disposable migration/RLS rerun after whitespace cleanup: **29 passed in 5.84 seconds**. No Phase 01 volume or runtime configuration was modified.
+
+## Final approved-commit and hosted verification outcome
+
+- **PASS:** final staged sensitive-artifact review, 63-file inventory (36 created/27 modified/0 deleted), cached whitespace check, Phase 01 preservation and inclusion of the Timescale chunk ACL guard/read-write regression.
+- **PASS:** commit `b7e80289037c3d0b3313bacdc3b8ba73b0b197da` with the exact requested message, pushed to private `origin/main`; remote SHA matched.
+- **PASS:** actual workflow [41294557565](https://github.com/prasanna-dev-codes/t1d-ai-management/actions/runs/41294557565), all three hosted jobs successful and 105 tests passed.
+- **FAIL:** no outstanding hosted/local failing check; no CI correction or additional implementation commit needed. Pre-commit SQL trailing-whitespace failure was corrected and the affected migration suite passed again before committing.
+- **NOT RUN:** Phase 03, real-data acquisition/enrollment, clinical validation, production deployment and the other future governance/operational validations listed above.
+- **APPROVED:** the user authorized committing/pushing this documentation-only post-CI update with message `Document successful Phase 02 verification and hosted CI results`. No source/configuration changes were made after the approved implementation commit; Phase 03 remains unauthorized.
