@@ -1,0 +1,135 @@
+{
+  "$defs": {
+    "ErrorBody": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "correlation_id": {
+          "format": "uuid",
+          "title": "Correlation Id",
+          "type": "string"
+        },
+        "details": {
+          "items": {
+            "$ref": "#/$defs/ErrorDetail"
+          },
+          "title": "Details",
+          "type": "array"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "details",
+        "correlation_id"
+      ],
+      "title": "ErrorBody",
+      "type": "object"
+    },
+    "ErrorDetail": {
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "title": "Field",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "field",
+        "reason"
+      ],
+      "title": "ErrorDetail",
+      "type": "object"
+    },
+    "ErrorResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "$ref": "#/$defs/ErrorBody"
+        }
+      },
+      "required": [
+        "error"
+      ],
+      "title": "ErrorResponse",
+      "type": "object"
+    },
+    "LivenessResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "const": "alive",
+          "default": "alive",
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "title": "LivenessResponse",
+      "type": "object"
+    },
+    "ReadinessResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "const": "ready",
+          "default": "ready",
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "title": "ReadinessResponse",
+      "type": "object"
+    },
+    "Role": {
+      "enum": [
+        "researcher",
+        "clinician",
+        "participant",
+        "administrator"
+      ],
+      "title": "Role",
+      "type": "string"
+    },
+    "SessionResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "expires_at": {
+          "format": "date-time",
+          "title": "Expires At",
+          "type": "string"
+        },
+        "roles": {
+          "items": {
+            "$ref": "#/$defs/Role"
+          },
+          "title": "Roles",
+          "type": "array"
+        },
+        "subject_id": {
+          "format": "uuid",
+          "title": "Subject Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "subject_id",
+        "roles",
+        "expires_at"
+      ],
+      "title": "SessionResponse",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

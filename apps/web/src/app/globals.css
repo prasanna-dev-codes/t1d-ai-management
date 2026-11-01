@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+:root { color-scheme: light; }
+body { margin: 0; background: #f8fafb; color: #0f172a; font-family: Arial, Helvetica, sans-serif; }
+button, a { -webkit-tap-highlight-color: transparent; }
+::selection { background: #ccfbf1; }

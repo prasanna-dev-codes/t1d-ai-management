@@ -1,0 +1,24 @@
+{
+  "name": "t1d-ai-management",
+  "private": true,
+  "workspaces": [
+    "apps/web",
+    "packages/shared-contracts"
+  ],
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "dev:web": "npm run dev --workspace @t1d/web",
+    "build": "npm run build --workspace @t1d/web",
+    "lint": "npm run lint --workspace @t1d/web",
+    "typecheck": "npm run typecheck --workspace @t1d/web",
+    "test:web": "npm run test --workspace @t1d/web"
+  },
+  "devDependencies": {
+    "vitest": "5.0.5",
+    "jsdom": "27.0.1",
+    "@testing-library/react": "16.3.3",
+    "@testing-library/jest-dom": "7.0.1"
+  }
+}

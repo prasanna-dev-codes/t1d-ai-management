@@ -30,3 +30,35 @@ Build a research/educational Type 1 Diabetes management and clinical decision-su
 3. Implement with minimal changes and run relevant checks.
 4. Summarize changes, tests, risks, and unresolved questions.
 5. Ask for human approval before modifying clinical safety policies, dosage logic, or deployment settings.
+
+
+## Phase 00 foundation and authoritative references
+- Project identity: T1D AI, a research-grade AI-powered Type 1 diabetes management prototype.
+- The five tiers in `docs/architecture.md` and 12 phases in `docs/roadmap.md` are authoritative for future work. Phase 00 is documentation only; do not begin Phase 01 without user approval.
+- Read relevant requirements, contracts, and ADRs before changes; do not modify shared architecture without explicit approval.
+- Prefer small, modular, testable changes. Use Python type hints and Pydantic models and strict TypeScript typing when implementation begins.
+- Preserve backward compatibility with approved contracts; update documentation whenever implementation contracts change.
+- Avoid unnecessary dependencies; record purpose, exact resolved version, licensing review, and compatibility evidence before adoption.
+
+## Testing integrity
+- Add tests for implemented behavior; run relevant checks after changes and report exact commands and outcomes.
+- Never claim tests passed unless executed successfully; report failures and checks not run.
+- Never hide failing tests or silently weaken assertions to make them pass.
+
+## Additional research safety requirements
+- Do not produce unvalidated patient-facing insulin dosing recommendations.
+- Keep forecasting separate from clinical decision logic; treat all AI predictions as experimental.
+- Implement explicit abstention for unreliable information and preserve traceability and auditability.
+- Do not claim clinical safety or regulatory compliance without evidence.
+- The Phase 00 safety specification documents existing boundaries and proposed verification controls. It does not approve clinical thresholds, dosage algorithms, or deployment settings.
+
+## Repository management
+- Never delete user data without explicit permission or overwrite unrelated work.
+- Do not commit, push, or modify Git remotes without explicit instruction.
+- Summarize modified files, verification results, risks, and unresolved questions after every task.
+
+## Phase completion gate
+A phase is complete only when required deliverables exist, acceptance criteria are satisfied, relevant tests or documentation checks pass, limitations are documented, and no blocking issue remains. The user must approve progression to the next phase. File creation alone does not establish completion.
+
+## Current authorized phase
+The user authorized Phase 01 on 2026-11-01, including the minimal web connectivity shell and optional local PostgreSQL/Neo4j configuration. Follow `docs/local-development.md` and the Phase 01 evidence register. This authorization does not extend to Phase 02, clinical schemas/features, production identity, clinical safety-policy changes or production deployment. Preserve all existing safety rules above.

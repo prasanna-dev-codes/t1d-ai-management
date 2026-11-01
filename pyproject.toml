@@ -1,0 +1,34 @@
+[project]
+name = "t1d-ai-foundation"
+version = "0.1.0"
+description = "Research-only T1D AI engineering foundation; no clinical functionality"
+requires-python = ">=3.12,<3.13"
+dependencies = []
+
+[tool.uv.workspace]
+members = ["apps/api"]
+
+[dependency-groups]
+dev = [
+    "pytest==9.2.0",
+    "ruff==0.17.3",
+    "mypy==2.4.1",
+    "httpx2==2.16.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+extend-exclude = [".tools", ".uv-cache", ".npm-cache", "node_modules"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["apps/api/src", "tests", "scripts"]

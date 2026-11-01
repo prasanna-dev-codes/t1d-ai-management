@@ -1,0 +1,48 @@
+# Optional development stores only. No API dependency wiring or clinical schema.
+name: t1d-ai-local
+services:
+  postgres:
+    image: postgres:17.11-alpine3.23
+    profiles: ["stores"]
+    environment:
+      POSTGRES_USER: t1d_local
+      POSTGRES_DB: t1d_research_local
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a unique local POSTGRES_PASSWORD}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U t1d_local -d t1d_research_local"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    restart: "no"
+  neo4j:
+    image: neo4j:5.26.32-community
+    profiles: ["stores"]
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:?Set a unique local NEO4J_PASSWORD}
+      NEO4J_server_memory_heap_initial__size: 256m
+      NEO4J_server_memory_heap_max__size: 512m
+      NEO4J_server_memory_pagecache_size: 256m
+      NEO4J_dbms_usage__report_enabled: "false"
+    ports:
+      - "127.0.0.1:${NEO4J_HTTP_PORT:-7475}:7474"
+      - "127.0.0.1:${NEO4J_BOLT_PORT:-7688}:7687"
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+    healthcheck:
+      # Authentication check; no graph schema/query data is created.
+      test: ["CMD-SHELL", "cypher-shell -a bolt://localhost:7687 -u neo4j -p \"$${NEO4J_AUTH#*/}\" 'RETURN 1' >/dev/null 2>&1"]
+      interval: 15s
+      timeout: 10s
+      retries: 15
+      start_period: 40s
+    restart: "no"
+volumes:
+  postgres_data:
+  neo4j_data:
+  neo4j_logs:

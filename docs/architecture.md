@@ -1,34 +1,131 @@
-# Architecture — T1D AI Management
+# System architecture
 
-Status: Initial scaffold; detailed design to be finalized before implementation.
+Status: Phase 00 design baseline. Five tiers and the modular-monolith direction are specified by the project brief; implementation and operational settings are not approved by this document. See [requirements](requirements.md) and [ADRs](decisions/README.md).
 
-## Goals
-Research-oriented, clinician-supervised Type 1 Diabetes decision-support prototype with explainable inputs, traceable processing, and conservative safety boundaries.
+## Components and responsibilities
+1. **Tier 1 — Vision-to-Nutrition Intelligence:** validate images; detect/segment/classify foods; estimate portions; map versioned nutrient references; return uncertainty and human-correction requirements. Experimental Fat/Protein Unit work is optional research, not a treatment formula.
+2. **Tier 2 — Personalized Metabolic Memory:** retrieve patient-scoped historical evidence using structured filters, time bounds, vector similarity, and graph relations. Preserve source revisions and exclude information known only after the prediction timestamp. Retrieval is not a physiological digital twin.
+3. **Tier 3 — Glucose Forecasting and Personalization:** build leakage-safe features, compare baselines/advanced candidates, forecast 30/60/90/120-minute glucose with uncertainty and version lineage. No dosing outputs.
+4. **Tier 4 — Safety and Clinical Research Simulation:** deterministic input/output eligibility, freshness/completeness checks, uncertainty gates, abstention, and traceable audit. A later restricted simulation may evaluate independently approved clinician-defined protocols; it cannot issue treatment instructions or change settings.
+5. **Tier 5 — Human-in-the-Loop Application:** web dashboard, meal/nutrition corrections and confirmation, history, experimental forecasts, evidence, warnings, abstention explanations, and qualified research review.
 
-## Proposed logical components
-1. **Frontend** — user interface for meal information, glucose/context entry, result review, and uncertainty notices.
-2. **API** — authentication, schema validation, request orchestration, audit metadata.
-3. **Nutrition pipeline** — food-image classification, human-confirmed portion estimates, nutrition lookup, carbohydrate estimation.
-4. **Clinical decision-support domain** — independently testable deterministic logic, explicit clinician-configured parameters, hard safety gates; no autonomous dosing.
-5. **Model services** — versioned models, confidence/quality thresholds, evaluation reports, fallback behavior.
-6. **Persistence** — minimal necessary data, encryption, access control, retention/deletion procedures.
-7. **Observability** — privacy-preserving logs, model/version traceability, test and safety metrics.
+`apps/api` orchestrates domain modules in `services/`; the directory name does not imply network services. `apps/web` accesses the API only. Domain logic remains independent of transport, persistence adapters, training scripts, and UI. PostgreSQL is authoritative for structured records; TimescaleDB is an extension for time-series management, pgvector for derived embeddings, Neo4j for derived graph retrieval, and object storage for governed image/model objects. Do not introduce Kafka, Kubernetes, or distributed microservices.
 
-## Suggested implementation stack (provisional)
-- Frontend: Next.js, TypeScript.
-- API: Python FastAPI, Pydantic.
-- Database: PostgreSQL with migrations.
-- ML inference: Python with ONNX Runtime where appropriate.
-- Tests: pytest, API integration tests, frontend tests, safety regression fixtures.
-- CI: GitHub Actions with lint, type checking, tests, and secret scanning.
+```mermaid
+flowchart TD
+    UI["Tier 5: Next.js research review UI"] --> API["FastAPI: auth, schemas, orchestration"]
+    API --> SAFE["Tier 4: deterministic eligibility and abstention"]
+    SAFE --> V["Tier 1: vision and nutrition"]
+    SAFE --> M["Tier 2: metabolic memory"]
+    SAFE --> F["Tier 3: forecasting and personalization"]
+    V --> PG["PostgreSQL authoritative records; TimescaleDB time series"]
+    M --> PG
+    M --> IDX["Derived pgvector and Neo4j indexes"]
+    F --> PG
+    V --> OBJ["Governed object storage"]
+    F --> SAFE
+    V --> SAFE
+    SAFE --> SIM["Restricted research simulation; separately approved protocol"]
+    SAFE --> AUDIT["Protected audit records"]
+```
 
-## Trust boundaries
-User input and model output are untrusted. All clinical computations require schema, units, provenance, freshness, and safety validation. No LLM is the authority for clinical calculations.
+## Data flow and trust boundaries
+All input is untrusted, including model outputs, retrieval, uploaded files, and LLM content. The API verifies identity and scope before resolving references, validates schemas, establishes a server-side input cutoff, and asks Tier 4 to evaluate operation-specific prerequisites. Output gates run again before a result becomes displayable. Eligibility means research display/use eligibility, never clinical safety clearance. A forecast missing required data becomes an abstention, not a guessed value.
 
-## Open decisions
-- Exact module scope and approved clinical references.
-- Whether any dosing-related module is permitted, and under what clinician oversight.
-- Model and dataset selection, evaluation criteria, deployment environment.
-- Privacy/compliance requirements and intended users.
+```mermaid
+flowchart LR
+    INPUT["Images, CGM, context with units and timestamps"] --> VALIDATE["Authorize and validate"]
+    VALIDATE --> STORE["Canonical event revisions and provenance"]
+    STORE --> MEAL["Meal inference and human confirmation"]
+    STORE --> RETRIEVE["Patient and time bounded historical evidence"]
+    MEAL --> FEATURES["Versioned feature snapshot at cutoff"]
+    RETRIEVE --> FEATURES
+    FEATURES --> PREDICT["Forecast and uncertainty"]
+    PREDICT --> GATE["Deterministic output eligibility"]
+    GATE --> REVIEW["Experimental output or explicit abstention"]
+    REVIEW --> AUDIT["Protected revision and review audit"]
+```
 
-Record decisions in `docs/decisions/`.
+## API orchestration and processing
+Use synchronous validation, confirmation, bounded historical queries, and lightweight inference only when measured limits permit. Meal image analysis and slow inference can use asynchronous job contracts. A worker is an optional process using the same modules and gates; Redis is optional pending demonstrated need. Job records live in PostgreSQL with scope, immutable inputs, status, expiry, and idempotency metadata. Queue messages contain opaque authorized references, not medical payloads. Duplicate delivery must not duplicate confirmations or audit semantics. Cancellation/retry must recheck authorization, consent, source revisions, and expiry.
+
+```mermaid
+sequenceDiagram
+    actor User as Research reviewer
+    participant UI as Web UI
+    participant API as API orchestrator
+    participant S as Safety module
+    participant V as Vision and nutrition module
+    participant DB as Canonical store
+    User->>UI: Submit meal image and capture time
+    UI->>API: Authorized upload
+    API->>S: Validate media, scope, metadata
+    alt Invalid or unsupported
+        S-->>API: Reject or abstain with reason codes
+        API-->>UI: Structured failure
+    else Valid
+        API->>DB: Store governed upload and job references
+        API->>V: Analyze immutable image reference
+        V-->>API: Candidates, portions, uncertainty, provenance
+        API->>S: Evaluate result eligibility
+        API-->>UI: Job result; human confirmation required
+        User->>UI: Correct and confirm nutrients
+        UI->>API: Expected revision and confirmed values
+        API->>DB: Append confirmed revision and audit event
+    end
+```
+
+```mermaid
+sequenceDiagram
+    participant UI as Research UI
+    participant API as API orchestrator
+    participant S as Deterministic safety module
+    participant M as Metabolic memory
+    participant F as Forecast module
+    participant DB as PostgreSQL
+    UI->>API: Request forecast for patient and cutoff
+    API->>DB: Authorized immutable event snapshot
+    API->>S: Check units, quality, freshness, applicability
+    alt Ineligible
+        S-->>API: Abstention reasons and missing data
+    else Eligible for experimental inference
+        API->>M: Retrieve same-patient evidence known by cutoff
+        M-->>API: Versioned evidence or unavailable status
+        API->>F: Validated features and required evidence
+        F-->>API: Four horizons, intervals, model version
+        API->>S: Validate output and uncertainty
+        S-->>API: Eligible or abstained
+    end
+    API->>DB: Persist evaluation, lineage, audit references
+    API-->>UI: Experimental result or abstention; no dose
+```
+
+```mermaid
+flowchart TD
+    A["Authorized operation and immutable inputs"] --> B{"Schema, units, times, source valid?"}
+    B -- No --> X["Reject invalid input; no inference"]
+    B -- Yes --> C{"Required context complete, fresh, applicable?"}
+    C -- No --> Z["Abstain with reasons and missing data"]
+    C -- Yes --> D["Experimental inference"]
+    D --> E{"Finite outputs and acceptable uncertainty under approved policy?"}
+    E -- No --> Z
+    E -- Yes --> F["Research display with uncertainty and review notice"]
+    X --> G["Protected audit; redacted operational event"]
+    Z --> G
+    F --> G
+```
+
+## Training and inference separation
+Offline `ml/training` never runs in a request handler. `ml/experiments` tracks configuration; `ml/evaluation` evaluates locked patient/time splits. Approved candidate artifacts enter a versioned registry only after evaluation and human review. Inference loads an immutable model/preprocessing manifest with supported input units, feature schema, horizons, applicability, and uncertainty method. An unapproved, missing, incompatible, or corrupt artifact results in abstention. Models cannot update clinical parameters. External multimodal providers remain optional and unavailable for protected data until governance review.
+
+## Persistence and consistency
+A transaction writes canonical event revisions plus outbox/index-update metadata and protected audit references. Graph/vector updates are derived, idempotent, revision-aware, and eventually consistent. Retrieval checks canonical ownership and knowledge-time after candidate search; stale/deleted candidates are excluded. PostgreSQL failure blocks operations requiring history/audit; graph outage may permit an explicitly documented structured-only retrieval mode only for a model validated for that mode. Never silently substitute a different model or impute treatment context. See [memory design](memory-architecture.md) and [data model](data-model.md).
+
+## Failure handling and observability
+Distinguish transport/schema errors, unauthorized access, domain conflicts, dependency failures, job timeouts, and valid research abstention. Return stable reason codes and correlation IDs without internal stack traces. Bounded retries apply only to transient idempotent operations; finite timeouts and upload/batch limits are configured only after measurement. Track latency, dependency availability, gate reasons, model version, and revision consistency without medical payloads. Protected audit failures fail closed for operations requiring traceability. OpenTelemetry/Sentry export requires redaction and governance approval.
+
+## Deployment design, not settings
+Proposed local topology: a web process, API process, PostgreSQL/extensions, optional Neo4j, object storage adapter, and later optional worker/Redis under Docker Compose. This is a design, not executable deployment configuration. No ports, credentials, public exposure, cloud account, production region, or retention interval is approved. Phase 10 needs a reviewed threat model, synthetic integration/recovery evidence, and explicit deployment approval. Phase 01 should begin with the smallest runnable backend slice and add stores at their roadmap phases, not start the full infrastructure stack prematurely.
+
+## Phase 01 foundation status
+The user approved a limited Phase 01 timing addition on 2026-11-01: a minimal web connectivity shell and optional local PostgreSQL/Neo4j configuration. This does not implement the Tier 5 clinical workflows or later database/graph features. The API has only health and a fail-closed session-read boundary; optional stores are not connected to enabled API capabilities. Plain PostgreSQL is a documented local fallback while exact TimescaleDB/pgvector image compatibility is unverified. This note records the approved scope addition without changing the five-tier design, database authority or clinical boundaries.

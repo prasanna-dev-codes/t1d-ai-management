@@ -218,3 +218,59 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# T1D AI local development, credentials, and research artifacts
+.DS_Store
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+credentials*.json
+secrets*.json
+.aws/
+node_modules/
+.next/
+out/
+.turbo/
+playwright-report/
+test-results/
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.example.json
+*.swp
+*.swo
+*~
+*.tmp
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+*.sqlite-wal
+*.sqlite-shm
+*.sql.gz
+/infrastructure/docker/volumes/
+/ml/datasets/raw/
+/ml/datasets/processed/
+/ml/experiments/artifacts/
+mlruns/
+mlartifacts/
+wandb/
+checkpoints/
+*.ckpt
+*.pt
+*.pth
+*.onnx
+*.safetensors
+logs/
+
+# Phase 01 repository-local tools and frontend caches
+.tools/
+.npm-cache/
+.uv-cache/
+*.tsbuildinfo
+
+# Preserve frontend source under lib despite the inherited Python lib/ ignore.
+!apps/web/src/lib/
+!apps/web/src/lib/**
