@@ -1,6 +1,8 @@
 # Phase 03 review — revised cloud plan and dataset-independent infrastructure
 
-Date: 2026-11-01. **PARTIAL — empirical acceptance BLOCKED.** Baseline/unchanged HEAD: `6b8929087fdd8a336a753c93b0bebddaff0b3ebb`. The user approved this infrastructure checkpoint for commit/push and hosted CI verification. At this pre-commit snapshot no Phase 03 commit/run exists; no cloud execution/training or Phase 04 is authorized. PASS below means only the named observed check, never whole-phase or clinical validation.
+Date: 2026-11-02. Checkpoint evidence below is dated 2026-11-01; the preparation addendum records 2026-11-02 results. **PARTIAL — empirical acceptance BLOCKED.** Infrastructure checkpoint committed/pushed as `a3f4a80e442c4aeeec775e3518404252a6aafa6a`, based on `6b8929087fdd8a336a753c93b0bebddaff0b3ebb`. The user explicitly approved this checkpoint commit and hosted verification, not cloud execution/data acquisition/training or Phase 04. PASS below means only the named observed check, never whole-phase or clinical validation.
+
+Sections A–K record the committed 2026-11-01 infrastructure checkpoint. Section L records the later, uncommitted 2026-11-02 preparation results.
 
 ## A. Architecture
 
@@ -67,7 +69,21 @@ Infrastructure Compose, migrations, existing database/auth/clinical-safety modul
 
 ## J. CI and Git
 
-Phase 03 hosted CI **NOT RUN**. No new commit SHA/run URL exists; HEAD remains the baseline above, all Phase 03 work is uncommitted and the index is empty. Existing backend/database/frontend jobs are retained; backend now also checks proposal gates and includes deterministic base vision tests. No job downloads data/weights or runs substantial training. Optional PyTorch architecture/training/export CI is not delivered/qualified yet. Prior Phase 02 hosted success in [its review](phase-02-review.md) is not relabeled as Phase 03 CI.
+**PASS — actual hosted run completed successfully**, not inferred from local checks:
+
+- Commit: `a3f4a80e442c4aeeec775e3518404252a6aafa6a`.
+- Message: `Implement Phase 03 vision infrastructure and cloud training preparation`.
+- Private repository: `prasanna-dev-codes/t1d-ai-management`, `origin/main`; 52 reviewed text files committed, `.DS_Store` excluded. Staged blobs were compared against the reviewed SHA-256 inventory before committing; `git diff --cached --check` passed.
+- Workflow: [Research foundation / run 41334223799](https://github.com/prasanna-dev-codes/t1d-ai-management/actions/runs/41334223799), event `push`, exact `headSha` verified, final `status=completed`, `conclusion=success`.
+- Completed **2026-11-01 23:30:04 IST** (provider `updatedAt=2026-11-01T18:00:04Z`).
+- Backend PASS: **106 tests**, Ruff/format, strict mypy, shared-contract and proposal-gate checks.
+- Database PASS: **40 tests** on hosted disposable TimescaleDB/pgvector; chunk-access regression included.
+- Frontend PASS: **32 tests**, lint, typecheck and production build.
+- Hosted job conclusions and test totals were checked in GitHub CLI/logs. No CI failure or corrective commit/push occurred.
+
+No hosted job downloads a food corpus/ImageNet weights or runs substantial training. Optional PyTorch architecture/training/export CI remains NOT RUN. Phase 03 remains PARTIAL despite infrastructure CI success. Earlier Phase 02 evidence is preserved separately.
+
+Post-CI changes: this evidence/README status update, the [execution-approval proposal](phase-03-execution-approval.md) and its public-source metadata-only Commons sample are local/uncommitted, outside the tested checkpoint. No further push is authorized/inferred. The unrelated tracked `.DS_Store` remains untouched/unstaged; the working tree is not claimed clean.
 
 ## K. Remaining blockers and limitations
 
@@ -93,9 +109,40 @@ Phase 03 hosted CI **NOT RUN**. No new commit SHA/run URL exists; HEAD remains t
 11. PARTIAL — scoped authenticated software flow tested; genuine food inference blocked.
 12. PARTIAL — frontend tested/builds; genuine food output blocked.
 13. PASS for local regressions/scope preservation — Phase 01/02 foundations remain intact.
-14. PARTIAL — local deterministic checks pass; hosted CI and optional PyTorch job not run.
+14. PARTIAL — local and hosted infrastructure checks pass; optional PyTorch job and empirical checks not run.
 15. PASS for this checkpoint — explicit evidence, limitations and revised proposal recorded.
 
 ## M. Phase 04 readiness
 
 **Not ready; do not begin Phase 04.** Phase 03 remains partial until approved data/environment, real baselines/evaluation/calibration, reviewed artifacts and genuine scoped output exist. Software fixtures and documents cannot substitute for these prerequisites. Checkpoint commit/push approval is explicit; no cloud execution/training or next-phase approval is inferred from it.
+
+
+## Post-CI execution proposal — no execution approval
+
+[Concrete proposal](phase-03-execution-approval.md): acquire only 40 named Commons candidates, eight each for biryani/chapati/dosa/idli/samosa, with per-file own-work/CC BY-SA 4.0 metadata and declared total **70,401,436 bytes (67.140041 MiB)**. No image pixels/weights were fetched; labels remain unreviewed. Metadata records are public attribution/source information, not clinical data. The proposed first approval is CPU-only acquisition/environment/persistence audit; a 30-minute MobileNet GPU pilot and later two-baseline research run require separate approvals and qualified trainer/weight evidence. RASOI's original linked public Kaggle page returned HTTP 404; no mirrored replacement or guessed size/class list is used. The five-class development sample is not a validated primary dataset, final test set or Phase 03 completion.
+
+
+## L. Bounded pilot preparation — 2026-11-02
+
+**Authorization:** local dataset-specific implementation and authored synthetic CPU checks, public source verification and temporary low-resolution visual-review previews only. The user has not approved original acquisition, pretrained-weight acquisition, Kaggle execution/training, paid services or Phase 04. Phase 03 remains **PARTIAL**. These working-tree additions are not covered by hosted CI for `a3f4a80e442c4aeeec775e3518404252a6aafa6a`.
+
+**PASS — metadata evidence:** all 40 proposed MediaWiki file identities, per-file own-work/CC BY-SA 4.0 declarations, required attribution and lack of detected warning/restriction flags match the pinned metadata proposal. This is publisher evidence, not independently guaranteed ownership. Preserve source URL, creator credit, license link and changes. The local manifest SHA-256 remains `065a6dd368350f2a4814027f4e55210facab7962e915a654bc286e205a6bc9ae`.
+
+**BLOCKED — complete URL verification:** initial HEAD checks verified 6/40 originals. A later HEAD-only recheck verified 5/40 and received HTTP 429 on 35. No original GET was performed; further source requests stopped. The local audit script now defers subsequent HEAD requests after rate limiting. HEAD and declared SHA-1/size never establish actual checksum/decode integrity.
+
+**PASS — bounded visual-review process; BLOCKED — usable cohort:** 32 previews decoded and visually reviewed; a smaller-preview retry did not recover the other eight. Fourteen provisional candidates require independent human adjudication; 18 were excluded pending label, quality or authorship clarification; eight remain unreviewed. Candidate counts: biryani 1, chapati 3, dosa 3, idli 2, samosa 5. All three task-created preview directories, including raw temporary thumbnails and contact sheets, were deleted. Metadata-only local evidence preserves individual URLs, attribution/license, transformation notes and decisions. No original-resolution image was acquired. The five-class taxonomy remains provisional; the eight-per-class proposal is not executable. See [the revised execution proposal](phase-03-execution-approval.md) for exact manifest positions and manual checks.
+
+**PASS — local pilot software qualification:** typed MobileNetV3-Small head-training loop, epoch-boundary resume with optimizer/scheduler/RNG state and identity/hash checks, validation reporting, atomic checkpoints, locked cumulative 12-hour ledger, prelaunch reservation and process watchdog. The actual native model completed an authored synthetic CPU epoch and ONNX export/parity/integrity checks; the engineering-only artifact remained unavailable to the serving loader. A separate supervised CLI fixture completed within its 60-second CPU reservation and settled the ledger. These are software tests, not food accuracy, calibrated confidence, GPU performance or clinical validation. A stalled epoch resumes from the last completed checkpoint; there is no promise of mid-epoch or two-minute checkpoint recovery. Cloud ledger/output persistence is still unverified.
+
+Executed checks:
+
+- **PASS:** `TORCH_DEVICE_BACKEND_AUTOLOAD=0 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 .venv/bin/pytest -q tests/test_pilot_budget.py tests/test_pilot_training.py --tb=short` — **10 passed in 7.60s**. Authored random pixels and random initial weights only; no food dataset or ImageNet weights.
+- **PASS:** `TORCH_DEVICE_BACKEND_AUTOLOAD=0 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 /tmp/t1d-phase03-clean-env/bin/pytest -q -m 'not integration' --tb=short` — **116 passed, 11 skipped, 29 deselected in 120.20s**. Database integration was not exercised; the skips explicitly direct operators to the isolated database test runner.
+- **PASS:** Ruff lint and formatting, **101 files**; strict mypy, **55 source files**. No frontend files changed; frontend checks were not rerun in this preparation task and the earlier hosted results remain separately scoped.
+- Local native import initially stalled in optional device-backend discovery; the documented `TORCH_DEVICE_BACKEND_AUTOLOAD=0` setting restricts qualification to built-in CPU/CUDA. An installed ONNX module also stalled on a file read; reinstalling the **same pinned 1.23.2** package restored the focused export checks. A diagnostic run was aborted and is not counted as a passing test. A separate clean temporary environment resolved the existing lockfile without dependency changes. All package downloads were software dependencies, not model weights.
+
+**BLOCKED — account/environment readiness:** public Kaggle username pending; no browser/account session or credentials are available. Private dataset/output handling, actual free quotas, Python/package compatibility, GPU availability/CUDA execution and durable checkpoint restoration are unverified. The prepared local CPU-only preflight notebook has empty outputs and parsed code cells; it has not run on Kaggle. The execution proposal gives explicit Private/accelerator-None/CREATE/new-session-RESTORE instructions. Do not request passwords/tokens/login codes. A CPU-only check cannot prove GPU allocation.
+
+**NOT RUN:** original-file checksum/decode/duplicate verification, original-data or weight acquisition, cloud training, real held-out food evaluation/calibration, actual GPU budget measurements, new hosted CI for these local additions or any Phase 04 work. No real health data, clinical policy, schema, infrastructure/volume or serving authentication change was made. Actual GPU training usage in this task is zero.
+
+**Documentation-only review scope:** prepare only `docs/phase-03-review.md` and `docs/phase-03-execution-approval.md` for the next reviewed commit. Exclude `.DS_Store`, README, the local metadata/evidence, source audit, trainer, tests and notebook. No commit or push is authorized by preparation alone; request human approval for the concrete two-file checkpoint. Existing hosted CI success remains scoped to the earlier exact commit.
