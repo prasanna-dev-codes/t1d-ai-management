@@ -37,8 +37,9 @@ packages/shared-contracts/   Generated health/error/ingestion receipt schemas an
 services/vision/             Future Tier 1 image domain module
 services/nutrition/          Future Tier 1 portion/nutrient domain module
 phases/phase-05-memory/             Phase 05 research retrieval package
-services/forecasting/        Future Tier 3 forecasting domain module
-services/safety/             Future Tier 4 deterministic eligibility module
+phases/phase-06-forecasting/ Reserved forecasting phase (Archit)
+phases/phase-07-personalization/ Reserved personalization phase (Archit)
+phases/phase-08-safety/      Reserved safety research phase (Archit)
 ml/datasets/                 Future manifests/pipelines; no data payloads in Git
 ml/experiments/               Future reproducible experiment definitions
 ml/training/                 Future offline training
