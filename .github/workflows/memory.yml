@@ -1,0 +1,35 @@
+name: Phase 05 real-service qualification
+on:
+  push:
+    branches: ["workstream/archit-phases-05-08"]
+  pull_request:
+    paths:
+      - "services/memory/**"
+      - "apps/api/**"
+      - "infrastructure/migrations/**"
+      - "tests/**"
+      - "scripts/**"
+      - "uv.lock"
+      - ".github/workflows/memory.yml"
+permissions:
+  contents: read
+concurrency:
+  group: memory-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  real-services:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install uv==0.13.6
+      - run: uv sync --frozen --all-packages
+      - run: uv run --frozen --no-sync python scripts/run_memory_tests.py --tb=short
+      - run: uv run --frozen --no-sync python scripts/evaluate_memory.py --output memory-evaluation.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase05-synthetic-evaluation
+          path: memory-evaluation.json

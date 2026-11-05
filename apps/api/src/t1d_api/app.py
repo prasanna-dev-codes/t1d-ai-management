@@ -14,6 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.responses import Response
+from t1d_memory.graph import GraphIndex, Neo4jIndex
 from t1d_vision.contracts import VisionFault
 from t1d_vision.runtime import VisionRuntime
 
@@ -31,6 +32,8 @@ from t1d_api.data.errors import DataError
 from t1d_api.data.router import router as data_router
 from t1d_api.data.service import failure_audit
 from t1d_api.db.session import Database
+from t1d_api.memory_router import router as memory_router
+from t1d_api.memory_service import MemoryService
 from t1d_api.observability import request_logger
 from t1d_api.readiness import Runtime
 from t1d_api.vision_router import VisionProvider
@@ -61,6 +64,7 @@ def create_app(
     runtime: Runtime | None = None,
     database: Database | None = None,
     vision_provider: VisionProvider | None = None,
+    memory_graph: GraphIndex | None = None,
 ) -> FastAPI:
     config = settings if settings is not None else Settings()
     state = runtime if runtime is not None else Runtime()
@@ -78,6 +82,14 @@ def create_app(
 
         state.probes = (*state.probes, database_probe)
     logger = request_logger()
+    graph = memory_graph
+    if graph is None and config.memory_neo4j_uri is not None:
+        assert config.memory_neo4j_user is not None and config.memory_neo4j_password is not None
+        graph = Neo4jIndex(
+            config.memory_neo4j_uri,
+            config.memory_neo4j_user,
+            config.memory_neo4j_password.get_secret_value(),
+        )
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -88,6 +100,8 @@ def create_app(
             state.started = False
             if db is not None:
                 db.close()
+            if graph is not None:
+                graph.close()
 
     app = FastAPI(
         title="T1D AI Research Foundation",
@@ -101,6 +115,7 @@ def create_app(
     app.state.settings = config
     app.state.runtime = state
     app.state.authenticator = DenyAllAuthenticator()
+    app.state.memory_service = MemoryService(db, graph)
     app.state.vision_provider = (
         vision_provider
         if vision_provider is not None
@@ -281,4 +296,5 @@ def create_app(
     app.include_router(router)
     app.include_router(data_router)
     app.include_router(vision_router)
+    app.include_router(memory_router)
     return app
