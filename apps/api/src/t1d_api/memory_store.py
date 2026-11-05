@@ -14,6 +14,7 @@ from t1d_api.data.schemas import Kind
 from t1d_api.db.models import (
     ActivityEvent,
     CGMReading,
+    DataSource,
     InsulinEvent,
     Meal,
     MealComponent,
@@ -34,6 +35,15 @@ def canonical_events(session: Session, scope: Scope, cutoff: datetime) -> list[E
         if len(rows) > MAX_EVENTS_PER_KIND:
             raise DataError(503, "MEMORY_HISTORY_LIMIT")
         for row in rows:
+            source_approved = session.scalar(
+                select(DataSource.approved).where(
+                    DataSource.study_id == scope.study_id,
+                    DataSource.source_ref == row.source_ref,
+                    DataSource.source_version == row.source_version,
+                )
+            )
+            if source_approved is not True:
+                continue
             model = {
                 "meal": Meal,
                 "cgm": CGMReading,

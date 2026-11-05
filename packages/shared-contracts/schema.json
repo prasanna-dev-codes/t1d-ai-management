@@ -180,6 +180,168 @@
       "title": "EventReceipt",
       "type": "object"
     },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "anchor_meal_id": {
+          "format": "uuid",
+          "title": "Anchor Meal Id",
+          "type": "string"
+        },
+        "available_at": {
+          "format": "date-time",
+          "title": "Available At",
+          "type": "string"
+        },
+        "episode_id": {
+          "format": "uuid",
+          "title": "Episode Id",
+          "type": "string"
+        },
+        "event_time": {
+          "format": "date-time",
+          "title": "Event Time",
+          "type": "string"
+        },
+        "evidence_reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Reasons",
+          "type": "array"
+        },
+        "graph_similarity": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Graph Similarity"
+        },
+        "nutrient_similarity": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Nutrient Similarity",
+          "type": "number"
+        },
+        "response": {
+          "$ref": "#/$defs/GlucoseResponse"
+        },
+        "score": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Score",
+          "type": "number"
+        },
+        "source_revision_refs": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": "Source Revision Refs",
+          "type": "array"
+        },
+        "vector_similarity": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Vector Similarity"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "episode_id",
+        "anchor_meal_id",
+        "source_revision_refs",
+        "event_time",
+        "available_at",
+        "score",
+        "nutrient_similarity",
+        "evidence_reasons",
+        "warnings",
+        "response"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "GlucoseResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "first": {
+          "exclusiveMinimum": 0,
+          "title": "First",
+          "type": "number"
+        },
+        "last": {
+          "exclusiveMinimum": 0,
+          "title": "Last",
+          "type": "number"
+        },
+        "maximum": {
+          "exclusiveMinimum": 0,
+          "title": "Maximum",
+          "type": "number"
+        },
+        "maximum_gap_minutes": {
+          "minimum": 0,
+          "title": "Maximum Gap Minutes",
+          "type": "number"
+        },
+        "minimum": {
+          "exclusiveMinimum": 0,
+          "title": "Minimum",
+          "type": "number"
+        },
+        "observed_span_fraction": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Observed Span Fraction",
+          "type": "number"
+        },
+        "samples": {
+          "minimum": 2,
+          "title": "Samples",
+          "type": "integer"
+        },
+        "unit": {
+          "const": "mg/dL",
+          "default": "mg/dL",
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "minimum",
+        "maximum",
+        "first",
+        "last",
+        "samples",
+        "observed_span_fraction",
+        "maximum_gap_minutes"
+      ],
+      "title": "GlucoseResponse",
+      "type": "object"
+    },
     "ImageQuality": {
       "additionalProperties": false,
       "properties": {
@@ -337,6 +499,257 @@
         }
       },
       "title": "ReadinessResponse",
+      "type": "object"
+    },
+    "RebuildRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "definition_version": {
+          "const": "research-response120-context120-v1",
+          "default": "research-response120-context120-v1",
+          "title": "Definition Version",
+          "type": "string"
+        }
+      },
+      "title": "RebuildRequest",
+      "type": "object"
+    },
+    "RebuildResult": {
+      "additionalProperties": false,
+      "properties": {
+        "definition_version": {
+          "title": "Definition Version",
+          "type": "string"
+        },
+        "experimental": {
+          "const": true,
+          "default": true,
+          "title": "Experimental",
+          "type": "boolean"
+        },
+        "graph_status": {
+          "enum": [
+            "synchronized",
+            "unavailable",
+            "not_configured"
+          ],
+          "title": "Graph Status",
+          "type": "string"
+        },
+        "index_watermark": {
+          "format": "date-time",
+          "title": "Index Watermark",
+          "type": "string"
+        },
+        "inserted": {
+          "minimum": 0,
+          "title": "Inserted",
+          "type": "integer"
+        },
+        "retained": {
+          "minimum": 0,
+          "title": "Retained",
+          "type": "integer"
+        },
+        "run_id": {
+          "format": "uuid",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "skipped_meals": {
+          "minimum": 0,
+          "title": "Skipped Meals",
+          "type": "integer"
+        },
+        "tombstoned": {
+          "minimum": 0,
+          "title": "Tombstoned",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "run_id",
+        "definition_version",
+        "inserted",
+        "retained",
+        "tombstoned",
+        "skipped_meals",
+        "graph_status",
+        "index_watermark"
+      ],
+      "title": "RebuildResult",
+      "type": "object"
+    },
+    "RetrievalRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "anchor_meal_id": {
+          "format": "uuid",
+          "title": "Anchor Meal Id",
+          "type": "string"
+        },
+        "input_cutoff": {
+          "format": "date-time",
+          "title": "Input Cutoff",
+          "type": "string"
+        },
+        "limit": {
+          "default": 5,
+          "maximum": 20,
+          "minimum": 1,
+          "title": "Limit",
+          "type": "integer"
+        },
+        "retrieval_profile_version": {
+          "default": "structured-v1",
+          "enum": [
+            "structured-v1",
+            "vector-v1",
+            "hybrid-v1"
+          ],
+          "title": "Retrieval Profile Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "input_cutoff",
+        "anchor_meal_id"
+      ],
+      "title": "RetrievalRequest",
+      "type": "object"
+    },
+    "RetrievalResult": {
+      "additionalProperties": false,
+      "properties": {
+        "audit_reference": {
+          "format": "uuid",
+          "title": "Audit Reference",
+          "type": "string"
+        },
+        "definition_hash": {
+          "title": "Definition Hash",
+          "type": "string"
+        },
+        "definition_version": {
+          "title": "Definition Version",
+          "type": "string"
+        },
+        "degraded_mode": {
+          "default": null,
+          "title": "Degraded Mode",
+          "type": "null"
+        },
+        "embedding_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Embedding Version"
+        },
+        "episodes": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Episodes",
+          "type": "array"
+        },
+        "experimental": {
+          "const": true,
+          "default": true,
+          "title": "Experimental",
+          "type": "boolean"
+        },
+        "index_watermark": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Index Watermark"
+        },
+        "input_cutoff": {
+          "format": "date-time",
+          "title": "Input Cutoff",
+          "type": "string"
+        },
+        "ranking_version": {
+          "const": "nutrient-food-weights-v1",
+          "default": "nutrient-food-weights-v1",
+          "title": "Ranking Version",
+          "type": "string"
+        },
+        "reason_codes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reason Codes",
+          "type": "array"
+        },
+        "retrieval_id": {
+          "format": "uuid",
+          "title": "Retrieval Id",
+          "type": "string"
+        },
+        "retrieval_profile_version": {
+          "enum": [
+            "structured-v1",
+            "vector-v1",
+            "hybrid-v1"
+          ],
+          "title": "Retrieval Profile Version",
+          "type": "string"
+        },
+        "review_required": {
+          "const": true,
+          "default": true,
+          "title": "Review Required",
+          "type": "boolean"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "evidence",
+            "abstained"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "retrieval_id",
+        "status",
+        "input_cutoff",
+        "retrieval_profile_version",
+        "definition_version",
+        "definition_hash",
+        "embedding_version",
+        "index_watermark",
+        "episodes",
+        "reason_codes",
+        "warnings",
+        "audit_reference"
+      ],
+      "title": "RetrievalResult",
       "type": "object"
     },
     "Role": {

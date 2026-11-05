@@ -36,6 +36,15 @@ BEGIN
 END $$;
 CREATE TRIGGER stamp_memory BEFORE INSERT ON memory_episodes
  FOR EACH ROW EXECUTE FUNCTION public.t1d_stamp_memory();
+CREATE FUNCTION public.t1d_memory_tombstone() RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+ IF OLD.tombstoned AND NOT NEW.tombstoned THEN
+  RAISE EXCEPTION 'memory tombstones cannot be resurrected' USING ERRCODE='42501';
+ END IF;
+ RETURN NEW;
+END $$;
+CREATE TRIGGER irreversible_tombstone BEFORE UPDATE ON memory_episodes
+ FOR EACH ROW EXECUTE FUNCTION public.t1d_memory_tombstone();
 ALTER TABLE memory_episodes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE memory_episodes FORCE ROW LEVEL SECURITY;
 CREATE POLICY memory_scoped_read ON memory_episodes FOR SELECT

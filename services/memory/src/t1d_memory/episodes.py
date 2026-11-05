@@ -153,6 +153,7 @@ def build_episodes(
         lineage = tuple(
             Source(
                 id=e.id,
+                kind=e.kind,
                 event_time=e.event_time,
                 available_at=e.available_at,
                 revision=e.revision,

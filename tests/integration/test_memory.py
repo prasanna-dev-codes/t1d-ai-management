@@ -15,7 +15,7 @@ from t1d_api.config import Settings
 from t1d_api.contracts import Role
 from t1d_api.data.errors import DataError
 from t1d_api.data.schemas import CGMInput, MealInput
-from t1d_api.db.models import AccessGrant, AuditEvent, ConsentRecord
+from t1d_api.db.models import AccessGrant, AuditEvent, ConsentRecord, DataSource
 from t1d_api.db.session import authorize
 from t1d_api.memory_service import MemoryService
 from t1d_memory.contracts import RetrievalRequest
@@ -170,6 +170,64 @@ def test_memory_correction_invalidates_stale_projection_before_rebuild(case: Cas
     result = service.retrieve(case.scope, case.principal, query(anchors[-1]), uuid4())
     assert [e.anchor_meal_id for e in result.episodes] == [anchors[1]]
     assert service.rebuild(case.scope, case.principal, uuid4()).tombstoned == 1
+    with pytest.raises(DBAPIError), case.database.sessions.begin() as session:
+        authorize(session, case.scope, True)
+        session.execute(text("UPDATE memory_episodes SET tombstoned=false WHERE tombstoned"))
+
+
+def test_memory_source_withdrawal_invalidates_index(case: Case) -> None:
+    anchors = seed(case)
+    service = MemoryService(case.database)
+    service.rebuild(case.scope, case.principal, uuid4())
+    with Session(case.admin) as session, session.begin():
+        session.execute(update(DataSource).values(approved=False))
+    with pytest.raises(DataError) as unavailable:
+        service.retrieve(case.scope, case.principal, query(anchors[-1]), uuid4())
+    assert unavailable.value.status == 404
+
+
+def test_memory_read_only_can_retrieve_but_not_rebuild(case: Case) -> None:
+    anchors = seed(case)
+    service = MemoryService(case.database)
+    service.rebuild(case.scope, case.principal, uuid4())
+    with Session(case.admin) as session, session.begin():
+        session.execute(update(AccessGrant).values(can_write=False))
+    assert (
+        len(service.retrieve(case.scope, case.principal, query(anchors[-1]), uuid4()).episodes) == 2
+    )
+    with pytest.raises(DataError) as denied:
+        service.rebuild(case.scope, case.principal, uuid4())
+    assert denied.value.status == 404
+
+
+def test_memory_future_cutoff_and_expired_principal(case: Case) -> None:
+    service = MemoryService(case.database)
+    with pytest.raises(DataError) as invalid:
+        service.retrieve(
+            case.scope,
+            case.principal,
+            query(uuid4(), cutoff=datetime.now(UTC) + timedelta(days=1)),
+            uuid4(),
+        )
+    assert invalid.value.status == 422
+    expired = case.principal.model_copy(update={"expires_at": WHEN})
+    with pytest.raises(DataError) as denied:
+        service.rebuild(case.scope, expired, uuid4())
+    assert denied.value.status == 401
+
+
+def test_memory_concurrent_rebuild_preserves_single_identity_set(case: Case) -> None:
+    from concurrent.futures import ThreadPoolExecutor
+
+    seed(case)
+    service = MemoryService(case.database)
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        results = list(
+            pool.map(lambda _: service.rebuild(case.scope, case.principal, uuid4()), range(2))
+        )
+    assert sum(r.inserted for r in results) == 3
+    with case.admin.connect() as connection:
+        assert connection.execute(text("SELECT count(*) FROM memory_episodes")).scalar_one() == 3
 
 
 @pytest.mark.parametrize("denial", ["grant", "consent", "role", "foreign"])

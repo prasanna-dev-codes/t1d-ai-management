@@ -51,6 +51,7 @@ class Event(Contract):
 
 class Source(Contract):
     id: UUID
+    kind: Literal["meal", "cgm", "insulin", "activity"]
     event_time: ExplicitTime
     available_at: ExplicitTime
     revision: int = Field(ge=1)
@@ -158,6 +159,8 @@ class RetrievalResult(Contract):
     input_cutoff: ExplicitTime
     retrieval_profile_version: ProfileName
     definition_version: str
+    definition_hash: str
+    ranking_version: Literal["nutrient-food-weights-v1"] = "nutrient-food-weights-v1"
     embedding_version: str | None
     index_watermark: ExplicitTime | None
     episodes: list[Evidence]

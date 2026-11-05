@@ -34,3 +34,4 @@ def downgrade() -> None:
     op.execute("DROP TABLE memory_index_state")
     op.execute("DROP TABLE memory_episodes")
     op.execute("DROP FUNCTION public.t1d_stamp_memory()")
+    op.execute("DROP FUNCTION public.t1d_memory_tombstone()")

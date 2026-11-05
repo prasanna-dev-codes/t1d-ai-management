@@ -64,6 +64,8 @@ def rank(
         graph = None if profile != "hybrid-v1" else (graph_scores or {}).get(str(episode.id), 0.0)
         if profile != "structured-v1" and vector is None:
             raise ValueError("Vector evidence unavailable; no silent fallback")
+        if profile == "hybrid-v1" and (graph_scores is None or str(episode.id) not in graph_scores):
+            raise ValueError("Graph evidence unavailable; no silent fallback")
         score = nutrient
         if profile == "vector-v1":
             score = 0.5 * nutrient + 0.5 * float(vector)  # type: ignore[arg-type]

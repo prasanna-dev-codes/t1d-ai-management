@@ -59,6 +59,10 @@ class Neo4jIndex:
                     "CREATE CONSTRAINT t1d_memory_food IF NOT EXISTS "
                     "FOR (f:T1DMemoryFood) REQUIRE (f.study,f.patient,f.label) IS UNIQUE"
                 ).consume()
+                schema.run(
+                    "CREATE CONSTRAINT t1d_memory_source IF NOT EXISTS "
+                    "FOR (s:T1DMemorySource) REQUIRE (s.study,s.patient,s.id) IS UNIQUE"
+                ).consume()
             with (
                 self.driver.session(database="neo4j") as session,
                 session.begin_transaction(timeout=5) as tx,
@@ -92,6 +96,11 @@ class Neo4jIndex:
                     patient=str(patient),
                 ).consume()
                 tx.run(
+                    "MATCH (s:T1DMemorySource {study:$study,patient:$patient}) DETACH DELETE s",
+                    study=str(study),
+                    patient=str(patient),
+                ).consume()
+                tx.run(
                     "UNWIND $episodes AS item "
                     "CREATE (e:T1DMemoryEpisode {id:item.id,study:$study,patient:$patient,"
                     "available:item.available,ending:item.ending}) "
@@ -106,6 +115,35 @@ class Neo4jIndex:
                             "available": e.available_at.isoformat(),
                             "ending": e.end_at.isoformat(),
                             "foods": list(e.foods),
+                        }
+                        for e in episodes
+                    ],
+                ).consume()
+                tx.run(
+                    "UNWIND $episodes AS item "
+                    "MATCH (e:T1DMemoryEpisode {id:item.id,study:$study,patient:$patient}) "
+                    "SET e.source_count=size(item.sources),e.anchor=item.anchor "
+                    "WITH e,item UNWIND item.sources AS source "
+                    "MERGE (s:T1DMemorySource {study:$study,patient:$patient,id:source.id}) "
+                    "SET s.kind=source.kind,s.event_time=source.event_time,"
+                    "s.available=source.available,s.revision=source.revision "
+                    "CREATE (e)-[:T1D_DERIVED_FROM {study:$study,patient:$patient}]->(s)",
+                    study=str(study),
+                    patient=str(patient),
+                    episodes=[
+                        {
+                            "id": str(e.id),
+                            "anchor": str(e.anchor_id),
+                            "sources": [
+                                {
+                                    "id": str(s.id),
+                                    "kind": s.kind,
+                                    "event_time": s.event_time.isoformat(),
+                                    "available": s.available_at.isoformat(),
+                                    "revision": s.revision,
+                                }
+                                for s in e.sources
+                            ],
                         }
                         for e in episodes
                     ],
@@ -153,6 +191,11 @@ class Neo4jIndex:
                         "MATCH (e:T1DMemoryEpisode {study:$study,patient:$patient}) "
                         "WHERE e.id IN $ids AND datetime(e.available)<=datetime($cutoff) "
                         "AND datetime(e.ending)<=datetime($cutoff) "
+                        "AND COUNT { (e)-[:T1D_DERIVED_FROM]->() }=e.source_count "
+                        "AND NOT EXISTS { MATCH (e)-[x:T1D_DERIVED_FROM]->(s) "
+                        "WHERE x.study<>$study OR x.patient<>$patient OR s.study<>$study "
+                        "OR s.patient<>$patient OR datetime(s.available)>datetime($cutoff) "
+                        "OR datetime(s.event_time)>datetime($cutoff) } "
                         "OPTIONAL MATCH (e)-[r:T1D_CONTAINS {study:$study,patient:$patient}]->"
                         "(f:T1DMemoryFood {study:$study,patient:$patient}) "
                         "RETURN e.id AS id,collect(f.label) AS foods",

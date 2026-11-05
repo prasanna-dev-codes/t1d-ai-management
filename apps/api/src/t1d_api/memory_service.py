@@ -5,6 +5,7 @@ from typing import Literal
 from uuid import UUID, uuid4
 
 from pydantic import ValidationError
+from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from t1d_memory.contracts import (
     DEFINITION,
@@ -12,7 +13,7 @@ from t1d_memory.contracts import (
     RetrievalRequest,
     RetrievalResult,
 )
-from t1d_memory.episodes import build_episodes, foods_and_nutrients
+from t1d_memory.episodes import build_episodes, definition_hash, foods_and_nutrients
 from t1d_memory.graph import GraphIndex, GraphUnavailable
 from t1d_memory.ranking import EMBEDDING_VERSION, rank
 
@@ -68,6 +69,11 @@ class MemoryService:
             run_id = uuid4()
             with db.sessions.begin() as session:
                 authorize(session, scope, True)
+                # Serialize before snapshot selection, not only before insertion.
+                session.execute(
+                    text("SELECT pg_advisory_xact_lock(hashtextextended(:key,0))"),
+                    {"key": f"memory:{scope.study_id}:{scope.patient_id}"},
+                )
                 cutoff = datetime.now(UTC)
                 events = canonical_events(session, scope, cutoff)
                 episodes, skipped = build_episodes(events, cutoff, scope.study_id, scope.patient_id)
@@ -211,6 +217,7 @@ class MemoryService:
                     input_cutoff=query.input_cutoff,
                     retrieval_profile_version=query.retrieval_profile_version,
                     definition_version=DEFINITION.version,
+                    definition_hash=definition_hash(DEFINITION),
                     embedding_version=None if vectors is None else EMBEDDING_VERSION,
                     index_watermark=watermark
                     if watermark is not None and watermark <= query.input_cutoff
