@@ -29,7 +29,10 @@ jobs:
       - run: uv sync --frozen --all-packages
       - run: uv run --frozen --no-sync python scripts/run_memory_tests.py --tb=short
       - run: uv run --frozen --no-sync python scripts/evaluate_memory.py --output memory-evaluation.json
+      - run: uv run --frozen --no-sync python scripts/benchmark_memory.py --output memory-performance.json
       - uses: actions/upload-artifact@v4
         with:
           name: phase05-synthetic-evaluation
-          path: memory-evaluation.json
+          path: |
+            memory-evaluation.json
+            memory-performance.json

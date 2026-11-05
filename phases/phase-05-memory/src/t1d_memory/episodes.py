@@ -3,6 +3,7 @@
 import hashlib
 import json
 import unicodedata
+from bisect import bisect_left, bisect_right
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from uuid import NAMESPACE_URL, UUID, uuid5
@@ -91,7 +92,9 @@ def build_episodes(
     if cutoff.utcoffset() is None:
         raise ValueError("Explicit cutoff timezone required")
     pool = known_events(events, cutoff, study, patient)
+    times_in_pool = [e.event_time for e in pool]
     meals = [e for e in pool if e.kind == "meal"]
+    meal_times = [e.event_time for e in meals]
     result: list[Episode] = []
     skipped = 0
     for meal in meals:
@@ -104,7 +107,10 @@ def build_episodes(
         # Overlapping meals are retained with a warning, not attributed causally.
         sources = [meal]
         samples: dict[datetime, list[tuple[Event, Decimal]]] = {}
-        for event in pool:
+        # Binary-search only the relevant interval of the sorted canonical pool.
+        left = bisect_left(times_in_pool, context_start)
+        right = bisect_right(times_in_pool, end)
+        for event in pool[left:right]:
             if event.kind == "cgm" and meal.event_time <= event.event_time <= end:
                 if event.data.get("sensor_status") != "valid":
                     continue
@@ -146,7 +152,9 @@ def build_episodes(
         for kind in ("insulin", "activity"):
             if not any(e.kind == kind for e in sources):
                 warnings.append("UNKNOWN_" + kind.upper() + "_HISTORY")
-        if any(m.id != meal.id and meal.event_time <= m.event_time <= end for m in meals):
+        meal_left = bisect_left(meal_times, meal.event_time)
+        meal_right = bisect_right(meal_times, end)
+        if any(m.id != meal.id for m in meals[meal_left:meal_right]):
             warnings.append("OVERLAPPING_MEAL")
         if any(e.quality == "warning" for e in sources):
             warnings.append("SOURCE_QUALITY_WARNING")

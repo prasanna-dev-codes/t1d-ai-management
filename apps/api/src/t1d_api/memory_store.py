@@ -3,8 +3,9 @@
 import json
 from datetime import datetime
 from typing import Literal, cast
+from uuid import UUID
 
-from sqlalchemy import select, text
+from sqlalchemy import select, text, tuple_
 from sqlalchemy.orm import Session
 from t1d_memory.contracts import DEFINITION, Episode, Event
 from t1d_memory.ranking import embed
@@ -34,70 +35,93 @@ def canonical_events(session: Session, scope: Scope, cutoff: datetime) -> list[E
         rows = EventRepository(session, scope).history(kind, cutoff, MAX_EVENTS_PER_KIND, None)
         if len(rows) > MAX_EVENTS_PER_KIND:
             raise DataError(503, "MEMORY_HISTORY_LIMIT")
-        for row in rows:
-            source_approved = session.scalar(
-                select(DataSource.approved).where(
-                    DataSource.study_id == scope.study_id,
-                    DataSource.source_ref == row.source_ref,
-                    DataSource.source_version == row.source_version,
-                )
+        # Fixed-size batches avoid two SQL round trips for every CGM sample.
+        # All reads remain in this authorized transaction under forced RLS.
+        model = {
+            "meal": Meal,
+            "cgm": CGMReading,
+            "insulin": InsulinEvent,
+            "activity": ActivityEvent,
+        }[kind]
+        for offset in range(0, len(rows), 500):
+            batch = rows[offset : offset + 500]
+            source_keys = {(row.source_ref, row.source_version) for row in batch}
+            approved = set(
+                session.execute(
+                    select(DataSource.source_ref, DataSource.source_version).where(
+                        DataSource.study_id == scope.study_id,
+                        DataSource.approved.is_(True),
+                        tuple_(DataSource.source_ref, DataSource.source_version).in_(source_keys),
+                    )
+                ).tuples()
             )
-            if source_approved is not True:
+            selected = [r for r in batch if (r.source_ref, r.source_version) in approved]
+            if not selected:
                 continue
-            model = {
-                "meal": Meal,
-                "cgm": CGMReading,
-                "insulin": InsulinEvent,
-                "activity": ActivityEvent,
-            }[kind]
-            payload = session.get(
-                model, {"id": row.id, "event_time": row.event_time} if kind == "cgm" else row.id
-            )
-            if payload is None:
-                raise DataError(503, "MEMORY_SOURCE_UNAVAILABLE")
-            data = {
-                column.name: getattr(payload, column.name) for column in model.__table__.columns
-            }
-            available = row.available_at
-            if kind == "meal":
-                components = list(
-                    session.scalars(select(MealComponent).where(MealComponent.meal_id == row.id))
+            ids = [row.id for row in selected]
+            predicate = model.__table__.c.id.in_(ids)
+            if kind == "cgm":
+                predicate = tuple_(CGMReading.id, CGMReading.event_time).in_(
+                    [(row.id, row.event_time) for row in selected]
                 )
-                nutrition = list(
-                    session.scalars(
-                        select(NutritionRecord).where(NutritionRecord.meal_id == row.id)
+            payloads = {
+                r["id"]: r
+                for r in session.execute(select(model.__table__).where(predicate)).mappings()
+            }
+            components_by_meal: dict[UUID, list[MealComponent]] = {}
+            nutrition_by_meal: dict[UUID, list[NutritionRecord]] = {}
+            if kind == "meal":
+                for component in session.scalars(
+                    select(MealComponent).where(MealComponent.meal_id.in_(ids))
+                ):
+                    components_by_meal.setdefault(component.meal_id, []).append(component)
+                for record in session.scalars(
+                    select(NutritionRecord).where(NutritionRecord.meal_id.in_(ids))
+                ):
+                    nutrition_by_meal.setdefault(record.meal_id, []).append(record)
+            for row in selected:
+                payload = payloads.get(row.id)
+                if payload is None:
+                    raise DataError(503, "MEMORY_SOURCE_UNAVAILABLE")
+                data = {column.name: payload[column.name] for column in model.__table__.columns}
+                available = row.available_at
+                if kind == "meal":
+                    components = components_by_meal.get(row.id, [])
+                    nutrition = nutrition_by_meal.get(row.id, [])
+                    if any(n.available_at > cutoff for n in nutrition):
+                        continue
+                    data["components"] = [
+                        {c.name: getattr(e, c.name) for c in MealComponent.__table__.columns}
+                        for e in components
+                    ]
+                    data["nutrition_records"] = [
+                        {c.name: getattr(e, c.name) for c in NutritionRecord.__table__.columns}
+                        for e in nutrition
+                    ]
+                    confirmed = data.get("confirmed_at")
+                    if isinstance(confirmed, datetime):
+                        available = max(available, confirmed)
+                    available = max([available, *(n.available_at for n in nutrition)])
+                if available > cutoff:
+                    continue
+                output.append(
+                    Event(
+                        id=row.id,
+                        study_id=scope.study_id,
+                        patient_id=scope.patient_id,
+                        kind=kind,
+                        event_time=row.event_time,
+                        available_at=available,
+                        quality=cast(
+                            Literal["accepted", "warning", "quarantined"], row.quality_state
+                        ),
+                        revision=row.revision,
+                        source_chain=json.dumps(
+                            [row.source_ref, row.stream_ref, row.source_event_ref]
+                        ),
+                        data=data,
                     )
                 )
-                if any(n.available_at > cutoff for n in nutrition):
-                    continue
-                data["components"] = [
-                    {c.name: getattr(e, c.name) for c in MealComponent.__table__.columns}
-                    for e in components
-                ]
-                data["nutrition_records"] = [
-                    {c.name: getattr(e, c.name) for c in NutritionRecord.__table__.columns}
-                    for e in nutrition
-                ]
-                confirmed = data.get("confirmed_at")
-                if isinstance(confirmed, datetime):
-                    available = max(available, confirmed)
-                available = max([available, *(n.available_at for n in nutrition)])
-            if available > cutoff:
-                continue
-            output.append(
-                Event(
-                    id=row.id,
-                    study_id=scope.study_id,
-                    patient_id=scope.patient_id,
-                    kind=kind,
-                    event_time=row.event_time,
-                    available_at=available,
-                    quality=cast(Literal["accepted", "warning", "quarantined"], row.quality_state),
-                    revision=row.revision,
-                    source_chain=json.dumps([row.source_ref, row.stream_ref, row.source_event_ref]),
-                    data=data,
-                )
-            )
     return output
 
 

@@ -6,7 +6,7 @@ from uuid import UUID, uuid4
 
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import select, text, update
+from sqlalchemy import event, select, text, update
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm import Session
 from t1d_api.app import create_app
@@ -18,6 +18,7 @@ from t1d_api.data.schemas import CGMInput, MealInput
 from t1d_api.db.models import AccessGrant, AuditEvent, ConsentRecord, DataSource
 from t1d_api.db.session import authorize
 from t1d_api.memory_service import MemoryService
+from t1d_api.memory_store import canonical_events
 from t1d_memory.contracts import RetrievalRequest
 from t1d_memory.graph import GraphUnavailable, Neo4jIndex
 
@@ -27,9 +28,9 @@ pytestmark = pytest.mark.integration
 WHEN = datetime(2020, 1, 1, tzinfo=UTC)
 
 
-def seed(case: Case) -> list[UUID]:
+def seed(case: Case, count: int = 3) -> list[UUID]:
     identities = []
-    for n in range(3):
+    for n in range(count):
         when = WHEN + timedelta(hours=4 * n)
         nutrition = {
             "carbohydrate_g": "30",
@@ -89,6 +90,34 @@ def seed(case: Case) -> list[UUID]:
         ]
         case.service.ingest(case.scope, case.principal, "cgm", readings, f"memory-cgm-{n}", uuid4())
     return identities
+
+
+@pytest.mark.parametrize("meals,expected_queries", [(1, 26), (24, 28)])
+def test_memory_canonical_reads_are_batched(case: Case, meals: int, expected_queries: int) -> None:
+    seed(case, meals)
+    statements: list[str] = []
+
+    def capture(
+        connection: object,
+        cursor: object,
+        statement: str,
+        parameters: object,
+        context: object,
+        executemany: bool,
+    ) -> None:
+        statements.append(statement)
+
+    event.listen(case.database.engine, "before_cursor_execute", capture)
+    try:
+        with case.database.sessions.begin() as session:
+            rows = canonical_events(session, case.scope, datetime.now(UTC))
+        assert len(rows) == 26 * meals
+        assert len(statements) == expected_queries
+        assert sum(row.kind == "meal" for row in rows) == meals
+        assert sum(row.kind == "cgm" for row in rows) == 25 * meals
+        assert all(row.data["components"] for row in rows if row.kind == "meal")
+    finally:
+        event.remove(case.database.engine, "before_cursor_execute", capture)
 
 
 def query(

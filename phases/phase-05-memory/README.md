@@ -131,3 +131,10 @@ Prasanna: 03/04/09. Archit: 05/06/07/08. Shared changes here are only additive
 Phase 05 API registration, workspace/dependency wiring, generated contracts,
 migration and qualification tests/workflow. Existing applied migrations, vision,
 nutrition and frontend implementation remain unchanged. Main merge needs review.
+
+## Efficiency and independent evaluation
+
+See [the measured efficiency and evaluation protocol](../../docs/phase-05-evaluation.md)
+for batching, time-window assembly, reproducible timing and independently judged
+benchmark inputs with patient-cluster uncertainty and paired baseline comparisons.
+These tools do not establish real-world relevance without suitable reviewed data.

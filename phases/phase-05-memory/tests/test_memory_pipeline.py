@@ -180,3 +180,27 @@ def test_hand_calculated_ranking_metrics() -> None:
     assert metrics([], set(), 3)["ndcg_at_k"] == 0
     with pytest.raises(ValueError):
         metrics(["a", "a"], {"a"}, 3)
+
+
+def test_optimized_window_keeps_inclusive_context_boundaries() -> None:
+    events = cohort(1)
+    anchor = events[0]
+    added = []
+    for i, minutes in enumerate((-121, -120, 120, 121)):
+        added.append(
+            anchor.model_copy(
+                update={
+                    "id": UUID(int=800 + i),
+                    "kind": "insulin",
+                    "source_chain": f"boundary-{i}",
+                    "event_time": anchor.event_time + timedelta(minutes=minutes),
+                    "available_at": anchor.event_time + timedelta(minutes=minutes),
+                    "data": {},
+                }
+            )
+        )
+    assembled, _ = build_episodes(events + added, CUTOFF, STUDY, PATIENT)
+    identities = {source.id for source in assembled[0].sources}
+    assert added[1].id in identities and added[2].id in identities
+    assert added[0].id not in identities and added[3].id not in identities
+    assert assembled == build_episodes(list(reversed(events + added)), CUTOFF, STUDY, PATIENT)[0]
