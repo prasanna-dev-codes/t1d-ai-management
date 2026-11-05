@@ -37,7 +37,7 @@ scoped payload reads and batched meal components/nutrients. For one and 24 meals
 with 25 CGM records each, regression tests assert 26 and 28 SQL statements,
 including all four kind-history authorization checks. The previous code's
 corresponding statement counts were 74 and 1,316 by inspection. The new counts
-must pass actual PostgreSQL tests before treating them as verified. These counts
+passed actual PostgreSQL tests on commit `f104f0c` (56 integration tests overall). These counts
 cover one canonical-adapter call, not an entire retrieval; retrieval deliberately
 calls the adapter twice to detect changes after derived search.
 

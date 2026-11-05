@@ -32,7 +32,7 @@ are in phases/phase-05-memory/README.md, with ADR 008.
   tombstones and concurrent rebuild checks.
 - The phase-folder reorganization retains this implementation and updates the
   workspace, lockfile, test discovery and CI paths. Exact commit checks are
-  available in the branch’s GitHub Actions history; earlier runs above establish
+  available in the branchâ€™s GitHub Actions history; earlier runs above establish
   implementation evidence, not verification of later commits.
 
 ## Evaluation interpretation and limits
@@ -49,3 +49,18 @@ permission, independent relevance judgments, larger patient/time-separated
 evaluation, production identity and real-data retention remain research/governance
 work. Bounded pools refuse oversized histories. Default identity is deny-all.
 Review before advancing to Phase 06.
+
+## Efficiency and evaluation refinement
+
+Implementation commit `f104f0cb600719099c7febfab65f3ed7c2abfa40` passed
+[all foundation jobs](https://github.com/prasanna-dev-codes/t1d-ai-management/actions/runs/42096403322)
+and [56 actual-service integration tests](https://github.com/prasanna-dev-codes/t1d-ai-management/actions/runs/42096403327).
+Local focused tests: 78 passed, including the judged-input CLI round trip,
+invalid judgments, patient-cluster uncertainty and inclusive time-window boundaries.
+Strict mypy passed 72 files, lint/format passed, generated contracts matched.
+See [the efficiency/evaluation protocol](phase-05-evaluation.md) for measured
+assembly speedups, verified SQL batching and scientific limitations. A subsequent
+regression also covers context payload batching and exact source-version
+withdrawal in the same transaction; its exact-head run is in branch Actions.
+Research evidence is still synthetic. Better evaluation tooling does not establish
+independent real-world relevance or forecast improvement.

@@ -14,7 +14,7 @@ from t1d_api.auth import Principal, get_authenticator
 from t1d_api.config import Settings
 from t1d_api.contracts import Role
 from t1d_api.data.errors import DataError
-from t1d_api.data.schemas import CGMInput, MealInput
+from t1d_api.data.schemas import ActivityInput, CGMInput, InsulinInput, MealInput
 from t1d_api.db.models import AccessGrant, AuditEvent, ConsentRecord, DataSource
 from t1d_api.db.session import authorize
 from t1d_api.memory_service import MemoryService
@@ -118,6 +118,67 @@ def test_memory_canonical_reads_are_batched(case: Case, meals: int, expected_que
         assert all(row.data["components"] for row in rows if row.kind == "meal")
     finally:
         event.remove(case.database.engine, "before_cursor_execute", capture)
+
+
+def test_memory_batches_context_and_rechecks_exact_source_version(case: Case) -> None:
+    seed(case, 1)
+    provenance = {
+        "source_type": "synthetic",
+        "source_ref": "synthetic:fixture",
+        "source_version": "1",
+        "recorded_at": WHEN,
+    }
+    insulin = InsulinInput.model_validate(
+        {
+            "source_event_ref": "batch-insulin",
+            "event_time": WHEN,
+            "provenance": provenance,
+            "event_kind": "planned",
+            "amount_value": "1",
+            "amount_unit": "U",
+            "insulin_type_ref": "fictional-not-a-dose-recommendation",
+        }
+    )
+    case.service.ingest(case.scope, case.principal, "insulin", [insulin], "ctx-i", uuid4())
+    with Session(case.admin) as session, session.begin():
+        session.add(
+            DataSource(
+                study_id=case.scope.study_id,
+                source_ref="synthetic:fixture",
+                source_version="2",
+                source_type="synthetic",
+                approved=True,
+                license_reference="authored-synthetic",
+            )
+        )
+    activity = ActivityInput.model_validate(
+        {
+            "source_event_ref": "batch-activity",
+            "event_time": WHEN,
+            "provenance": {**provenance, "source_version": "2"},
+            "activity_type": "fictional-motion",
+            "start_at": WHEN,
+            "end_at": WHEN + timedelta(minutes=1),
+            "intensity_status": "unknown",
+        }
+    )
+    case.service.ingest(case.scope, case.principal, "activity", [activity], "ctx-a", uuid4())
+    with case.database.sessions.begin() as session:
+        before = canonical_events(session, case.scope, datetime.now(UTC))
+        assert {row.kind for row in before} == {"meal", "cgm", "insulin", "activity"}
+        with Session(case.admin) as admin, admin.begin():
+            admin.execute(
+                update(DataSource)
+                .where(
+                    DataSource.study_id == case.scope.study_id,
+                    DataSource.source_version == "2",
+                )
+                .values(approved=False)
+            )
+        # Same transaction must query approvals again, not reuse an ORM/cache value.
+        after = canonical_events(session, case.scope, datetime.now(UTC))
+        assert {row.kind for row in after} == {"meal", "cgm", "insulin"}
+        assert len(after) == 27
 
 
 def query(
