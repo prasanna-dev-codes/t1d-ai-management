@@ -1087,7 +1087,7 @@ requires-dist = [
     { name = "pydantic-settings", specifier = "==2.16.2" },
     { name = "sqlalchemy", specifier = "==2.0.55" },
     { name = "starlette", specifier = "==1.10.0" },
-    { name = "t1d-memory", editable = "services/memory" },
+    { name = "t1d-memory", editable = "phases/phase-05-memory" },
     { name = "t1d-vision", editable = "services/vision" },
     { name = "uvicorn", specifier = "==0.54.0" },
 ]
@@ -1095,7 +1095,7 @@ requires-dist = [
 [[package]]
 name = "t1d-memory"
 version = "0.1.0"
-source = { editable = "services/memory" }
+source = { editable = "phases/phase-05-memory" }
 dependencies = [
     { name = "neo4j" },
     { name = "pydantic" },

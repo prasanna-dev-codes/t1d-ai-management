@@ -13,21 +13,27 @@ pgvector features; RLS and database-stamped availability; scoped Neo4j graph;
 structured/vector/hybrid profiles; canonical rechecks; idempotent rebuild and
 tombstones; authenticated/audited API; generated contracts; reproducible evaluation
 and disposable actual-service runner. Operations, limits and erasure procedures
-are in services/memory/README.md, with ADR 008.
+are in phases/phase-05-memory/README.md, with ADR 008.
 
-## Executed evidence (final exact-head evidence to be added)
+## Executed evidence
 
-- Local focused memory/API regression: 63 passed at the first complete software
-  draft; subsequent lineage/contract refinements need final revalidation.
-- Initial full Windows unit run: 137 passed, 3 failed. Authorized memory routes
-  were added to the route allowlist, which now passes. Two existing vision tests
-  hit Windows symlink privilege/multiprocessing cleanup issues; their code was
-  not weakened or modified. Linux hosted regression is recorded separately.
-- Hosted implementation commit 49d81d56df8332d29960d0e471ef9315b0c85bff:
-  [Research foundation](https://github.com/prasanna-dev-codes/t1d-ai-management/actions/runs/42088799936)
-  passed backend, frontend and PostgreSQL/pgvector database jobs. This supports
-  only that intermediate commit, not subsequent working-tree changes.
-- Actual Neo4j qualification and final exact-head checks are pending here.
+- Local focused memory/API regression after moving Phase 05 to its own folder:
+  65 passed. Ruff lint/format checks and strict mypy (68 files) passed; frozen
+  workspace installation resolved the new package location successfully.
+- Initial full Windows unit run: 137 passed, 3 failed. The memory route allowlist
+  was fixed. Two existing vision tests hit Windows symlink privilege and
+  multiprocessing cleanup issues; their code was not weakened or modified.
+- Hardened implementation commit `6d2a915d9edc116d4430fdf33eeba12d02e23a0a`:
+  [Research foundation](https://github.com/prasanna-dev-codes/t1d-ai-management/actions/runs/42090248829)
+  passed backend, frontend and database jobs.
+  [Actual-service qualification](https://github.com/prasanna-dev-codes/t1d-ai-management/actions/runs/42090248851)
+  passed 54 integration tests against disposable PostgreSQL/TimescaleDB/pgvector
+  and Neo4j services, including the authenticated API, lineage, withdrawal,
+  tombstones and concurrent rebuild checks.
+- The phase-folder reorganization retains this implementation and updates the
+  workspace, lockfile, test discovery and CI paths. Exact commit checks are
+  available in the branch’s GitHub Actions history; earlier runs above establish
+  implementation evidence, not verification of later commits.
 
 ## Evaluation interpretation and limits
 

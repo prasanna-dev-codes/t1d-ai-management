@@ -36,7 +36,7 @@ apps/web/                    Minimal research shell and connectivity state
 packages/shared-contracts/   Generated health/error/ingestion receipt schemas and types
 services/vision/             Future Tier 1 image domain module
 services/nutrition/          Future Tier 1 portion/nutrient domain module
-services/memory/             Future Tier 2 retrieval domain module
+phases/phase-05-memory/             Phase 05 research retrieval package
 services/forecasting/        Future Tier 3 forecasting domain module
 services/safety/             Future Tier 4 deterministic eligibility module
 ml/datasets/                 Future manifests/pipelines; no data payloads in Git
@@ -76,3 +76,5 @@ make web
 Web: `http://127.0.0.1:3000`; API: `http://127.0.0.1:8001`. Health: `/api/v1/health/live` and `/api/v1/health/ready`; development OpenAPI: `/docs`. Authentication fails closed. Stop foreground servers with Ctrl-C. `make check-api` runs backend lint/format/types/contracts/tests; `make check-web` runs frontend lint/types/tests/build. CI is configured but has not run remotely.
 
 See [local development](docs/local-development.md) for uv bootstrap, `.env.example` setup, environment variables, CORS, port collisions, exact commands, safe logging, infrastructure startup and troubleshooting. Docker setup and limitations are in the [infrastructure guide](infrastructure/docker/README.md). Local stores require unique ignored development passwords and bind only to loopback. TimescaleDB/pgvector support remains unverified; the supplied fallback is plain PostgreSQL. No actual credentials are committed.
+
+Archit’s separate Phase 05–08 folders are indexed in [phases/README.md](phases/README.md).

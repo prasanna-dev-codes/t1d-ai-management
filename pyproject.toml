@@ -6,7 +6,7 @@ requires-python = ">=3.12,<3.13"
 dependencies = []
 
 [tool.uv.workspace]
-members = ["apps/api", "services/vision", "services/memory"]
+members = ["apps/api", "services/vision", "phases/phase-05-memory"]
 
 [dependency-groups]
 dev = [
@@ -17,9 +17,9 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-testpaths = ["tests", "services/memory/tests"]
+testpaths = ["tests", "phases/phase-05-memory/tests"]
 addopts = "-ra --strict-markers"
-pythonpath = ["apps/api/src", "services/vision/src", "services/memory/src"]
+pythonpath = ["apps/api/src", "services/vision/src", "phases/phase-05-memory/src"]
 markers = ["integration: isolated PostgreSQL integration tests", "ml: optional model architecture/training/export engineering tests, no food accuracy claim"]
 
 [tool.ruff]
@@ -33,7 +33,7 @@ select = ["E", "F", "I", "UP", "B", "ASYNC"]
 [tool.mypy]
 python_version = "3.12"
 strict = true
-files = ["services/vision/src", "services/memory/src", "services/memory/tests", "apps/api/src", "tests", "scripts", "infrastructure/migrations"]
+files = ["services/vision/src", "phases/phase-05-memory/src", "phases/phase-05-memory/tests", "apps/api/src", "tests", "scripts", "infrastructure/migrations"]
 
 [[tool.mypy.overrides]]
 module = ["google.protobuf", "google.protobuf.*", "psutil", "psutil.*", "onnxruntime", "onnxruntime.*", "torch", "torch.*", "torchvision", "torchvision.*", "onnxscript", "onnxscript.*"]

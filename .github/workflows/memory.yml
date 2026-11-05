@@ -4,7 +4,7 @@ on:
     branches: ["workstream/archit-phases-05-08"]
   pull_request:
     paths:
-      - "services/memory/**"
+      - "phases/phase-05-memory/**"
       - "apps/api/**"
       - "infrastructure/migrations/**"
       - "tests/**"

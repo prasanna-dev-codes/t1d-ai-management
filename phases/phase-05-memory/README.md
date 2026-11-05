@@ -87,7 +87,7 @@ Python 3.12, existing pinned uv workflow:
 
 ```text
 uv sync --frozen --all-packages
-uv run python -m pytest services/memory/tests tests/test_memory_api.py -q
+uv run python -m pytest phases/phase-05-memory/tests tests/test_memory_api.py -q
 uv run python scripts/evaluate_memory.py
 uv run python scripts/run_memory_tests.py --tb=short
 ```
