@@ -44,3 +44,8 @@ follow_imports = "skip"
 name = "pytorch-cpu"
 url = "https://download.pytorch.org/whl/cpu"
 explicit = true
+
+[[tool.mypy.overrides]]
+module = ["sklearn", "sklearn.*", "xgboost", "xgboost.*"]
+ignore_missing_imports = true
+follow_imports = "skip"

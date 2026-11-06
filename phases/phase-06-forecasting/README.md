@@ -45,3 +45,15 @@ an existing approved authenticator is configured; there is no test bypass route.
 Domain code/artifacts/tests live here. API integration, generated shared contracts,
 root workspace and real-service tests retain their existing shared locations.
 Phase 07 personalization and Phase 08 clinical simulation are not implemented.
+
+## Three-dataset offline research extension
+
+The first approved offline experiment now fits actual OhioT1DM, PhysioCGM and
+AZT1D data, including recorded context with missingness masks. See
+[real-data results](REAL_DATA_RESULTS.md) and [protocol decisions](MULTIDATASET_DECISIONS.md).
+Install optional training tools using `uv sync --frozen --all-packages --extra research`.
+Run `scripts/train_multidataset_forecasting.py --help` for the three explicit source
+paths, external output directory and required context-availability policy. Raw
+records and research weights are not included in Git. Aggregate reports are in
+results/. The existing synthetic HTTP API is intentionally unchanged; the new
+local-clock context artifacts are not silently substituted into it.

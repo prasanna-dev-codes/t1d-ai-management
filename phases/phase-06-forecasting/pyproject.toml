@@ -5,6 +5,9 @@ description = "Synthetic-qualified, research-only four-horizon CGM forecasting"
 requires-python = ">=3.12,<3.13"
 dependencies = ["pydantic==2.14.2"]
 
+[project.optional-dependencies]
+research = ["numpy==2.5.4", "scikit-learn==1.9.1", "xgboost==3.4.1"]
+
 [build-system]
 requires = ["hatchling==1.33.0"]
 build-backend = "hatchling.build"

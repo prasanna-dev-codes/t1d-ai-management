@@ -38,3 +38,22 @@ An added regression checks equivalent features, changed lineage hash, unknown
 warnings and inconsistent accepted-with-flags rejection. All 56 focused Phase 06,
 API and contract tests pass locally; hosted actual-service revalidation is required.
 New artifact filenames are content-addressed; the initial bundle stays preserved.
+
+## Three-dataset offline extension (2026-11-07)
+
+User approved recorded-context models with missingness masks, unknown-clock local
+elapsed-time handling and explicitly labeled event-time replay. The official
+AZT1D outer/inner archives were verified against the local working copy; selected
+Ohio and public PhysioCGM inputs remain outside Git. The first fixed experiment
+completed pooled and three held-out-dataset runs in 144.83 seconds. Full aggregate
+results and inference timings are in phases/phase-06-forecasting/results/, with
+interpretation in REAL_DATA_RESULTS.md. Raw records and learned research weights
+are not committed. Prespecified settings and test limitations are recorded in
+MULTIDATASET_DECISIONS.md; no serving artifact or clinical policy was replaced.
+
+Local regression before final packaging: 118 focused Phase 05/06/API/contract
+checks passed; subsequent targeted adapter/window/metric/forecast tests passed
+41 checks. Strict mypy passed 92 source files; lint/format and generated contracts
+match. Actual branch CI is the final software qualification. Wide uncertainty
+bands and context degradation on one external dataset are reported rather than
+hidden; these results do not establish full clinical/research acceptance.
