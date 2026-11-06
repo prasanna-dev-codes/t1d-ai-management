@@ -1,0 +1,106 @@
+[
+  {
+    "evaluation": "pooled-patient-disjoint",
+    "checked": [
+      {
+        "model": "ridge-cgm",
+        "sha256": "10a4918fb4ffbc1eb06400fd3517da6339d27e1674c4c6bbb47f0c04556e63f7",
+        "finite_four_horizon_output": true
+      },
+      {
+        "model": "ridge-context",
+        "sha256": "39f42f08a13c994d968630fb19c0f5f396773243edb07f19cc100cb970a64a38",
+        "finite_four_horizon_output": true
+      },
+      {
+        "model": "xgb-cgm",
+        "sha256": "60e0d827cc2c45a703e39cb1b3e3186ed94c9ebdf8555d5f4da3864f19ce44d2",
+        "finite_four_horizon_output": true
+      },
+      {
+        "model": "xgb-context",
+        "sha256": "7a62f53dfff9743819059d2181cb20b24a8b8940cb6754cfd8351747f686ab43",
+        "finite_four_horizon_output": true
+      }
+    ],
+    "scope": "Local consistency and loadability, not independent authenticity or clinical validation"
+  },
+  {
+    "evaluation": "external-ohio",
+    "checked": [
+      {
+        "model": "ridge-cgm",
+        "sha256": "d03b8ebcd6f9526bd5e9a427d1e009913869950ed12a0164894220fc6147c9bd",
+        "finite_four_horizon_output": true
+      },
+      {
+        "model": "ridge-context",
+        "sha256": "b7d40b0bc6aad63b37332de74f9bf6bf4b5bbf2b32dbce02411d7d3fcd753a7f",
+        "finite_four_horizon_output": true
+      },
+      {
+        "model": "xgb-cgm",
+        "sha256": "57f58c9991c8bee589dc5a77ee96cfe81b671e7e3bf965f9c026931d7ed8d04a",
+        "finite_four_horizon_output": true
+      },
+      {
+        "model": "xgb-context",
+        "sha256": "0557940d4757c5dc158d2f015842d75b5f50e0b4c58eef14b12dd4ea564c2f97",
+        "finite_four_horizon_output": true
+      }
+    ],
+    "scope": "Local consistency and loadability, not independent authenticity or clinical validation"
+  },
+  {
+    "evaluation": "external-physiocgm",
+    "checked": [
+      {
+        "model": "ridge-cgm",
+        "sha256": "162d554e7af6ebf543f6424cd90308d4beeedffd38590ce110060232a1112728",
+        "finite_four_horizon_output": true
+      },
+      {
+        "model": "ridge-context",
+        "sha256": "9fa1ad117b1cdb488bdbfdc7799e51b337ea1af7dc8b66743fe4f1b1ee7df789",
+        "finite_four_horizon_output": true
+      },
+      {
+        "model": "xgb-cgm",
+        "sha256": "6478cd8b9440d3cd5c4a0ee271517595fd19c8ff4e02192d54045493f4d4bcd7",
+        "finite_four_horizon_output": true
+      },
+      {
+        "model": "xgb-context",
+        "sha256": "49e15c4975e348cd78764e4d155c06d072f9299184295fbbf3d440cb9b01a5f0",
+        "finite_four_horizon_output": true
+      }
+    ],
+    "scope": "Local consistency and loadability, not independent authenticity or clinical validation"
+  },
+  {
+    "evaluation": "external-azt1d",
+    "checked": [
+      {
+        "model": "ridge-cgm",
+        "sha256": "fd845f687439ab576787bd0cf9dbe334187284e157a8d0f43f082cb873168ede",
+        "finite_four_horizon_output": true
+      },
+      {
+        "model": "ridge-context",
+        "sha256": "d9474447b158471562314e9dc8d4b9215f8f0747d14764f36233e7314f8056e5",
+        "finite_four_horizon_output": true
+      },
+      {
+        "model": "xgb-cgm",
+        "sha256": "6bd306aa7b2ec10159ceba14f619650c174a8ea47e52ee4ba9bbc5e9f3f186c6",
+        "finite_four_horizon_output": true
+      },
+      {
+        "model": "xgb-context",
+        "sha256": "16b76cf2492dbebc133f980e02c387f13f784846321a820d2c8154c2e59ce157",
+        "finite_four_horizon_output": true
+      }
+    ],
+    "scope": "Local consistency and loadability, not independent authenticity or clinical validation"
+  }
+]

@@ -57,3 +57,13 @@ checks passed; subsequent targeted adapter/window/metric/forecast tests passed
 match. Actual branch CI is the final software qualification. Wide uncertainty
 bands and context degradation on one external dataset are reported rather than
 hidden; these results do not establish full clinical/research acceptance.
+
+Commit 1adc429 passed hosted foundation and actual-service qualification:
+https://github.com/prasanna-dev-codes/t1d-ai-management/actions/runs/42287772896
+https://github.com/prasanna-dev-codes/t1d-ai-management/actions/runs/42287773202
+All 16 research model exports across four runs were subsequently verified for
+recorded SHA-256, feature dimensions/order and finite four-horizon inference.
+Five fictional parameter-validation tests pass. Verification output is committed
+as aggregate hashes only; raw records and trained weights remain external.
+NEXT_DECISIONS.md records the uncertainty/context/serving questions held for the
+user's return. No revised calibration target or live promotion was assumed.

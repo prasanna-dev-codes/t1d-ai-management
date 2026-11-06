@@ -97,3 +97,8 @@ Current context masks reflect recorded events, not verified complete logging.
 Dates are not a shared UTC calendar, and unknown timezone/availability metadata
 cannot be reconstructed by adding a fictional offset. These artifacts are not
 promoted into the live API, whose previous guards and tests remain in place.
+
+All 16 trained exports passed the standalone checksum/dimension/inference verifier;
+see results/artifact-verification.json. Use scripts/verify_forecast_research_artifacts.py
+with an external artifact directory to repeat the consistency check. Pending
+research tradeoffs are recorded in NEXT_DECISIONS.md for user review.
