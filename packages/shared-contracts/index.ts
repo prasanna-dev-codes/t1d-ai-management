@@ -85,7 +85,7 @@ export type ForecastResult = {
   readonly review_required: true;
   readonly input_cutoff: string;
   readonly safety_evaluation_id: string;
-  readonly policy_version: "synthetic-research-grid5-fresh5-v1";
+  readonly policy_version: "synthetic-research-grid5-fresh5-v2";
   readonly model_profile: "persistence-v1" | "linear-v1" | "ridge-v1";
   readonly feature_version: "cgm12-five-minute-age-aware-v1";
   readonly reason_codes: Array<string>;

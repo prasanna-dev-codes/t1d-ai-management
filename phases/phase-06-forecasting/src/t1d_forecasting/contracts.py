@@ -21,7 +21,7 @@ Horizon = Literal[30, 60, 90, 120]
 Profile = Literal["persistence-v1", "linear-v1", "ridge-v1"]
 HORIZONS: tuple[Horizon, ...] = (30, 60, 90, 120)
 FEATURE_VERSION: Final = "cgm12-five-minute-age-aware-v1"
-POLICY_VERSION: Final = "synthetic-research-grid5-fresh5-v1"
+POLICY_VERSION: Final = "synthetic-research-grid5-fresh5-v2"
 
 
 class ForecastContract(BaseModel):
@@ -36,6 +36,7 @@ class Reading(ForecastContract):
     unit: Literal["mg/dL", "mmol/L"]
     quality: Literal["accepted", "warning", "quarantined"]
     valid_sensor: bool
+    quality_flags: tuple[str, ...] = ()
 
 
 class ForecastRequest(ForecastContract):
@@ -86,7 +87,7 @@ class ForecastResult(ForecastContract):
     review_required: Literal[True] = True
     input_cutoff: Time
     safety_evaluation_id: UUID
-    policy_version: Literal["synthetic-research-grid5-fresh5-v1"] = POLICY_VERSION
+    policy_version: Literal["synthetic-research-grid5-fresh5-v2"] = POLICY_VERSION
     model_profile: Profile
     feature_version: Literal["cgm12-five-minute-age-aware-v1"] = FEATURE_VERSION
     reason_codes: list[str]
@@ -122,7 +123,7 @@ class ForecastModel(ForecastContract):
 class ModelBundle(ForecastContract):
     format_version: Literal["synthetic-forecast-bundle-v1"] = "synthetic-forecast-bundle-v1"
     feature_version: Literal["cgm12-five-minute-age-aware-v1"] = FEATURE_VERSION
-    policy_version: Literal["synthetic-research-grid5-fresh5-v1"] = POLICY_VERSION
+    policy_version: Literal["synthetic-research-grid5-fresh5-v2"] = POLICY_VERSION
     data_kind: Literal["authored-synthetic-only"] = "authored-synthetic-only"
     training_manifest_sha256: str
     calibration_patients: int = Field(ge=9)

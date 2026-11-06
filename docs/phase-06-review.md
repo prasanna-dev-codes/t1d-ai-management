@@ -21,3 +21,20 @@ Read phases/phase-06-forecasting/MODEL_CARD.md for synthetic held-out numbers,
 whole-patient interval coverage misses and deferred real-data/retrieval/advanced
 sequence-model evaluation. Engineering execution is not full research acceptance.
 Only separately permitted real-data evaluation can support external validity.
+
+## Restart audit and correction (2026-11-07)
+
+The user requested a fresh start. Preserve prior commits and recheck requirements
+and evidence rather than erase history. Initial commit 15e1c94 passed backend and
+frontend CI, but both actual database runs failed the positive forecast assertion:
+Phase 02 assigns recording-delay warnings to normal ingestion, while the first
+forecast profile accepted only the accepted quality state. This is an integration
+bug, not a reason to weaken positive assertions or bypass quality checks.
+
+Policy v2 permits only the two explicit recording metadata warning flags and
+preserves them in hashed source lineage. Missing, invalid, quarantined, unknown
+or inconsistent quality still abstains. The output discloses warning retention.
+An added regression checks equivalent features, changed lineage hash, unknown
+warnings and inconsistent accepted-with-flags rejection. All 56 focused Phase 06,
+API and contract tests pass locally; hosted actual-service revalidation is required.
+New artifact filenames are content-addressed; the initial bundle stays preserved.

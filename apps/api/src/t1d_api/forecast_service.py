@@ -88,6 +88,7 @@ def canonical_cgm(session: Session, scope: Scope, cutoff: datetime) -> tuple[lis
                 value=float(value.glucose_value) if value.glucose_value is not None else None,
                 unit=value.glucose_unit,
                 quality=revision.quality_state,
+                quality_flags=tuple(revision.quality_flags),
                 valid_sensor=value.sensor_status == "valid",
             )
         )
@@ -170,6 +171,7 @@ class ForecastService:
                         "SYNTHETIC_QUALIFICATION_ONLY",
                         "NOT_FOR_TREATMENT_DECISIONS",
                         "NOMINAL_COVERAGE_NOT_A_GUARANTEE",
+                        "SOURCE_RECORDING_WARNINGS_PRESERVED",
                     ],
                     data=data,
                 )

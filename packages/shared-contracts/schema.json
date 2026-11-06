@@ -496,8 +496,8 @@
           "type": "string"
         },
         "policy_version": {
-          "const": "synthetic-research-grid5-fresh5-v1",
-          "default": "synthetic-research-grid5-fresh5-v1",
+          "const": "synthetic-research-grid5-fresh5-v2",
+          "default": "synthetic-research-grid5-fresh5-v2",
           "title": "Policy Version",
           "type": "string"
         },

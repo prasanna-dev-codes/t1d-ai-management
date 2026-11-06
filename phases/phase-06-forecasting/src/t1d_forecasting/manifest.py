@@ -1,3 +1,6 @@
 """Approved fictional artifact digest; regeneration requires review."""
 
-ARTIFACT_SHA256 = "cf1ca0b680e42d5849a7e9cd0ef351415d9f784f2439763925e238aeac40d440"
+ARTIFACT_SHA256 = "bb37755674b5bf201c7013cc71328bbc92e0b26d28bccc79385d36d8ea67c800"
+ARTIFACT_FILENAME = (
+    "synthetic-bb37755674b5bf201c7013cc71328bbc92e0b26d28bccc79385d36d8ea67c800.json"
+)

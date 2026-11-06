@@ -59,7 +59,8 @@ def test_forecast_models_positive_api_and_audit(case: Case) -> None:
             {"input_cutoff": datetime.now(UTC), "model_profile": profile}
         )
         result = service.forecast(case.scope, case.principal, query, uuid4())
-        assert result.status == "eligible" and result.data is not None
+        assert result.status == "eligible" and result.data is not None, result.reason_codes
+        assert "SOURCE_RECORDING_WARNINGS_PRESERVED" in result.warnings
         assert len(result.data.points) == 4 and len(result.data.source_revision_refs) == 12
         assert len(result.data.input_snapshot_ref) == 64
         assert result.data.evidence_refs == []

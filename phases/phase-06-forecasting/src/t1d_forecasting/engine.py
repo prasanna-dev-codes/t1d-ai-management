@@ -49,7 +49,17 @@ def snapshot(readings: list[Reading], cutoff: datetime) -> Snapshot:
     if not visible:
         raise Abstain("NO_CGM_HISTORY")
     # Do not substitute older accepted data for a questionable current observation.
-    if any(r.quality != "accepted" or not r.valid_sensor for r in visible):
+    recording_flags = {"SOURCE_RECORDED_AFTER_EVENT", "INGESTED_AFTER_SOURCE_RECORDING"}
+    if any(
+        r.quality == "quarantined"
+        or not r.valid_sensor
+        or (
+            r.quality == "warning"
+            and (not r.quality_flags or not set(r.quality_flags) <= recording_flags)
+        )
+        or (r.quality == "accepted" and bool(r.quality_flags))
+        for r in visible
+    ):
         raise Abstain("CGM_QUALITY_UNRESOLVED")
     grouped: dict[datetime, list[Reading]] = {}
     for row in visible:
@@ -127,9 +137,9 @@ def predict(
 
 def load_bundle() -> tuple[ModelBundle, str, UUID]:
     # A fixed package resource, never a request-controlled path or pickle.
-    from t1d_forecasting.manifest import ARTIFACT_SHA256
+    from t1d_forecasting.manifest import ARTIFACT_FILENAME, ARTIFACT_SHA256
 
-    path = files("t1d_forecasting").joinpath("artifacts/synthetic-v1.json")
+    path = files("t1d_forecasting").joinpath("artifacts/" + ARTIFACT_FILENAME)
     raw = path.read_bytes()
     actual = hashlib.sha256(raw).hexdigest()
     if actual != ARTIFACT_SHA256:

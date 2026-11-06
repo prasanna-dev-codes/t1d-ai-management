@@ -58,19 +58,25 @@ set. A new modeling/calibration decision needs a new version and untouched test 
 
 ## Serving, lineage and failure handling
 
-A fixed packaged JSON resource is checked against a code-pinned SHA-256 before
+A content-addressed packaged JSON resource is checked against a code-pinned SHA-256 before
 use; all coefficients and radii are finite and schema validated. LF line endings
 are enforced for digest stability. The generator and weights are authored here;
 no pretrained artifact or dataset license is introduced. Regeneration is explicit:
 `uv run python scripts/evaluate_forecasting.py --write-bundle`. This overwrites only
-the explicitly synthetic package artifact/manifest and must be reviewed. Normal
-evaluation does not modify artifacts. Floating math libraries can differ slightly
+the explicitly synthetic package artifact/manifest and must be reviewed. Prior artifact files are retained; new bundles use their SHA-256 in the filename.
+Normal evaluation does not modify artifacts. Floating math libraries can differ slightly
 across platforms; tests compare refitted parameters within 1e-8, while the frozen
 release file has exact byte integrity.
 
 Current principal expiry/roles, scoped grant and consent are checked before/after
 inference. Latest known revisions are resolved before time/quality filtering;
 quarantined or missing readings cause abstention, never revival of predecessors.
+Policy v2 explicitly permits only SOURCE_RECORDED_AFTER_EVENT and
+INGESTED_AFTER_SOURCE_RECORDING recording warnings, preserving their flags in
+input lineage and disclosing warning retention in the output. Unknown or
+inconsistent quality flags remain blocked. Phase 02 marks ordinary delayed
+ingestion as warning; treating every warning as invalid made the first API
+implementation unusable. Positive integration assertions remain unchanged.
 Recent source approval is checked again after prediction with ORM refresh enabled.
 Missing/irregular/stale/ambiguous history, nonsynthetic sources, withdrawn sources
 and nonpositive/nonfinite predicted intervals cannot yield eligible predictions.

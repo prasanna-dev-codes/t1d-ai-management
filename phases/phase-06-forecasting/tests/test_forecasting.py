@@ -137,3 +137,26 @@ def test_artifact_integrity_failure_is_closed(monkeypatch: pytest.MonkeyPatch) -
     monkeypatch.setattr(manifest, "ARTIFACT_SHA256", "0" * 64)
     with pytest.raises(ValueError, match="integrity"):
         load_bundle()
+
+
+def test_known_recording_warnings_preserved_unknown_quality_blocked() -> None:
+    example = examples(range(1, 2), 1)[0]
+    known = [
+        r.model_copy(
+            update={
+                "quality": "warning",
+                "quality_flags": ("INGESTED_AFTER_SOURCE_RECORDING",),
+            }
+        )
+        for r in example.readings
+    ]
+    state = snapshot(known, example.cutoff)
+    assert state.features == snapshot(list(example.readings), example.cutoff).features
+    assert all(r.quality_flags for r in state.readings)
+    assert state.sha256 != snapshot(list(example.readings), example.cutoff).sha256
+    unknown = [*known[:-1], known[-1].model_copy(update={"quality_flags": ("UNKNOWN_WARNING",)})]
+    with pytest.raises(Abstain, match="QUALITY"):
+        snapshot(unknown, example.cutoff)
+    forged = [r.model_copy(update={"quality": "accepted"}) for r in known]
+    with pytest.raises(Abstain, match="QUALITY"):
+        snapshot(forged, example.cutoff)
