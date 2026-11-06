@@ -32,6 +32,8 @@ from t1d_api.data.errors import DataError
 from t1d_api.data.router import router as data_router
 from t1d_api.data.service import failure_audit
 from t1d_api.db.session import Database
+from t1d_api.forecast_router import router as forecast_router
+from t1d_api.forecast_service import ForecastService
 from t1d_api.memory_router import router as memory_router
 from t1d_api.memory_service import MemoryService
 from t1d_api.observability import request_logger
@@ -116,6 +118,7 @@ def create_app(
     app.state.runtime = state
     app.state.authenticator = DenyAllAuthenticator()
     app.state.memory_service = MemoryService(db, graph)
+    app.state.forecast_service = ForecastService(db)
     app.state.vision_provider = (
         vision_provider
         if vision_provider is not None
@@ -297,4 +300,5 @@ def create_app(
     app.include_router(data_router)
     app.include_router(vision_router)
     app.include_router(memory_router)
+    app.include_router(forecast_router)
     return app

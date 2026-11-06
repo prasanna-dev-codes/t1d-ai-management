@@ -5,7 +5,7 @@ Each phase has its own folder in the same repository and workstream branch.
 | Phase | Folder | Status |
 | --- | --- | --- |
 | 05 | [Personalized memory and hybrid retrieval](phase-05-memory/README.md) | Research implementation; verification in docs/phase-05-review.md |
-| 06 | [Glucose forecasting](phase-06-forecasting/README.md) | Reserved; not started |
+| 06 | [Glucose forecasting](phase-06-forecasting/README.md) | Synthetic research implementation; see model card |
 | 07 | [Personalization](phase-07-personalization/README.md) | Reserved; not started |
 | 08 | [Safety research](phase-08-safety/README.md) | Reserved; not started |
 

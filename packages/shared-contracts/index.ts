@@ -53,6 +53,48 @@ export type Evidence = {
   readonly response: GlucoseResponse;
 };
 
+export type ForecastData = {
+  readonly prediction_id: string;
+  readonly model_version_id: string;
+  readonly artifact_sha256: string;
+  readonly input_snapshot_ref: string;
+  readonly source_revision_refs: Array<string>;
+  readonly points: Array<ForecastPoint>;
+  readonly evidence_refs: Array<string>;
+  readonly uncertainty_method: "synthetic-patient-max-split-residual-v1";
+  readonly nominal_coverage: number;
+};
+
+export type ForecastPoint = {
+  readonly horizon_minutes: 30 | 60 | 90 | 120;
+  readonly target_time: string;
+  readonly glucose_mg_dl: number;
+  readonly lower_mg_dl: number;
+  readonly upper_mg_dl: number;
+};
+
+export type ForecastRequest = {
+  readonly input_cutoff: string;
+  readonly horizons_minutes: Array<30 | 60 | 90 | 120>;
+  readonly model_profile: "persistence-v1" | "linear-v1" | "ridge-v1";
+};
+
+export type ForecastResult = {
+  readonly status: "eligible" | "abstained";
+  readonly experimental: true;
+  readonly review_required: true;
+  readonly input_cutoff: string;
+  readonly safety_evaluation_id: string;
+  readonly policy_version: "synthetic-research-grid5-fresh5-v1";
+  readonly model_profile: "persistence-v1" | "linear-v1" | "ridge-v1";
+  readonly feature_version: "cgm12-five-minute-age-aware-v1";
+  readonly reason_codes: Array<string>;
+  readonly assumptions: Array<string>;
+  readonly missing_data: Array<string>;
+  readonly warnings: Array<string>;
+  readonly data: ForecastData | null;
+};
+
 export type GlucoseResponse = {
   readonly unit: "mg/dL";
   readonly minimum: number;

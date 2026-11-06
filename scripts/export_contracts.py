@@ -8,6 +8,7 @@ from typing import Any
 from pydantic import BaseModel
 from t1d_api.contracts import ErrorResponse, LivenessResponse, ReadinessResponse, SessionResponse
 from t1d_api.data.schemas import CGMReceipt, EventReceipt, MealReceipt
+from t1d_forecasting.contracts import ForecastRequest, ForecastResult
 from t1d_memory.contracts import RebuildRequest, RebuildResult, RetrievalRequest, RetrievalResult
 from t1d_vision.contracts import VisionAvailability, VisionResult
 
@@ -62,6 +63,8 @@ def artifacts() -> dict[Path, str]:
         RebuildResult,
         RetrievalRequest,
         RetrievalResult,
+        ForecastRequest,
+        ForecastResult,
     ]
     for model in models:
         schema = model.model_json_schema(mode="serialization")
