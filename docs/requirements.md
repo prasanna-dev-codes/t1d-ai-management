@@ -52,3 +52,7 @@ Researchers operate approved synthetic/de-identified studies; qualified clinicia
 Three students, macOS development, finite compute, no assumed datasets, trained models, application, or clinical validation. Dataset permissions, exact software versions, clinical thresholds, evaluation targets, and study authorization remain unresolved. No architecture component establishes regulatory compliance by itself.
 
 Each requirement is accepted only with traceable tests/evaluation or documentation evidence at its assigned phase. Phase 00 acceptance is documentary coverage, consistent contracts, explicit unresolved decisions, and passed local checks; it does not assert FR implementation. See [Phase 00 review](phase-00-review.md) for gate status and [ML plan](ml-research-plan.md) for scientific evaluation.
+
+## Project-wide factor extension (user authorized 2026-11-07)
+
+- **FR-016 — Mandatory architecture requirement:** Support the eleven factors in [metabolic factor requirements](metabolic-factor-requirements.md), with source/derived status, units, temporal eligibility, missingness, phase ownership and evaluation evidence. Support does not mean every factor is available or required by every model. No guessed IOB, ISF, sleep duration, weight or treatment parameters. Acceptance follows the per-factor matrix and its assigned phase; unimplemented factors remain explicit.

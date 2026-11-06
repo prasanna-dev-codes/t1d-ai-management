@@ -142,3 +142,7 @@ EventRevision separates UUID identity from time-inclusive CGM keys, preserves or
 ## Phase 03 approved implementation refinement
 
 The user approved ephemeral synchronous vision transport and cloud-first planning in [ADR 007](decisions/007-ephemeral-vision-and-cloud-training.md). Shared dataset/image/metric/artifact/process logic lives in `services/vision/src/t1d_vision`; API scope/audits stay in the existing backend and the minimal web tester consumes generated contracts. No stored-image/job infrastructure, schema/grant change or default auth bypass is introduced. Dataset acquisition, cloud execution and substantial training remain gated; current artifacts are unavailable. See [inference](vision-inference.md) and [cloud workflow](vision-cloud-workflow.md).
+
+## Project-wide factor extension
+
+The user-approved [eleven-factor matrix](metabolic-factor-requirements.md) defines source, derivation, missingness and phase ownership across all tiers. Forecasting consumes declared versioned feature profiles; Phase 05 stores traceable context rather than substituting similarity for physiological parameters. IOB/ISF and clinical interpretations require their own reviewed definitions. See FR-016 for acceptance.

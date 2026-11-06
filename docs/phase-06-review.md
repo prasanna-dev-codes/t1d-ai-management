@@ -67,3 +67,15 @@ Five fictional parameter-validation tests pass. Verification output is committed
 as aggregate hashes only; raw records and trained weights remain external.
 NEXT_DECISIONS.md records the uncertainty/context/serving questions held for the
 user's return. No revised calibration target or live promotion was assumed.
+
+## Per-forecast interval and project-wide factor extension
+
+The user authorized revisions on 2026-11-07. Frozen v1 point artifacts were reused
+for exploratory v2 per-forecast intervals; validation residuals fit the scale
+learner and distinct calibration patients set quantiles. Previously inspected
+test sources are disclosed. Reports preserve external undercoverage. Local
+history-only inference completed on actual Ohio source data, with individual
+results outside Git. Six hand-calculation/invalid-input interval tests and three
+causal-feature/inference tests pass. The eleven-factor matrix is linked as FR-016
+and includes a concrete Prasanna handoff. Missing physiological parameters remain
+explicit; no treatment policy, Phase 07 implementation or live serving was added.

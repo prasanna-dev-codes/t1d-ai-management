@@ -57,3 +57,12 @@ paths, external output directory and required context-availability policy. Raw
 records and research weights are not included in Git. Aggregate reports are in
 results/. The existing synthetic HTTP API is intentionally unchanged; the new
 local-clock context artifacts are not silently substituted into it.
+
+## Exploratory uncertainty v2 and project-wide context
+
+See [the v2 report](UNCERTAINTY_V2.md) for per-forecast intervals, external coverage
+misses and history-only offline inference. The original v1 results remain intact.
+The [eleven-factor project matrix](../../docs/metabolic-factor-requirements.md)
+and [Prasanna handoff](../../docs/prasanna-phase-handoff.md) distinguish current
+features from later verified physiological/profile inputs. No IOB/ISF, sleep
+duration, BMI or clinical diagnosis is fabricated by this extension.

@@ -90,6 +90,43 @@ def _context(
     return output
 
 
+def causal_features(
+    inputs: list[OfflineEvent],
+    context: list[OfflineEvent],
+    context_times: list[datetime],
+    allow_event_time_replay: bool = False,
+) -> tuple[float, ...]:
+    """Exactly the training transform; no target readings are required."""
+    if len(inputs) != 12 or len({e.scope for e in inputs}) != 1:
+        raise ValueError("Twelve same-participant observations required")
+    if any(e.kind != "glucose" or e.glucose_type != "cgm" or e.value is None for e in inputs):
+        raise ValueError("Verified glucose inputs required")
+    if any(
+        not 295 <= (b.time - a.time).total_seconds() <= 305
+        for a, b in zip(inputs, inputs[1:], strict=False)
+    ):
+        raise ValueError("Unresolved cadence or clock change")
+    anchor = inputs[-1]
+    context_left = bisect_left(context_times, anchor.time - timedelta(minutes=120))
+    context_right = bisect_right(context_times, anchor.time)
+    if any(e.scope != anchor.scope for e in context[context_left:context_right]):
+        raise ValueError("Foreign context scope")
+    observed = [float(e.value) for e in inputs if e.value is not None]
+    offsets = [(e.time - anchor.time).total_seconds() / 60 for e in inputs]
+    mx, my = statistics.mean(offsets), statistics.mean(observed)
+    denominator = sum((x - mx) ** 2 for x in offsets)
+    slope = sum((x - mx) * (y - my) for x, y in zip(offsets, observed, strict=True)) / denominator
+    features = [v / 100 for v in observed] + [
+        my / 100,
+        statistics.pstdev(observed) / 100,
+        slope / 10,
+    ]
+    features.extend(_context(context, context_times, anchor, allow_event_time_replay))
+    if len(features) != len(FEATURE_NAMES) or not all(math.isfinite(v) for v in features):
+        raise ValueError("Invalid offline features")
+    return tuple(features)
+
+
 def make_windows(
     sources: tuple[SourceData, ...], stride: int = 6, *, allow_event_time_replay: bool = False
 ) -> tuple[list[Window], dict[str, int]]:
@@ -149,28 +186,13 @@ def make_windows(
                 ):
                     counts["horizon_alignment_excluded"] += 1
                     continue
-                observed = [float(e.value) for e in inputs if e.value is not None]
-                offsets = [(e.time - anchor.time).total_seconds() / 60 for e in inputs]
-                mx, my = statistics.mean(offsets), statistics.mean(observed)
-                denominator = sum((x - mx) ** 2 for x in offsets)
-                slope = (
-                    sum((x - mx) * (y - my) for x, y in zip(offsets, observed, strict=True))
-                    / denominator
-                )
-                features = [v / 100 for v in observed] + [
-                    my / 100,
-                    statistics.pstdev(observed) / 100,
-                    slope / 10,
-                ]
-                features.extend(_context(context, context_times, anchor, allow_event_time_replay))
-                if len(features) != len(FEATURE_NAMES) or not all(
-                    math.isfinite(v) for v in features
-                ):
-                    raise ValueError("Invalid offline features")
+                features = causal_features(inputs, context, context_times, allow_event_time_replay)
                 lineage = [(e.source_sha256, e.source_row) for e in inputs]
                 # Input fingerprint includes context features, masks and raw source hashes.
                 ref = hashlib.sha256(
-                    repr((lineage, features, FEATURE_VERSION, allow_event_time_replay)).encode()
+                    repr(
+                        (lineage, list(features), FEATURE_VERSION, allow_event_time_replay)
+                    ).encode()
                 ).hexdigest()
                 windows.append(
                     Window(

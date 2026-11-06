@@ -38,3 +38,15 @@ model-domain and uncertainty eligibility checks and appropriate evaluation.
 No Phase 07 work, deployment, personal-data collection, or treatment logic has
 been started. The user's lived experience can guide usability and scenario review;
 it does not substitute for held-out evaluation or qualified clinical review.
+
+## User authorization update, 2026-11-07
+
+The user subsequently granted full permission for the engineering/uncertainty
+revision and requested all eleven metabolic factors across the entire project.
+Per-forecast empirical/scaled interval research is now authorized and executed as
+exploratory v2, preserving the original whole-patient v1 results. It does not
+establish fresh independent validation or authorize unsupported clinical claims.
+The factor matrix and Prasanna handoff record cross-phase requirements and actual
+implementation gaps. Offline history-only inference is added; live promotion is
+still withheld because timestamp/availability assumptions and external coverage
+shortfalls remain unresolved. No dosing or clinical-parameter formula is added.
