@@ -64,5 +64,13 @@ See [the v2 report](UNCERTAINTY_V2.md) for per-forecast intervals, external cove
 misses and history-only offline inference. The original v1 results remain intact.
 The [eleven-factor project matrix](../../docs/metabolic-factor-requirements.md)
 and [Prasanna handoff](../../docs/prasanna-phase-handoff.md) distinguish current
-features from later verified physiological/profile inputs. No IOB/ISF, sleep
-duration, BMI or clinical diagnosis is fabricated by this extension.
+features from later verified physiological/profile inputs.
+
+## Offline history benchmark
+
+[History benchmark v4](HISTORY_RESULTS.md) documents the improved point model,
+held-out results, activity subgroup regression and source-specific factor
+coverage. It adds longer CGM trends, prior recorded-clock patterns, wearable
+sleep duration and reported activity and insulin metadata where the sources
+support them. Use the report commands to reproduce training or run a local
+forecast from observed history. The artifact requires explicit event-time replay.

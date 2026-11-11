@@ -1,5 +1,6 @@
 """Context availability and local elapsed-time semantics must be explicit."""
 
+from dataclasses import replace
 from datetime import datetime, timedelta
 
 from t1d_forecasting.datasets import OfflineEvent
@@ -31,8 +32,6 @@ def test_context_with_unknown_availability_needs_explicit_replay() -> None:
 
 
 def test_late_record_is_excluded_even_when_replay_allowed() -> None:
-    from dataclasses import replace
-
     anchor, meal = event(), event("carbohydrate")
     late = replace(meal, available_at=meal.time + timedelta(minutes=1))
     assert _context([late], [late.time], anchor, allow_event_time_replay=True)[:2] == [0.0, 0.0]
@@ -41,8 +40,6 @@ def test_late_record_is_excluded_even_when_replay_allowed() -> None:
 
 
 def test_context_does_not_include_future_exercise_duration_or_unavailable_mode() -> None:
-    from dataclasses import replace
-
     anchor = replace(event(), device_mode="sleep")
     exercise = event("exercise")
     strict = _context([], [], anchor)
@@ -74,6 +71,12 @@ def test_patient_partitions_and_official_test_calibration_exclusion() -> None:
                     )
     for external in (None, "ohio", "physiocgm", "azt1d"):
         parts = patient_partitions(windows, external)
+        augmented = patient_partitions(
+            windows + [replace(row, fit_only=True) for row in windows], external
+        )
+        assert augmented["fit"] and any(row.fit_only for row in augmented["fit"])
+        for role in ("validation", "calibration", "test"):
+            assert augmented[role] == parts[role]
         fit = {w.scope for w in parts["fit"]}
         calibration = {w.scope for w in parts["calibration"]}
         test = {w.scope for w in parts["test"]}

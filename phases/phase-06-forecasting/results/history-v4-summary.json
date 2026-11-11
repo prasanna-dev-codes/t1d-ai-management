@@ -1,0 +1,1974 @@
+{
+  "feature_version": "offline-causal-history-v4",
+  "context_policy": "event-time-replay",
+  "horizons_minutes": [
+    30,
+    60,
+    90,
+    120
+  ],
+  "runs": {
+    "standard": {
+      "external-azt1d": {
+        "fit_stride": 6,
+        "score_stride": 6,
+        "role_counts": {
+          "fit": 22051,
+          "validation": 4550,
+          "calibration": 28286,
+          "test": 40900
+        },
+        "validation_mae": {
+          "frozen-v1": 27.808558399643264,
+          "long-cgm": 26.6247545611495,
+          "long-context": 25.889091541720923,
+          "long-context-huber": 25.697757684178722,
+          "history-ensemble": 25.718533574737698,
+          "baseline-history-ensemble": 26.3510023887619
+        },
+        "selected_on_validation": "long-context-huber",
+        "test_selected_minus_frozen_mae_bootstrap_95": [
+          [
+            -0.7904254450445031,
+            -0.47767986579065236
+          ],
+          [
+            -0.9106035732831638,
+            -0.4458059141079305
+          ],
+          [
+            -1.0037140530388604,
+            -0.26088653846881166
+          ],
+          [
+            -1.1400101364250639,
+            -0.3432357367526291
+          ]
+        ],
+        "test_factor_observed_windows_by_dataset": {
+          "azt1d": {
+            "cgm": 40900,
+            "carbs": 18645,
+            "insulin_on_board": 0,
+            "insulin_sensitivity_factor": 0,
+            "physical_activity": 0,
+            "sleep_hours": 0,
+            "daily_routine": 21543,
+            "early_morning_pattern_proxy": 0,
+            "activity_after_insulin": 0,
+            "body_weight_bmi": 0,
+            "insulin_type": 0
+          }
+        },
+        "test_intervals": {
+          "30": {
+            "window_coverage": 0.8955501222493888,
+            "patient_macro_coverage": 0.8944421984837246,
+            "patient_bootstrap_coverage_ci95": [
+              0.8806862940773236,
+              0.9081777408065116
+            ],
+            "mean_width_mg_dl": 63.11318016052246,
+            "p95_width_mg_dl": 63.11318016052246,
+            "mean_interval_score": 94.40097290700096,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "60": {
+            "window_coverage": 0.8942053789731051,
+            "patient_macro_coverage": 0.8927360899611007,
+            "patient_bootstrap_coverage_ci95": [
+              0.8782320697997714,
+              0.9094376387258529
+            ],
+            "mean_width_mg_dl": 102.01000595092773,
+            "p95_width_mg_dl": 102.01000595092773,
+            "mean_interval_score": 149.00294427579783,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "90": {
+            "window_coverage": 0.8942053789731051,
+            "patient_macro_coverage": 0.8922560318756713,
+            "patient_bootstrap_coverage_ci95": [
+              0.8754566210350926,
+              0.9113494520647633
+            ],
+            "mean_width_mg_dl": 126.59806823730469,
+            "p95_width_mg_dl": 126.59806823730469,
+            "mean_interval_score": 180.68326473450767,
+            "nonpositive_lower_bounds": 6,
+            "nonpositive_point_predictions": 0
+          },
+          "120": {
+            "window_coverage": 0.9003911980440098,
+            "patient_macro_coverage": 0.8986962926514653,
+            "patient_bootstrap_coverage_ci95": [
+              0.8797864114735309,
+              0.9196430875470368
+            ],
+            "mean_width_mg_dl": 141.86241149902344,
+            "p95_width_mg_dl": 141.86241149902344,
+            "mean_interval_score": 197.7379947985146,
+            "nonpositive_lower_bounds": 1,
+            "nonpositive_point_predictions": 0
+          }
+        },
+        "frozen_model_sha256": "16b76cf2492dbebc133f980e02c387f13f784846321a820d2c8154c2e59ce157",
+        "artifact_sha256": {
+          "long-cgm.json": "f8413b6975e1ce60673104b97a22afd1ec00413e0c45eb9bba73716e84d331a8",
+          "long-context-huber.json": "478c94967e2fdb680f9701d2b1651c7927ff6321e3f7b965e1cbbe502c8fe537",
+          "long-context.json": "7c4fb69d15fa2bf2157c99976f9e4764c9ccb035217f7219388f53008644d701"
+        },
+        "test_balanced_mae_mg_dl": {
+          "frozen-v1": [
+            14.621013476869651,
+            23.725507271274733,
+            29.46480658065222,
+            32.8272908804185
+          ],
+          "long-cgm": [
+            14.108406686639068,
+            23.169630280262822,
+            28.588796704756888,
+            31.646169098238268
+          ],
+          "long-context": [
+            13.986971917812738,
+            22.908519308023326,
+            28.41063923120366,
+            31.564122054089957
+          ],
+          "long-context-huber": [
+            13.990118454436343,
+            23.05923275279565,
+            28.83115740503523,
+            32.087246832576916
+          ],
+          "history-ensemble": [
+            13.959631717033288,
+            22.91517211333875,
+            28.53042440959097,
+            31.676287875843375
+          ],
+          "baseline-history-ensemble": [
+            13.994622988125538,
+            22.9470477702888,
+            28.535724595698284,
+            31.734877445371
+          ]
+        },
+        "selected_relative_mean_mae_reduction_percent": 2.6539143838586687,
+        "test_subgroups": {
+          "falling_at_least_15_in_15min": {
+            "frozen-v1": {
+              "windows": 4426,
+              "patients": 24,
+              "balanced_mae": [
+                18.423070529903768,
+                28.33221992378926,
+                33.565540037169974,
+                36.06174177219937
+              ],
+              "balanced_rmse": [
+                24.537035347558625,
+                37.10345018124861,
+                43.5930026677258,
+                46.886735588176414
+              ],
+              "balanced_bias": [
+                0.6363835847615894,
+                -2.387713804522633,
+                -4.817104201890583,
+                -7.204762965609627
+              ]
+            },
+            "long-context-huber": {
+              "windows": 4426,
+              "patients": 24,
+              "balanced_mae": [
+                17.06739728145582,
+                27.390985379333465,
+                32.765800605251954,
+                35.673939337338034
+              ],
+              "balanced_rmse": [
+                23.367797040083442,
+                36.578732704655856,
+                43.49990810420778,
+                47.07842510451928
+              ],
+              "balanced_bias": [
+                -4.386066157687913,
+                -9.329552972605072,
+                -13.318845892833037,
+                -14.751890514615827
+              ]
+            }
+          },
+          "rising_at_least_15_in_15min": {
+            "frozen-v1": {
+              "windows": 4828,
+              "patients": 24,
+              "balanced_mae": [
+                21.06666438445807,
+                32.076748236807965,
+                37.8023577532601,
+                40.60869444822652
+              ],
+              "balanced_rmse": [
+                27.452848609232348,
+                41.30629987491963,
+                48.15511333651367,
+                51.52315449240318
+              ],
+              "balanced_bias": [
+                -3.695124885935019,
+                -4.993042795850129,
+                -2.5548834287569426,
+                1.2790071628515118
+              ]
+            },
+            "long-context-huber": {
+              "windows": 4828,
+              "patients": 24,
+              "balanced_mae": [
+                20.21067933598863,
+                31.431498829056995,
+                37.25223134035558,
+                39.501375055696734
+              ],
+              "balanced_rmse": [
+                26.421831419379437,
+                40.67474803617893,
+                48.03124393088074,
+                51.28617437913269
+              ],
+              "balanced_bias": [
+                -1.092901901558844,
+                -6.18225899851649,
+                -7.923911724365537,
+                -8.591188634213026
+              ]
+            }
+          },
+          "recorded_carbs_recent": {
+            "frozen-v1": {
+              "windows": 18645,
+              "patients": 23,
+              "balanced_mae": [
+                17.55928982345013,
+                27.90129533618607,
+                34.068670189751735,
+                37.126467460931394
+              ],
+              "balanced_rmse": [
+                23.542483718891358,
+                36.516528159220165,
+                43.958136621330254,
+                47.76275473878235
+              ],
+              "balanced_bias": [
+                -0.3599624747889736,
+                -1.2122976739116067,
+                -1.818389866173579,
+                -2.2541708801481914
+              ]
+            },
+            "long-context-huber": {
+              "windows": 18645,
+              "patients": 23,
+              "balanced_mae": [
+                16.822209392283206,
+                27.25357815137106,
+                33.621720357770194,
+                36.57012704918147
+              ],
+              "balanced_rmse": [
+                22.76788728044004,
+                36.19711335387936,
+                44.16369262240594,
+                47.977255672804844
+              ],
+              "balanced_bias": [
+                -2.144138269542766,
+                -6.440992759614307,
+                -9.871054443501407,
+                -11.04769949894771
+              ]
+            }
+          }
+        }
+      },
+      "external-ohio": {
+        "fit_stride": 6,
+        "score_stride": 6,
+        "role_counts": {
+          "fit": 38835,
+          "validation": 7801,
+          "calibration": 28041,
+          "test": 24801
+        },
+        "validation_mae": {
+          "frozen-v1": 24.6033029979952,
+          "long-cgm": 23.327017250049952,
+          "long-context": 23.14380411971662,
+          "long-context-huber": 22.905229781513718,
+          "history-ensemble": 22.970199124102162,
+          "baseline-history-ensemble": 23.447066536294543
+        },
+        "selected_on_validation": "long-context-huber",
+        "test_selected_minus_frozen_mae_bootstrap_95": [
+          [
+            -1.0571671647425471,
+            -0.7836633584079731
+          ],
+          [
+            -1.1270177340480052,
+            -0.7383849542978211
+          ],
+          [
+            -1.235848459494618,
+            -0.5514441845008788
+          ],
+          [
+            -1.2175377606107927,
+            -0.251884987902338
+          ]
+        ],
+        "test_factor_observed_windows_by_dataset": {
+          "ohio": {
+            "cgm": 24801,
+            "carbs": 12090,
+            "insulin_on_board": 0,
+            "insulin_sensitivity_factor": 0,
+            "physical_activity": 932,
+            "sleep_hours": 19774,
+            "daily_routine": 13515,
+            "early_morning_pattern_proxy": 13708,
+            "activity_after_insulin": 403,
+            "body_weight_bmi": 0,
+            "insulin_type": 24396
+          }
+        },
+        "test_intervals": {
+          "30": {
+            "window_coverage": 0.8841578968589976,
+            "patient_macro_coverage": 0.8839083604768847,
+            "patient_bootstrap_coverage_ci95": [
+              0.8679134738797553,
+              0.8979151723749546
+            ],
+            "mean_width_mg_dl": 60.892858314514164,
+            "p95_width_mg_dl": 60.89285831451417,
+            "mean_interval_score": 94.96994319016372,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "60": {
+            "window_coverage": 0.8689568968993185,
+            "patient_macro_coverage": 0.8678639756166772,
+            "patient_bootstrap_coverage_ci95": [
+              0.8488403991721648,
+              0.8848562690015415
+            ],
+            "mean_width_mg_dl": 99.29352498054504,
+            "p95_width_mg_dl": 99.29352498054504,
+            "mean_interval_score": 156.85681998969602,
+            "nonpositive_lower_bounds": 1,
+            "nonpositive_point_predictions": 0
+          },
+          "90": {
+            "window_coverage": 0.840570944719971,
+            "patient_macro_coverage": 0.8390720689974865,
+            "patient_bootstrap_coverage_ci95": [
+              0.8159837588094084,
+              0.8601028995535623
+            ],
+            "mean_width_mg_dl": 118.68714904785156,
+            "p95_width_mg_dl": 118.68714904785156,
+            "mean_interval_score": 201.43055367021688,
+            "nonpositive_lower_bounds": 2,
+            "nonpositive_point_predictions": 0
+          },
+          "120": {
+            "window_coverage": 0.8177896052578525,
+            "patient_macro_coverage": 0.8162592035631911,
+            "patient_bootstrap_coverage_ci95": [
+              0.7881058364955471,
+              0.8398493523107261
+            ],
+            "mean_width_mg_dl": 130.11697387695312,
+            "p95_width_mg_dl": 130.11697387695312,
+            "mean_interval_score": 236.53006340446444,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          }
+        },
+        "frozen_model_sha256": "0557940d4757c5dc158d2f015842d75b5f50e0b4c58eef14b12dd4ea564c2f97",
+        "artifact_sha256": {
+          "long-cgm.json": "b61c58f83438b4364015a6667ecd7dbec877414ed9cf90754e6b21b515a4e48a",
+          "long-context-huber.json": "7753a2acc4f38587a4d6c81443016393999349052fae4c1d8b5c486806ff268b",
+          "long-context.json": "fbd94d0103d4f7c16ad76c12cd187dbdc6ad3195bfead8ae9adcf333f70c2891"
+        },
+        "test_balanced_mae_mg_dl": {
+          "frozen-v1": [
+            15.527999160166036,
+            26.61544168934306,
+            34.8082406089038,
+            40.46204584605108
+          ],
+          "long-cgm": [
+            14.905956952150532,
+            26.13609292078782,
+            34.18757641585253,
+            39.55097074087386
+          ],
+          "long-context": [
+            14.81293082388713,
+            25.94580539236009,
+            34.12298852635952,
+            39.686759236868454
+          ],
+          "long-context-huber": [
+            14.609016489442583,
+            25.68718469160561,
+            33.92190668098599,
+            39.721359558859824
+          ],
+          "history-ensemble": [
+            14.685782467268579,
+            25.761533204959473,
+            33.948066731762474,
+            39.628402583141536
+          ],
+          "baseline-history-ensemble": [
+            14.937302508302439,
+            25.937082929613346,
+            34.07536901255263,
+            39.700535909005204
+          ]
+        },
+        "selected_relative_mean_mae_reduction_percent": 2.9589895179470083,
+        "test_subgroups": {
+          "falling_at_least_15_in_15min": {
+            "frozen-v1": {
+              "windows": 2699,
+              "patients": 12,
+              "balanced_mae": [
+                19.56376742826378,
+                30.35173246792786,
+                36.808543073847005,
+                39.91415717227511
+              ],
+              "balanced_rmse": [
+                26.518115528411844,
+                39.84928638909303,
+                47.27085979613519,
+                51.34842833645893
+              ],
+              "balanced_bias": [
+                3.654105503178224,
+                4.14855345070974,
+                2.4103723698713653,
+                -0.322847116966561
+              ]
+            },
+            "long-context-huber": {
+              "windows": 2699,
+              "patients": 12,
+              "balanced_mae": [
+                18.461159312624385,
+                29.57639828496196,
+                36.052400131747056,
+                39.428036534505445
+              ],
+              "balanced_rmse": [
+                25.589668442615768,
+                39.180201697241706,
+                46.86592799424898,
+                51.26802990245571
+              ],
+              "balanced_bias": [
+                0.7926850422033536,
+                1.0562716519807736,
+                -0.8382921412679213,
+                -3.7750166588576146
+              ]
+            }
+          },
+          "rising_at_least_15_in_15min": {
+            "frozen-v1": {
+              "windows": 2922,
+              "patients": 12,
+              "balanced_mae": [
+                22.534250759237228,
+                36.51369187959948,
+                45.26584239653027,
+                50.29318628191065
+              ],
+              "balanced_rmse": [
+                29.602584661346366,
+                46.98568384209974,
+                57.64495058651374,
+                63.735285328471235
+              ],
+              "balanced_bias": [
+                -7.27145985693527,
+                -10.958630062841994,
+                -14.515863167486462,
+                -14.2181398655366
+              ]
+            },
+            "long-context-huber": {
+              "windows": 2922,
+              "patients": 12,
+              "balanced_mae": [
+                21.324882275970797,
+                35.603670873658494,
+                44.57962271441885,
+                50.27149857114544
+              ],
+              "balanced_rmse": [
+                28.26324849403323,
+                46.15018279644717,
+                57.135818482489164,
+                64.29099995039523
+              ],
+              "balanced_bias": [
+                -4.5756060245444425,
+                -8.925214230914433,
+                -13.17705670186851,
+                -17.20330363546047
+              ]
+            }
+          },
+          "recorded_carbs_recent": {
+            "frozen-v1": {
+              "windows": 12090,
+              "patients": 12,
+              "balanced_mae": [
+                17.561858148644646,
+                28.98402066986932,
+                36.456322822176595,
+                40.969074018933235
+              ],
+              "balanced_rmse": [
+                23.699154058737605,
+                38.169505470404744,
+                47.36744334829777,
+                52.98513096165592
+              ],
+              "balanced_bias": [
+                -1.4141416929239834,
+                -2.845345930880403,
+                -4.606443715468377,
+                -5.711565273798071
+              ]
+            },
+            "long-context-huber": {
+              "windows": 12090,
+              "patients": 12,
+              "balanced_mae": [
+                16.584797456885138,
+                28.187610781022144,
+                35.95748628415842,
+                40.83462523083379
+              ],
+              "balanced_rmse": [
+                22.591217801419457,
+                37.31924552687409,
+                46.89669175149945,
+                53.062505712474675
+              ],
+              "balanced_bias": [
+                -1.5011650416768958,
+                -3.7818780390841775,
+                -5.576906235561925,
+                -8.623036773086959
+              ]
+            }
+          },
+          "recorded_sleep_recent": {
+            "frozen-v1": {
+              "windows": 19774,
+              "patients": 12,
+              "balanced_mae": [
+                15.52220777931054,
+                26.70494409458985,
+                34.89982031268972,
+                40.47577415664976
+              ],
+              "balanced_rmse": [
+                21.674327155578002,
+                35.63301723889401,
+                45.45145016868357,
+                52.054268022751856
+              ],
+              "balanced_bias": [
+                -1.8373112922079242,
+                -4.351081983916204,
+                -7.1917309753040275,
+                -9.359639767608266
+              ]
+            },
+            "long-context-huber": {
+              "windows": 19774,
+              "patients": 12,
+              "balanced_mae": [
+                14.554530438724315,
+                25.79322438084214,
+                33.94606160526375,
+                39.670765342066325
+              ],
+              "balanced_rmse": [
+                20.604153293420207,
+                34.74858344531431,
+                44.64347387552523,
+                51.58074298365649
+              ],
+              "balanced_bias": [
+                -2.0001388790586354,
+                -5.0103036480373895,
+                -7.844405874993852,
+                -10.967522647460417
+              ]
+            }
+          },
+          "recorded_activity_after_bolus": {
+            "frozen-v1": {
+              "windows": 403,
+              "patients": 10,
+              "balanced_mae": [
+                18.103066392617635,
+                26.59374899147563,
+                33.297199420786185,
+                37.37617748533933
+              ],
+              "balanced_rmse": [
+                23.292920477598173,
+                35.5206533456012,
+                43.2946037355292,
+                45.84565384878261
+              ],
+              "balanced_bias": [
+                0.21704955308991059,
+                -0.15442526228107245,
+                -0.4268944786032263,
+                0.689446163353974
+              ]
+            },
+            "long-context-huber": {
+              "windows": 403,
+              "patients": 10,
+              "balanced_mae": [
+                17.491829450122502,
+                26.346918438646608,
+                33.45343158662602,
+                36.15588189857304
+              ],
+              "balanced_rmse": [
+                22.974691805062175,
+                35.00484653585448,
+                43.62236322537731,
+                45.73183021280148
+              ],
+              "balanced_bias": [
+                -0.5385633622730441,
+                1.3710424216032642,
+                2.6485613437465427,
+                1.5690269789439828
+              ]
+            }
+          }
+        }
+      },
+      "external-physiocgm": {
+        "fit_stride": 6,
+        "score_stride": 6,
+        "role_counts": {
+          "fit": 34978,
+          "validation": 6777,
+          "calibration": 17135,
+          "test": 35813
+        },
+        "validation_mae": {
+          "frozen-v1": 27.412565077610132,
+          "long-cgm": 27.12545011977789,
+          "long-context": 26.295553213170344,
+          "long-context-huber": 26.132339690439437,
+          "history-ensemble": 26.140275322621108,
+          "baseline-history-ensemble": 26.441384237980003
+        },
+        "selected_on_validation": "long-context-huber",
+        "test_selected_minus_frozen_mae_bootstrap_95": [
+          [
+            -0.904745341142731,
+            -0.5059456203092202
+          ],
+          [
+            -1.5163618446103209,
+            -0.22868637487024898
+          ],
+          [
+            -1.8974527198667999,
+            1.0779970630561024
+          ],
+          [
+            -2.2484294938076053,
+            1.0420897379881793
+          ]
+        ],
+        "test_factor_observed_windows_by_dataset": {
+          "physiocgm": {
+            "cgm": 35813,
+            "carbs": 0,
+            "insulin_on_board": 0,
+            "insulin_sensitivity_factor": 0,
+            "physical_activity": 0,
+            "sleep_hours": 0,
+            "daily_routine": 24857,
+            "early_morning_pattern_proxy": 0,
+            "activity_after_insulin": 0,
+            "body_weight_bmi": 0,
+            "insulin_type": 0
+          }
+        },
+        "test_intervals": {
+          "30": {
+            "window_coverage": 0.8897886242425934,
+            "patient_macro_coverage": 0.8891735770749415,
+            "patient_bootstrap_coverage_ci95": [
+              0.8640980717073922,
+              0.9116922467106244
+            ],
+            "mean_width_mg_dl": 61.495088195800804,
+            "p95_width_mg_dl": 61.495088195800804,
+            "mean_interval_score": 95.11203014883037,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "60": {
+            "window_coverage": 0.8917152989138023,
+            "patient_macro_coverage": 0.8902996514367585,
+            "patient_bootstrap_coverage_ci95": [
+              0.8710865409389221,
+              0.9080694785439849
+            ],
+            "mean_width_mg_dl": 100.7345085144043,
+            "p95_width_mg_dl": 100.7345085144043,
+            "mean_interval_score": 143.20065073793614,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "90": {
+            "window_coverage": 0.892385446625527,
+            "patient_macro_coverage": 0.8935016979510596,
+            "patient_bootstrap_coverage_ci95": [
+              0.8809725122340423,
+              0.9058959911386792
+            ],
+            "mean_width_mg_dl": 126.55126876831059,
+            "p95_width_mg_dl": 126.55126876831054,
+            "mean_interval_score": 168.64315283838215,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "120": {
+            "window_coverage": 0.8963504872532321,
+            "patient_macro_coverage": 0.8969945084295132,
+            "patient_bootstrap_coverage_ci95": [
+              0.8865217758282626,
+              0.9070795592799329
+            ],
+            "mean_width_mg_dl": 142.8824281692505,
+            "p95_width_mg_dl": 142.8824281692505,
+            "mean_interval_score": 182.41569130094805,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          }
+        },
+        "frozen_model_sha256": "49e15c4975e348cd78764e4d155c06d072f9299184295fbbf3d440cb9b01a5f0",
+        "artifact_sha256": {
+          "long-cgm.json": "d7d14091fcb1af89d0db00283fd6bafb0d43da022112c6ccf4ca04868ddcee01",
+          "long-context-huber.json": "83488f4c0bcacaa457477c29f856efb9fa89909d5546b827b0a8e050cec285da",
+          "long-context.json": "496787f3f4e922135dc695452b675d8ce13420e843cfbe9312d87b3f6eb7a694"
+        },
+        "test_balanced_mae_mg_dl": {
+          "frozen-v1": [
+            15.331914586475753,
+            25.493860976603674,
+            32.195390133137515,
+            36.44806011997824
+          ],
+          "long-cgm": [
+            14.712700352790023,
+            24.77476748355415,
+            31.258077007774887,
+            35.2933601704728
+          ],
+          "long-context": [
+            15.038803248842568,
+            25.797715396854024,
+            32.9397524264038,
+            37.38406872272572
+          ],
+          "long-context-huber": [
+            14.619544613541814,
+            24.57428358716602,
+            31.693753628279687,
+            35.76457469219849
+          ],
+          "history-ensemble": [
+            14.79889127238066,
+            25.12073556215471,
+            32.25864896918988,
+            36.508000809561814
+          ],
+          "baseline-history-ensemble": [
+            14.907053854908838,
+            25.03767242630695,
+            31.825062856293066,
+            36.011003035747784
+          ]
+        },
+        "selected_relative_mean_mae_reduction_percent": 2.573389255295533,
+        "test_subgroups": {
+          "falling_at_least_15_in_15min": {
+            "frozen-v1": {
+              "windows": 3669,
+              "patients": 10,
+              "balanced_mae": [
+                19.47738371892243,
+                28.683678475781807,
+                33.08967401459014,
+                35.5387816446659
+              ],
+              "balanced_rmse": [
+                25.83142449902009,
+                37.079468394723065,
+                41.74983755744972,
+                44.30554223099225
+              ],
+              "balanced_bias": [
+                6.171924114911012,
+                7.455986116042874,
+                9.329382887668485,
+                11.995120154335355
+              ]
+            },
+            "long-context-huber": {
+              "windows": 3669,
+              "patients": 10,
+              "balanced_mae": [
+                19.092948898996696,
+                27.171243725650804,
+                31.879392380737027,
+                35.39207997560071
+              ],
+              "balanced_rmse": [
+                25.65378756676453,
+                35.119758932621316,
+                40.16100486135236,
+                44.04971483509495
+              ],
+              "balanced_bias": [
+                5.7684855412820495,
+                5.325459231217159,
+                7.536889714712895,
+                10.928238671134594
+              ]
+            }
+          },
+          "rising_at_least_15_in_15min": {
+            "frozen-v1": {
+              "windows": 4067,
+              "patients": 10,
+              "balanced_mae": [
+                21.416047204068104,
+                34.66798446984216,
+                42.06458391057273,
+                46.24244550958856
+              ],
+              "balanced_rmse": [
+                28.19206382582721,
+                44.06602411622804,
+                52.3052547438136,
+                55.93351323117146
+              ],
+              "balanced_bias": [
+                4.288287003007482,
+                13.110792605728063,
+                19.07242410579763,
+                22.370703215666403
+              ]
+            },
+            "long-context-huber": {
+              "windows": 4067,
+              "patients": 10,
+              "balanced_mae": [
+                20.923830483187825,
+                34.66891348383494,
+                42.34130173729097,
+                44.863446762699304
+              ],
+              "balanced_rmse": [
+                27.572317373412762,
+                44.20282749085893,
+                52.49475641227879,
+                54.63916091887839
+              ],
+              "balanced_bias": [
+                6.919163684023828,
+                15.41549271027275,
+                19.421241212209623,
+                18.540300681892372
+              ]
+            }
+          }
+        }
+      },
+      "pooled": {
+        "fit_stride": 6,
+        "score_stride": 6,
+        "role_counts": {
+          "fit": 42099,
+          "validation": 8356,
+          "calibration": 22493,
+          "test": 22800
+        },
+        "validation_mae": {
+          "frozen-v1": 26.234425462301786,
+          "long-cgm": 25.34041149106527,
+          "long-context": 24.691836672080374,
+          "long-context-huber": 24.54092673316499,
+          "history-ensemble": 24.553669831968392,
+          "baseline-history-ensemble": 25.01608189116548
+        },
+        "selected_on_validation": "long-context-huber",
+        "test_selected_minus_frozen_mae_bootstrap_95": [
+          [
+            -0.9718425872564609,
+            -0.5895127629434114
+          ],
+          [
+            -1.687985787952921,
+            -0.9645026488764744
+          ],
+          [
+            -2.7922722159709346,
+            -1.0759136691325644
+          ],
+          [
+            -3.7420926446807186,
+            -1.1350138966115464
+          ]
+        ],
+        "test_factor_observed_windows_by_dataset": {
+          "azt1d": {
+            "cgm": 4572,
+            "carbs": 2375,
+            "insulin_on_board": 0,
+            "insulin_sensitivity_factor": 0,
+            "physical_activity": 0,
+            "sleep_hours": 0,
+            "daily_routine": 2848,
+            "early_morning_pattern_proxy": 0,
+            "activity_after_insulin": 0,
+            "body_weight_bmi": 0,
+            "insulin_type": 0
+          },
+          "ohio": {
+            "cgm": 6550,
+            "carbs": 4303,
+            "insulin_on_board": 0,
+            "insulin_sensitivity_factor": 0,
+            "physical_activity": 394,
+            "sleep_hours": 6367,
+            "daily_routine": 4334,
+            "early_morning_pattern_proxy": 3962,
+            "activity_after_insulin": 193,
+            "body_weight_bmi": 0,
+            "insulin_type": 6522
+          },
+          "physiocgm": {
+            "cgm": 11678,
+            "carbs": 0,
+            "insulin_on_board": 0,
+            "insulin_sensitivity_factor": 0,
+            "physical_activity": 0,
+            "sleep_hours": 0,
+            "daily_routine": 7154,
+            "early_morning_pattern_proxy": 0,
+            "activity_after_insulin": 0,
+            "body_weight_bmi": 0,
+            "insulin_type": 0
+          }
+        },
+        "test_intervals": {
+          "30": {
+            "window_coverage": 0.9071491228070175,
+            "patient_macro_coverage": 0.9055922505282782,
+            "patient_bootstrap_coverage_ci95": [
+              0.8870917703723684,
+              0.9262772132890014
+            ],
+            "mean_width_mg_dl": 63.47639846801758,
+            "p95_width_mg_dl": 63.47639846801758,
+            "mean_interval_score": 91.03638214195017,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "60": {
+            "window_coverage": 0.9096052631578947,
+            "patient_macro_coverage": 0.9043526088987073,
+            "patient_bootstrap_coverage_ci95": [
+              0.8808205753277939,
+              0.9280279652069806
+            ],
+            "mean_width_mg_dl": 102.78982543945312,
+            "p95_width_mg_dl": 102.78982543945312,
+            "mean_interval_score": 140.11550790373366,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "90": {
+            "window_coverage": 0.9123245614035088,
+            "patient_macro_coverage": 0.903062964672997,
+            "patient_bootstrap_coverage_ci95": [
+              0.8750881597792067,
+              0.9311408772001438
+            ],
+            "mean_width_mg_dl": 125.58307266235352,
+            "p95_width_mg_dl": 125.58307266235352,
+            "mean_interval_score": 164.50327926813642,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "120": {
+            "window_coverage": 0.9182456140350878,
+            "patient_macro_coverage": 0.9072556861697044,
+            "patient_bootstrap_coverage_ci95": [
+              0.8777128715740067,
+              0.9360766151978224
+            ],
+            "mean_width_mg_dl": 141.39180755615234,
+            "p95_width_mg_dl": 141.39180755615234,
+            "mean_interval_score": 178.8401482357566,
+            "nonpositive_lower_bounds": 1,
+            "nonpositive_point_predictions": 0
+          }
+        },
+        "frozen_model_sha256": "7a62f53dfff9743819059d2181cb20b24a8b8940cb6754cfd8351747f686ab43",
+        "artifact_sha256": {
+          "long-cgm.json": "123f693f4901349a14c4c6a3f81543958538c10a91a03568ebe407d35176616b",
+          "long-context-huber.json": "0447f5e2b14bdeeba6d00154272df90af6e636122311f95a09b9bf3a2c829b8a",
+          "long-context.json": "cd2f1cc73c475af92f10f69fbcf3589181e25fdd5b535fbcd02ea1eb83f69949"
+        },
+        "test_balanced_mae_mg_dl": {
+          "frozen-v1": [
+            14.417761837883457,
+            23.973995483569283,
+            30.09329354657937,
+            34.11699349548545
+          ],
+          "long-cgm": [
+            13.803922778828644,
+            23.16135061290898,
+            28.81499933831051,
+            32.343222785085416
+          ],
+          "long-context": [
+            13.760599676840778,
+            22.95706496275475,
+            28.812379561585942,
+            32.509988321604055
+          ],
+          "long-context-huber": [
+            13.647706442057181,
+            22.705195754105127,
+            28.350935255806938,
+            31.943726004014138
+          ],
+          "history-ensemble": [
+            13.679635033048495,
+            22.768288735266868,
+            28.490966261725223,
+            32.11830628792619
+          ],
+          "baseline-history-ensemble": [
+            13.864188734508799,
+            23.059519630689007,
+            28.834527521128724,
+            32.53886855934822
+          ]
+        },
+        "selected_relative_mean_mae_reduction_percent": 5.803471991686182,
+        "test_subgroups": {
+          "falling_at_least_15_in_15min": {
+            "frozen-v1": {
+              "windows": 2263,
+              "patients": 9,
+              "balanced_mae": [
+                18.91338134045687,
+                28.80200746414289,
+                32.66918812507276,
+                35.4169532669456
+              ],
+              "balanced_rmse": [
+                25.268399630376,
+                37.24921198770314,
+                42.45899811342096,
+                45.174477021307325
+              ],
+              "balanced_bias": [
+                3.841095422728423,
+                3.1197258489562625,
+                2.5469337450718825,
+                2.508156484024198
+              ]
+            },
+            "long-context-huber": {
+              "windows": 2263,
+              "patients": 9,
+              "balanced_mae": [
+                17.877057914872022,
+                27.307560706501565,
+                31.211494004591476,
+                34.290674605196685
+              ],
+              "balanced_rmse": [
+                24.18555336066558,
+                35.786470515244474,
+                40.73929724555106,
+                44.016184697564775
+              ],
+              "balanced_bias": [
+                1.6880178207145915,
+                0.6367568623818324,
+                0.07430362902065688,
+                1.2609796388884846
+              ]
+            }
+          },
+          "rising_at_least_15_in_15min": {
+            "frozen-v1": {
+              "windows": 2485,
+              "patients": 9,
+              "balanced_mae": [
+                21.30854661755646,
+                34.330632484077405,
+                40.48856887120597,
+                43.53003087374237
+              ],
+              "balanced_rmse": [
+                28.02769063529024,
+                43.66094868790665,
+                50.773314021465914,
+                54.08819343172333
+              ],
+              "balanced_bias": [
+                0.3603055865123416,
+                2.9357726474317762,
+                5.752388722221228,
+                8.523310080670518
+              ]
+            },
+            "long-context-huber": {
+              "windows": 2485,
+              "patients": 9,
+              "balanced_mae": [
+                20.413798170488494,
+                33.22808430123452,
+                39.165649865800965,
+                41.922026032153376
+              ],
+              "balanced_rmse": [
+                27.272264645952838,
+                42.7124687039468,
+                49.69628452452008,
+                52.97737404850368
+              ],
+              "balanced_bias": [
+                2.1590687825450505,
+                4.559290488543326,
+                5.809434369276337,
+                6.677910416660271
+              ]
+            }
+          },
+          "recorded_carbs_recent": {
+            "frozen-v1": {
+              "windows": 6678,
+              "patients": 6,
+              "balanced_mae": [
+                16.970130812591698,
+                27.65693754473068,
+                34.22608785402448,
+                38.18773167275226
+              ],
+              "balanced_rmse": [
+                22.938446313579863,
+                36.298308436952496,
+                44.20881719552211,
+                48.92208299571364
+              ],
+              "balanced_bias": [
+                1.059304774345504,
+                1.4769574460559636,
+                1.740936389804196,
+                1.244607694443548
+              ]
+            },
+            "long-context-huber": {
+              "windows": 6678,
+              "patients": 6,
+              "balanced_mae": [
+                16.104614429440996,
+                26.680113877176666,
+                33.458351164233996,
+                37.64238319670286
+              ],
+              "balanced_rmse": [
+                21.985997561083853,
+                35.304726649233814,
+                43.451027475921045,
+                48.38285746893868
+              ],
+              "balanced_bias": [
+                0.5510543038469129,
+                0.9457119462055511,
+                1.3617630585883318,
+                1.877993305788348
+              ]
+            }
+          },
+          "recorded_sleep_recent": {
+            "frozen-v1": {
+              "windows": 6367,
+              "patients": 3,
+              "balanced_mae": [
+                15.855507029812626,
+                26.1775189745501,
+                33.13669179418331,
+                37.749875620249774
+              ],
+              "balanced_rmse": [
+                22.34902019472225,
+                34.92198611026584,
+                43.16241182201503,
+                48.43033691465562
+              ],
+              "balanced_bias": [
+                1.2122781387925117,
+                1.6135265079190153,
+                1.1402753986601017,
+                0.11263016336322282
+              ]
+            },
+            "long-context-huber": {
+              "windows": 6367,
+              "patients": 3,
+              "balanced_mae": [
+                15.062119736013724,
+                25.1640396649446,
+                32.04899430634602,
+                36.79827935463403
+              ],
+              "balanced_rmse": [
+                21.48445718762404,
+                34.013428453423074,
+                42.10989745343627,
+                47.57141541523134
+              ],
+              "balanced_bias": [
+                1.7557066069957503,
+                3.2037578022421402,
+                4.50613589114997,
+                6.106589452722729
+              ]
+            }
+          },
+          "recorded_activity_after_bolus": {
+            "frozen-v1": {
+              "windows": 193,
+              "patients": 3,
+              "balanced_mae": [
+                18.747987074654908,
+                30.817886636074384,
+                36.449395974305254,
+                35.64706323960093
+              ],
+              "balanced_rmse": [
+                24.972563571663436,
+                39.08150139062122,
+                45.00517879312482,
+                46.631545510470254
+              ],
+              "balanced_bias": [
+                0.9771777239002368,
+                2.7523727414184975,
+                2.5227296427684367,
+                -0.38613304131697435
+              ]
+            },
+            "long-context-huber": {
+              "windows": 193,
+              "patients": 3,
+              "balanced_mae": [
+                18.599237236441887,
+                29.62378154856257,
+                32.57477372660818,
+                38.9448257167049
+              ],
+              "balanced_rmse": [
+                24.978362135139655,
+                38.5827277380213,
+                43.12595956625921,
+                50.72376072245637
+              ],
+              "balanced_bias": [
+                -1.577079619546704,
+                -4.511041395778583,
+                -6.863609662775569,
+                -13.400634871303215
+              ]
+            }
+          }
+        }
+      }
+    },
+    "denser_fit_sensitivity": {
+      "external-azt1d": {
+        "fit_stride": 3,
+        "score_stride": 6,
+        "role_counts": {
+          "fit": 43991,
+          "validation": 4550,
+          "calibration": 28286,
+          "test": 40900
+        },
+        "validation_mae": {
+          "frozen-v1": 27.808558399643264,
+          "long-cgm": 26.642251676412975,
+          "long-context": 25.857094325368585,
+          "long-context-huber": 25.699651602663067,
+          "history-ensemble": 25.71382249913583,
+          "baseline-history-ensemble": 26.3215517203953
+        },
+        "selected_on_validation": "long-context-huber",
+        "test_selected_minus_frozen_mae_bootstrap_95": [
+          [
+            -0.8167800353698916,
+            -0.5289187055136415
+          ],
+          [
+            -0.9025246874532835,
+            -0.4505500034502909
+          ],
+          [
+            -0.9805381349578802,
+            -0.2309997372980454
+          ],
+          [
+            -1.1934994401073995,
+            -0.34400518931062074
+          ]
+        ],
+        "test_factor_observed_windows_by_dataset": {
+          "azt1d": {
+            "cgm": 40900,
+            "carbs": 18645,
+            "insulin_on_board": 0,
+            "insulin_sensitivity_factor": 0,
+            "physical_activity": 0,
+            "sleep_hours": 0,
+            "daily_routine": 21543,
+            "early_morning_pattern_proxy": 0,
+            "activity_after_insulin": 0,
+            "body_weight_bmi": 0,
+            "insulin_type": 0
+          }
+        },
+        "test_intervals": {
+          "30": {
+            "window_coverage": 0.8944743276283619,
+            "patient_macro_coverage": 0.8932913404921982,
+            "patient_bootstrap_coverage_ci95": [
+              0.8784142239233267,
+              0.9072162258934808
+            ],
+            "mean_width_mg_dl": 62.762386322021484,
+            "p95_width_mg_dl": 62.762386322021484,
+            "mean_interval_score": 94.13329739783208,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "60": {
+            "window_coverage": 0.8927383863080685,
+            "patient_macro_coverage": 0.8915993487971509,
+            "patient_bootstrap_coverage_ci95": [
+              0.8765530982592579,
+              0.9084355947684182
+            ],
+            "mean_width_mg_dl": 102.05708312988281,
+            "p95_width_mg_dl": 102.05708312988281,
+            "mean_interval_score": 149.2237916566762,
+            "nonpositive_lower_bounds": 1,
+            "nonpositive_point_predictions": 0
+          },
+          "90": {
+            "window_coverage": 0.8945721271393643,
+            "patient_macro_coverage": 0.8927546875287712,
+            "patient_bootstrap_coverage_ci95": [
+              0.8758395066392031,
+              0.9117378628839027
+            ],
+            "mean_width_mg_dl": 126.57213592529297,
+            "p95_width_mg_dl": 126.57213592529297,
+            "mean_interval_score": 180.46038727389572,
+            "nonpositive_lower_bounds": 4,
+            "nonpositive_point_predictions": 0
+          },
+          "120": {
+            "window_coverage": 0.903838630806846,
+            "patient_macro_coverage": 0.9022000033105847,
+            "patient_bootstrap_coverage_ci95": [
+              0.8835596786151271,
+              0.9230739935523729
+            ],
+            "mean_width_mg_dl": 143.8702392578125,
+            "p95_width_mg_dl": 143.8702392578125,
+            "mean_interval_score": 198.01204100777957,
+            "nonpositive_lower_bounds": 2,
+            "nonpositive_point_predictions": 0
+          }
+        },
+        "frozen_model_sha256": "16b76cf2492dbebc133f980e02c387f13f784846321a820d2c8154c2e59ce157",
+        "artifact_sha256": {
+          "long-cgm.json": "b35cd8d6b14bdaa1cd0baffeeead152623857adef87497518d069b5d7f648802",
+          "long-context-huber.json": "aac1b6d9009384e2c8547a01f931ff8e3287d6e6737968a738c028d99b0d74fe",
+          "long-context.json": "e74a0d562e9571240c742d30a1f5d850512585dd67cd35291d2100205661c91f"
+        },
+        "test_balanced_mae_mg_dl": {
+          "frozen-v1": [
+            14.621013476869651,
+            23.725507271274733,
+            29.46480658065222,
+            32.8272908804185
+          ],
+          "long-cgm": [
+            14.058012673492437,
+            23.05825067336147,
+            28.528796080856214,
+            31.591467742493595
+          ],
+          "long-context": [
+            13.975868943165503,
+            22.945993179242045,
+            28.415795888345116,
+            31.52072223332891
+          ],
+          "long-context-huber": [
+            13.955302669942077,
+            23.058859940391898,
+            28.85091124210254,
+            32.06141076997983
+          ],
+          "history-ensemble": [
+            13.93870599989651,
+            22.941028207729612,
+            28.542793050347406,
+            31.68316362061358
+          ],
+          "baseline-history-ensemble": [
+            13.996253898486096,
+            22.957464901582682,
+            28.508896612648968,
+            31.684849727151153
+          ]
+        },
+        "selected_relative_mean_mae_reduction_percent": 2.694923315779818
+      },
+      "external-ohio": {
+        "fit_stride": 3,
+        "score_stride": 6,
+        "role_counts": {
+          "fit": 77382,
+          "validation": 7801,
+          "calibration": 28041,
+          "test": 24801
+        },
+        "validation_mae": {
+          "frozen-v1": 24.6033029979952,
+          "long-cgm": 23.331887601544544,
+          "long-context": 23.14474790873578,
+          "long-context-huber": 22.937316209388978,
+          "history-ensemble": 22.993632011308534,
+          "baseline-history-ensemble": 23.462015902145534
+        },
+        "selected_on_validation": "long-context-huber",
+        "test_selected_minus_frozen_mae_bootstrap_95": [
+          [
+            -1.08648696924279,
+            -0.8153808907804416
+          ],
+          [
+            -1.0883648073054302,
+            -0.7339482068768804
+          ],
+          [
+            -1.017364883120061,
+            -0.4970324728964349
+          ],
+          [
+            -1.072577222061537,
+            -0.12854248785799768
+          ]
+        ],
+        "test_factor_observed_windows_by_dataset": {
+          "ohio": {
+            "cgm": 24801,
+            "carbs": 12090,
+            "insulin_on_board": 0,
+            "insulin_sensitivity_factor": 0,
+            "physical_activity": 932,
+            "sleep_hours": 19774,
+            "daily_routine": 13515,
+            "early_morning_pattern_proxy": 13708,
+            "activity_after_insulin": 403,
+            "body_weight_bmi": 0,
+            "insulin_type": 24396
+          }
+        },
+        "test_intervals": {
+          "30": {
+            "window_coverage": 0.884803032135801,
+            "patient_macro_coverage": 0.8846447504947154,
+            "patient_bootstrap_coverage_ci95": [
+              0.8694534076603609,
+              0.8985303523790259
+            ],
+            "mean_width_mg_dl": 60.86906051635742,
+            "p95_width_mg_dl": 60.86906051635742,
+            "mean_interval_score": 94.85639228676641,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "60": {
+            "window_coverage": 0.8668198862949075,
+            "patient_macro_coverage": 0.8657674154825341,
+            "patient_bootstrap_coverage_ci95": [
+              0.8468328223584529,
+              0.8830893283137301
+            ],
+            "mean_width_mg_dl": 98.60562362670895,
+            "p95_width_mg_dl": 98.60562362670896,
+            "mean_interval_score": 156.7681663435241,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "90": {
+            "window_coverage": 0.839038748437563,
+            "patient_macro_coverage": 0.8376651689788431,
+            "patient_bootstrap_coverage_ci95": [
+              0.8140264528694536,
+              0.858727288611364
+            ],
+            "mean_width_mg_dl": 118.21114540100098,
+            "p95_width_mg_dl": 118.21114540100098,
+            "mean_interval_score": 202.50545072234598,
+            "nonpositive_lower_bounds": 1,
+            "nonpositive_point_predictions": 0
+          },
+          "120": {
+            "window_coverage": 0.816338050885045,
+            "patient_macro_coverage": 0.8148487479099948,
+            "patient_bootstrap_coverage_ci95": [
+              0.7874439240358811,
+              0.8386393503455861
+            ],
+            "mean_width_mg_dl": 130.30691680908203,
+            "p95_width_mg_dl": 130.30691680908205,
+            "mean_interval_score": 237.57452713251246,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          }
+        },
+        "frozen_model_sha256": "0557940d4757c5dc158d2f015842d75b5f50e0b4c58eef14b12dd4ea564c2f97",
+        "artifact_sha256": {
+          "long-cgm.json": "938aa5db08780a1e8e09e7876d0f5f6c684ecbb1cfa20cf4ea06e81f84a7aeca",
+          "long-context-huber.json": "d3bc0ed66a11090ca332377448ced45c639cdab4e9be2bbb5264766c81a8923e",
+          "long-context.json": "cd793c5e6b1dd913b4db259fe7b6b2b53c1733dba48d5802c3ef32a80447b31b"
+        },
+        "test_balanced_mae_mg_dl": {
+          "frozen-v1": [
+            15.527999160166036,
+            26.61544168934306,
+            34.8082406089038,
+            40.46204584605108
+          ],
+          "long-cgm": [
+            14.924799347763333,
+            26.23530927501942,
+            34.18273198119083,
+            39.64560528791801
+          ],
+          "long-context": [
+            14.779893645031894,
+            25.988990510853213,
+            34.16904265850736,
+            39.731700911351986
+          ],
+          "long-context-huber": [
+            14.576425682762697,
+            25.696695181037445,
+            34.03761270031889,
+            39.85795827513232
+          ],
+          "history-ensemble": [
+            14.6572220889717,
+            25.791616656043995,
+            34.048028273327006,
+            39.73212315227773
+          ],
+          "baseline-history-ensemble": [
+            14.928508142350674,
+            25.95663620719995,
+            34.125940066322464,
+            39.758367691468365
+          ]
+        },
+        "selected_relative_mean_mae_reduction_percent": 2.7637615632437607
+      },
+      "external-physiocgm": {
+        "fit_stride": 3,
+        "score_stride": 6,
+        "role_counts": {
+          "fit": 69643,
+          "validation": 6777,
+          "calibration": 17135,
+          "test": 35813
+        },
+        "validation_mae": {
+          "frozen-v1": 27.412565077610132,
+          "long-cgm": 27.071575535141132,
+          "long-context": 26.31440765845011,
+          "long-context-huber": 26.108492976893118,
+          "history-ensemble": 26.13863699036275,
+          "baseline-history-ensemble": 26.449816038885224
+        },
+        "selected_on_validation": "long-context-huber",
+        "test_selected_minus_frozen_mae_bootstrap_95": [
+          [
+            -0.9256359845078701,
+            -0.3956705385097991
+          ],
+          [
+            -1.4446487862733168,
+            0.05985320772014441
+          ],
+          [
+            -1.7849647840426102,
+            1.221075770061791
+          ],
+          [
+            -2.060415234326496,
+            1.4432671551005773
+          ]
+        ],
+        "test_factor_observed_windows_by_dataset": {
+          "physiocgm": {
+            "cgm": 35813,
+            "carbs": 0,
+            "insulin_on_board": 0,
+            "insulin_sensitivity_factor": 0,
+            "physical_activity": 0,
+            "sleep_hours": 0,
+            "daily_routine": 24857,
+            "early_morning_pattern_proxy": 0,
+            "activity_after_insulin": 0,
+            "body_weight_bmi": 0,
+            "insulin_type": 0
+          }
+        },
+        "test_intervals": {
+          "30": {
+            "window_coverage": 0.8905425404182838,
+            "patient_macro_coverage": 0.8899042806257416,
+            "patient_bootstrap_coverage_ci95": [
+              0.8650497045803613,
+              0.9124089347638589
+            ],
+            "mean_width_mg_dl": 61.50072174072265,
+            "p95_width_mg_dl": 61.50072174072267,
+            "mean_interval_score": 94.70366179948557,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "60": {
+            "window_coverage": 0.8907380001675369,
+            "patient_macro_coverage": 0.8892112559136361,
+            "patient_bootstrap_coverage_ci95": [
+              0.8704671725324279,
+              0.9065789747739189
+            ],
+            "mean_width_mg_dl": 100.73889541625977,
+            "p95_width_mg_dl": 100.73889541625977,
+            "mean_interval_score": 143.60287632463067,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "90": {
+            "window_coverage": 0.8897607014212716,
+            "patient_macro_coverage": 0.8908552363084468,
+            "patient_bootstrap_coverage_ci95": [
+              0.8787620985684279,
+              0.9028595644686306
+            ],
+            "mean_width_mg_dl": 126.44107818603516,
+            "p95_width_mg_dl": 126.44107818603516,
+            "mean_interval_score": 168.95240848832168,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "120": {
+            "window_coverage": 0.8945634266886326,
+            "patient_macro_coverage": 0.8951456334523492,
+            "patient_bootstrap_coverage_ci95": [
+              0.8838274711724899,
+              0.9048794108947433
+            ],
+            "mean_width_mg_dl": 143.24266529083252,
+            "p95_width_mg_dl": 143.24266529083252,
+            "mean_interval_score": 182.41118480119428,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          }
+        },
+        "frozen_model_sha256": "49e15c4975e348cd78764e4d155c06d072f9299184295fbbf3d440cb9b01a5f0",
+        "artifact_sha256": {
+          "long-cgm.json": "b4689b0f34323e885ab8dc8782820f56c313d8c613b272858bb4dc92250fa837",
+          "long-context-huber.json": "dbb2b42a7d35e48d3edcb27d0ce4e1fb3d432067f451f328987bba40c3a75ad7",
+          "long-context.json": "17127185bfe799ff3648303a339c6061d9a032fe64394b80ddbf57ba4e21e984"
+        },
+        "test_balanced_mae_mg_dl": {
+          "frozen-v1": [
+            15.331914586475753,
+            25.493860976603674,
+            32.195390133137515,
+            36.44806011997824
+          ],
+          "long-cgm": [
+            14.717281475844633,
+            24.840659883240637,
+            31.19569388499341,
+            35.359627849764045
+          ],
+          "long-context": [
+            15.054387602362118,
+            25.784289380907136,
+            32.75728106661392,
+            37.188848422811475
+          ],
+          "long-context-huber": [
+            14.664961221967971,
+            24.75343174252055,
+            31.813222742434963,
+            36.041448446873865
+          ],
+          "history-ensemble": [
+            14.836827647768931,
+            25.22048110868242,
+            32.24511527308354,
+            36.56690512671213
+          ],
+          "baseline-history-ensemble": [
+            14.933793168071325,
+            25.089222980383326,
+            31.826578437714886,
+            36.0544106942459
+          ]
+        },
+        "selected_relative_mean_mae_reduction_percent": 2.006190914408501
+      },
+      "pooled": {
+        "fit_stride": 3,
+        "score_stride": 6,
+        "role_counts": {
+          "fit": 83877,
+          "validation": 8356,
+          "calibration": 22493,
+          "test": 22800
+        },
+        "validation_mae": {
+          "frozen-v1": 26.234425462301786,
+          "long-cgm": 25.357719580605146,
+          "long-context": 24.631150996561658,
+          "long-context-huber": 24.517316990652862,
+          "history-ensemble": 24.51106880698546,
+          "baseline-history-ensemble": 24.97347502222989
+        },
+        "selected_on_validation": "history-ensemble",
+        "test_selected_minus_frozen_mae_bootstrap_95": [
+          [
+            -0.9554344341182297,
+            -0.6027525121878939
+          ],
+          [
+            -1.6330682341061016,
+            -0.8847047542280938
+          ],
+          [
+            -2.5502045332519194,
+            -0.8876144627355028
+          ],
+          [
+            -3.4423431149995576,
+            -0.8176731385701969
+          ]
+        ],
+        "test_factor_observed_windows_by_dataset": {
+          "azt1d": {
+            "cgm": 4572,
+            "carbs": 2375,
+            "insulin_on_board": 0,
+            "insulin_sensitivity_factor": 0,
+            "physical_activity": 0,
+            "sleep_hours": 0,
+            "daily_routine": 2848,
+            "early_morning_pattern_proxy": 0,
+            "activity_after_insulin": 0,
+            "body_weight_bmi": 0,
+            "insulin_type": 0
+          },
+          "ohio": {
+            "cgm": 6550,
+            "carbs": 4303,
+            "insulin_on_board": 0,
+            "insulin_sensitivity_factor": 0,
+            "physical_activity": 394,
+            "sleep_hours": 6367,
+            "daily_routine": 4334,
+            "early_morning_pattern_proxy": 3962,
+            "activity_after_insulin": 193,
+            "body_weight_bmi": 0,
+            "insulin_type": 6522
+          },
+          "physiocgm": {
+            "cgm": 11678,
+            "carbs": 0,
+            "insulin_on_board": 0,
+            "insulin_sensitivity_factor": 0,
+            "physical_activity": 0,
+            "sleep_hours": 0,
+            "daily_routine": 7154,
+            "early_morning_pattern_proxy": 0,
+            "activity_after_insulin": 0,
+            "body_weight_bmi": 0,
+            "insulin_type": 0
+          }
+        },
+        "test_intervals": {
+          "30": {
+            "window_coverage": 0.9083333333333333,
+            "patient_macro_coverage": 0.9072487406665309,
+            "patient_bootstrap_coverage_ci95": [
+              0.8889608965838341,
+              0.9274818662311246
+            ],
+            "mean_width_mg_dl": 63.3929557800293,
+            "p95_width_mg_dl": 63.3929557800293,
+            "mean_interval_score": 90.49734807113022,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "60": {
+            "window_coverage": 0.9094736842105263,
+            "patient_macro_coverage": 0.9047435132542626,
+            "patient_bootstrap_coverage_ci95": [
+              0.8812602109062306,
+              0.928685649261596
+            ],
+            "mean_width_mg_dl": 103.02678604424,
+            "p95_width_mg_dl": 103.02678604424,
+            "mean_interval_score": 139.40245778866736,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "90": {
+            "window_coverage": 0.9140350877192982,
+            "patient_macro_coverage": 0.9057504866704195,
+            "patient_bootstrap_coverage_ci95": [
+              0.8788267651641722,
+              0.9332726246061517
+            ],
+            "mean_width_mg_dl": 125.95786440372467,
+            "p95_width_mg_dl": 125.95786440372467,
+            "mean_interval_score": 163.6144173155073,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "120": {
+            "window_coverage": 0.9167982456140351,
+            "patient_macro_coverage": 0.9058750604701137,
+            "patient_bootstrap_coverage_ci95": [
+              0.8747864859288687,
+              0.9357415749367123
+            ],
+            "mean_width_mg_dl": 140.9059238433838,
+            "p95_width_mg_dl": 140.9059238433838,
+            "mean_interval_score": 177.90832190627705,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          }
+        },
+        "frozen_model_sha256": "7a62f53dfff9743819059d2181cb20b24a8b8940cb6754cfd8351747f686ab43",
+        "artifact_sha256": {
+          "long-cgm.json": "3ebae52c08f8721d1ed64abd9decd0a98b548683605c05f2de6b1459baf88234",
+          "long-context-huber.json": "49b408f90e335eb0c359802a5914240f8d1d99d6cb59f743529af08316ad7dbd",
+          "long-context.json": "696caea6b84bc0a6d0b829410a4641d3297bf183f662e2bb5b9a483e7a14f4b8"
+        },
+        "test_balanced_mae_mg_dl": {
+          "frozen-v1": [
+            14.417761837883457,
+            23.973995483569283,
+            30.09329354657937,
+            34.11699349548545
+          ],
+          "long-cgm": [
+            13.813852629303828,
+            23.165507699449897,
+            28.89976118347721,
+            32.399760800949025
+          ],
+          "long-context": [
+            13.740312382643008,
+            22.99388361223548,
+            28.85155841144788,
+            32.56817118777678
+          ],
+          "long-context-huber": [
+            13.608316883071328,
+            22.68637481185694,
+            28.398400476971066,
+            32.024137512006796
+          ],
+          "history-ensemble": [
+            13.651202282280204,
+            22.780561582388145,
+            28.543231213359686,
+            32.18813558482663
+          ],
+          "baseline-history-ensemble": [
+            13.84990887493561,
+            23.05350922617447,
+            28.853445006061378,
+            32.54683443831224
+          ]
+        },
+        "selected_relative_mean_mae_reduction_percent": 5.300979853181975
+      }
+    }
+  }
+}

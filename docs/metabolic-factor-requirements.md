@@ -1,8 +1,9 @@
 # Project-wide metabolic factor requirements
 
 User requested these eleven factors on 2026-11-07 for the entire project.
-This is an architecture/acceptance update, not a claim that all are implemented.
-It does not approve treatment formulas, clinical thresholds, or Phase 07/08 execution.
+This tracks acceptance and implementation across phases. See the
+[Phase 06 history benchmark](../phases/phase-06-forecasting/HISTORY_RESULTS.md)
+for measured offline availability and forecast error.
 
 ## Factor ownership and current status
 
@@ -12,13 +13,13 @@ It does not approve treatment formulas, clinical thresholds, or Phase 07/08 exec
 | Carbohydrate intake | Human-confirmed meal revisions or recorded research events, with amount, unit and uncertainty | 03/04 (Prasanna), 02, 05, 06 | Recorded context sums/masks in research pipeline; image-derived estimates must pass confirmation before use |
 | Insulin on board (IOB) | Derived estimate requiring delivery history, formulation, reviewed action model and parameters | 07 research, 08 review | Not implemented; recorded bolus/basal features are not IOB; never invent an action duration/curve |
 | Insulin sensitivity factor (ISF) | Verified, versioned individual parameter with units, effective interval and review provenance | 02 profile, 07/08 | Not implemented; do not substitute a population heuristic or infer a treatment setting from a forecast |
-| Physical activity | Recorded type, start/end, duration/intensity with explicit missingness | 02, 05, 06, 07 | Some recorded activity context exists; model interactions must be evaluated, not a fixed assumed sensitivity multiplier |
-| Sleep hours | Observed/reported sleep intervals with source and completeness | 02, 05, 06/07, 09 | Actual duration features pending; pump sleep mode is stored as device mode and must not be relabeled as measured sleep |
-| Daily routine | Historical within-person timing of meals, activity and sleep, known by cutoff | 05, 06/07, 09 | Pattern features pending; preserve local-clock meaning, flag clock ambiguity, do not learn future routines |
-| Dawn phenomenon | Research hypothesis about recurring early-morning glucose patterns with relevant confounders | 07/08 | Not implemented; a morning rise alone is not an established diagnosis or treatment instruction |
-| Activity after insulin delivery | Timing relationship between recorded delivered insulin and later observed activity | 05, 06/07 | Interaction features pending; include only activity known by cutoff, not future activity or completed-duration labels |
+| Physical activity | Recorded type, start/end, duration/intensity with explicit missingness | 02, 05, 06, 07 | Phase 06 uses recorded duration and Ohio self-reported intensity with masks. A physiological sensitivity effect still needs validation. |
+| Sleep hours | Observed/reported sleep intervals with source and completeness | 02, 05, 06/07, 09 | Phase 06 measures elapsed time in valid completed Ohio wearable intervals. Pump sleep mode remains a separate device field. |
+| Daily routine | Historical within-person timing of meals, activity and sleep, known by cutoff | 05, 06/07, 09 | Phase 06 uses prior same-clock CGM patterns and completed Ohio work intervals. Meal and activity routine modeling remains open. |
+| Dawn phenomenon | Research hypothesis about recurring early-morning glucose patterns with relevant confounders | 07/08 | Phase 06 measures prior source-clock 04:00–06:00 CGM change in Ohio. Interpretation as dawn phenomenon requires independent validation. |
+| Activity after insulin delivery | Timing relationship between recorded delivered insulin and later observed activity | 05, 06/07 | Phase 06 models completed exercise after an earlier completed bolus. Long-horizon performance in this subgroup needs further validation. |
 | Body weight / BMI | Verified measurement, units, measurement date and provenance; BMI additionally needs verified height or a sourced BMI value | 02 profile, 06/07, 09 | Not implemented in forecast features; Ohio's weight=99 is a documented placeholder and must remain unavailable |
-| Insulin type | Verified formulation/type and validity dates, linked to actual delivery records | 02 profile/history, 07/08 | Raw source metadata may exist; harmonization and validity tracking pending; no automatic action-curve assignment |
+| Insulin type | Verified formulation/type and validity dates, linked to actual delivery records | 02 profile/history, 07/08 | Phase 06 uses Ohio's source type as a categorical feature attached to observed boluses. Verified profile history and action modeling remain separate. |
 
 ## Required data semantics
 

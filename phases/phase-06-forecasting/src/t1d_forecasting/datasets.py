@@ -13,7 +13,17 @@ from pathlib import Path
 from typing import Literal
 
 Dataset = Literal["ohio", "physiocgm", "azt1d"]
-Kind = Literal["glucose", "carbohydrate", "bolus", "basal", "temporary_basal", "exercise"]
+Kind = Literal[
+    "glucose",
+    "carbohydrate",
+    "bolus",
+    "basal",
+    "temporary_basal",
+    "exercise",
+    "sleep",
+    "work",
+    "sensor_sleep",
+]
 
 
 @dataclass(frozen=True)
@@ -34,6 +44,8 @@ class OfflineEvent:
     observation_status: Literal["recorded", "blank", "zero_encoding_unverified"] = "recorded"
     glucose_type: Literal["cgm", "unverified_cgm_or_bgm"] = "cgm"
     device_mode: str | None = None
+    intensity: float | None = None
+    insulin_type: str | None = None
 
     @property
     def timezone_known(self) -> bool:
@@ -73,7 +85,7 @@ def number(raw: str | None, *, positive: bool = False) -> float | None:
     return value
 
 
-def read_ohio(archive_path: Path) -> tuple[SourceData, ...]:
+def read_ohio(archive_path: Path, *, extended_context: bool = False) -> tuple[SourceData, ...]:
     output = []
     mapping: dict[str, tuple[Kind, str, str]] = {
         "glucose_level": ("glucose", "value", "mg/dL"),
@@ -83,6 +95,14 @@ def read_ohio(archive_path: Path) -> tuple[SourceData, ...]:
         "temp_basal": ("temporary_basal", "value", "U/hour"),
         "exercise": ("exercise", "duration", "minutes"),
     }
+    if extended_context:
+        mapping.update(
+            {
+                "sleep": ("sleep", "quality", "ordinal"),
+                "work": ("work", "intensity", "ordinal"),
+                "basis_sleep": ("sensor_sleep", "quality", "ordinal"),
+            }
+        )
     with zipfile.ZipFile(archive_path) as archive:
         members = archive.infolist()
         if len(members) > 100 or sum(m.file_size for m in members) > 150_000_000:
@@ -110,18 +130,28 @@ def read_ohio(archive_path: Path) -> tuple[SourceData, ...]:
                 for row in section:
                     row_number += 1
                     try:
-                        original = row.get("ts") or row.get("ts_begin") or ""
+                        original = row.get("ts") or row.get("ts_begin") or row.get("tbegin") or ""
                         when = parse_source_time(original, "ohio")
-                        end = (
-                            parse_source_time(row.attrib["ts_end"], "ohio")
-                            if row.get("ts_end")
-                            else None
-                        )
+                        raw_end = row.get("ts_end") or row.get("tend")
+                        end = parse_source_time(raw_end, "ohio") if raw_end else None
                         if end is not None and end < when:
                             raise ValueError("Reversed event interval")
-                        value = number(row.get(field), positive=kind == "glucose")
+                        value = (
+                            None
+                            if kind == "sensor_sleep"
+                            else number(row.get(field), positive=kind == "glucose")
+                        )
                         if kind == "glucose" and value is None:
                             raise ValueError("Missing glucose")
+                        if kind in {"sleep", "work", "sensor_sleep"} and (
+                            end is None or end == when
+                        ):
+                            raise ValueError("Missing or empty interval")
+                        intensity = None
+                        if extended_context and kind in {"exercise", "work"}:
+                            reported = row.get("intensity")
+                            if reported and reported.isdecimal() and 1 <= int(reported) <= 10:
+                                intensity = float(reported)
                     except (ValueError, KeyError):
                         rejected += 1
                         continue
@@ -138,6 +168,10 @@ def read_ohio(archive_path: Path) -> tuple[SourceData, ...]:
                             sha,
                             row_number,
                             end,
+                            intensity=intensity,
+                            insulin_type=root.get("insulin_type")
+                            if extended_context and kind == "bolus"
+                            else None,
                         )
                     )
             output.append(SourceData(tuple(events), rejected, sha))

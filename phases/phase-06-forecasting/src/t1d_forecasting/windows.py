@@ -9,6 +9,13 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 
 from t1d_forecasting.datasets import OfflineEvent, SourceData
+from t1d_forecasting.history_features import (
+    HISTORY_CGM_FEATURES,
+    HISTORY_CONTEXT_FEATURES,
+    HISTORY_LOOKBACK,
+    extended_cgm,
+    extended_context,
+)
 
 CGM_FEATURES = tuple(f"glucose_lag_{i}_scaled" for i in range(11, -1, -1)) + (
     "observed_mean_scaled",
@@ -23,6 +30,8 @@ CONTEXT_FEATURES = tuple(
 ) + ("last_basal_rate_scaled", "basal_rate_present", "sleep_mode", "exercise_mode", "mode_present")
 FEATURE_NAMES = CGM_FEATURES + CONTEXT_FEATURES
 FEATURE_VERSION = "offline-local12-context-mask-replay-v1"
+HISTORY_FEATURE_VERSION = "offline-causal-history-v4"
+HISTORY_FEATURE_NAMES = FEATURE_NAMES + HISTORY_CGM_FEATURES + HISTORY_CONTEXT_FEATURES
 
 
 @dataclass(frozen=True)
@@ -36,6 +45,7 @@ class Window:
     features: tuple[float, ...]
     targets: tuple[float, ...]
     input_ref: str
+    fit_only: bool = False
 
     @property
     def scope(self) -> str:
@@ -127,11 +137,50 @@ def causal_features(
     return tuple(features)
 
 
+def detailed_context(events: list[OfflineEvent]) -> list[OfflineEvent]:
+    return [
+        event
+        for event in events
+        if event.kind in {"sleep", "work", "sensor_sleep"}
+        or (event.kind in {"carbohydrate", "bolus", "exercise"} and event.value is not None)
+    ]
+
+
+def causal_history_features(
+    segment: list[OfflineEvent],
+    index: int,
+    context: list[OfflineEvent],
+    context_times: list[datetime],
+    detailed: list[OfflineEvent],
+    detailed_times: list[datetime],
+    replay: bool,
+) -> tuple[float, ...]:
+    inputs = segment[index - 11 : index + 1]
+    cutoff = segment[index].time
+    if any(e.available_at is not None and e.available_at > cutoff for e in inputs):
+        raise ValueError("Glucose observation unavailable at cutoff")
+    values = (
+        causal_features(inputs, context, context_times, replay)
+        + extended_cgm(segment, index)
+        + extended_context(detailed, detailed_times, cutoff, replay)
+    )
+    if len(values) != len(HISTORY_FEATURE_NAMES) or not all(math.isfinite(v) for v in values):
+        raise ValueError("Invalid causal history features")
+    return values
+
+
 def make_windows(
-    sources: tuple[SourceData, ...], stride: int = 6, *, allow_event_time_replay: bool = False
+    sources: tuple[SourceData, ...],
+    stride: int = 6,
+    *,
+    allow_event_time_replay: bool = False,
+    include_history: bool = False,
+    score_stride: int | None = None,
 ) -> tuple[list[Window], dict[str, int]]:
     if not 1 <= stride <= 36:
         raise ValueError("Bounded positive stride required")
+    if score_stride is not None and (not stride <= score_stride <= 36 or score_stride % stride):
+        raise ValueError("Score stride must be a bounded multiple of the training stride")
     groups: dict[tuple[str, str, str], list[OfflineEvent]] = defaultdict(list)
     for source in sources:
         for event in source.events:
@@ -173,6 +222,8 @@ def make_windows(
             segments[-1].append(event)
         context = sorted((e for e in events if e.kind != "glucose"), key=lambda e: e.time)
         context_times = [e.time for e in context]
+        detailed = detailed_context(context) if include_history else []
+        detailed_times = [e.time for e in detailed]
         for segment in segments:
             counts["verified_glucose_records"] += len(segment)
             for index in range(11, len(segment) - 24, stride):
@@ -186,25 +237,46 @@ def make_windows(
                 ):
                     counts["horizon_alignment_excluded"] += 1
                     continue
-                features = causal_features(inputs, context, context_times, allow_event_time_replay)
+                version = FEATURE_VERSION
+                input_start = min(inputs[0].time, anchor.time - timedelta(minutes=120))
+                if include_history:
+                    if any(
+                        e.available_at is not None and e.available_at > anchor.time for e in inputs
+                    ):
+                        counts["unavailable_glucose_excluded"] += 1
+                        continue
+                    features = causal_history_features(
+                        segment,
+                        index,
+                        context,
+                        context_times,
+                        detailed,
+                        detailed_times,
+                        allow_event_time_replay,
+                    )
+                    version = HISTORY_FEATURE_VERSION
+                    input_start = anchor.time - HISTORY_LOOKBACK
+                else:
+                    features = causal_features(
+                        inputs, context, context_times, allow_event_time_replay
+                    )
                 lineage = [(e.source_sha256, e.source_row) for e in inputs]
                 # Input fingerprint includes context features, masks and raw source hashes.
                 ref = hashlib.sha256(
-                    repr(
-                        (lineage, list(features), FEATURE_VERSION, allow_event_time_replay)
-                    ).encode()
+                    repr((lineage, list(features), version, allow_event_time_replay)).encode()
                 ).hexdigest()
                 windows.append(
                     Window(
                         anchor.dataset,
                         anchor.participant,
                         anchor.partition,
-                        min(inputs[0].time, anchor.time - timedelta(minutes=120)),
+                        input_start,
                         anchor.time,
                         labels[-1].time,
                         tuple(features),
                         tuple(float(e.value) for e in labels if e.value is not None),
                         ref,
+                        fit_only=score_stride is not None and (index - 11) % score_stride != 0,
                     )
                 )
     counts["accepted_windows"] = len(windows)
@@ -217,7 +289,8 @@ def patient_partitions(
     """Patient-disjoint calibration/test; chronological validation inside fit patients."""
     by_dataset: dict[str, set[str]] = defaultdict(set)
     for w in windows:
-        by_dataset[w.dataset].add(w.scope)
+        if not w.fit_only:
+            by_dataset[w.dataset].add(w.scope)
     roles: dict[str, str] = {}
     for dataset, subjects in sorted(by_dataset.items()):
         ordered = sorted(
@@ -248,19 +321,23 @@ def patient_partitions(
         key: [] for key in ("fit", "validation", "calibration", "test")
     }
     for w in windows:
-        if roles[w.scope] == "fit":
+        role = roles.get(w.scope)
+        if role == "fit":
             # Preserve the supplied Ohio testing files, including for model selection.
             if w.partition != "testing":
                 train_by_subject[w.scope].append(w)
-        else:
-            if roles[w.scope] == "calibration" and w.partition == "testing":
+        elif role is not None and not w.fit_only:
+            if role == "calibration" and w.partition == "testing":
                 continue  # Official Ohio test labels never calibrate a model.
-            result[roles[w.scope]].append(w)
+            result[role].append(w)
     for rows in train_by_subject.values():
         rows.sort(key=lambda w: w.cutoff)
-        boundary = rows[int(0.8 * len(rows))].cutoff
+        scoring = [w for w in rows if not w.fit_only]
+        if not scoring:
+            continue
+        boundary = scoring[int(0.8 * len(scoring))].cutoff
         result["fit"].extend(w for w in rows if w.label_end < boundary)
-        result["validation"].extend(w for w in rows if w.input_start >= boundary)
+        result["validation"].extend(w for w in scoring if w.input_start >= boundary)
     if not all(result.values()):
         raise ValueError("An evaluation partition is empty")
     sets = {role: {w.scope for w in rows} for role, rows in result.items()}

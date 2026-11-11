@@ -9,7 +9,17 @@ from typing import Any
 import numpy as np
 
 from t1d_forecasting.datasets import OfflineEvent, SourceData
-from t1d_forecasting.windows import FEATURE_NAMES, FEATURE_VERSION, causal_features
+from t1d_forecasting.history_features import HISTORY_LOOKBACK
+from t1d_forecasting.history_model import MODEL_COLUMNS, MODEL_WEIGHTS, TARGET_SCALE, factor_masks
+from t1d_forecasting.windows import (
+    FEATURE_NAMES,
+    FEATURE_VERSION,
+    HISTORY_FEATURE_NAMES,
+    HISTORY_FEATURE_VERSION,
+    causal_features,
+    causal_history_features,
+    detailed_context,
+)
 
 
 def observed_features(
@@ -91,6 +101,140 @@ def forecast(
         )
     else:
         raise ValueError("Select an explicit supported interval method")
+    return _forecast_result(points, radii) | {
+        "model_sha256": actual,
+        "feature_version": FEATURE_VERSION,
+        "lineage": lineage,
+        "method": method,
+        "availability": "unverified-event-time-replay"
+        if allow_event_time_replay
+        else "verified-context-only",
+    }
+
+
+def observed_history_features(
+    sources: tuple[SourceData, ...], dataset: str, participant: str
+) -> tuple[tuple[float, ...], dict[str, object]]:
+    """Apply the training transform to the latest contiguous history within one partition."""
+    events = [e for source in sources for e in source.events if e.scope == (dataset, participant)]
+    glucose = [
+        e for e in events if e.kind == "glucose" and e.value is not None and e.glucose_type == "cgm"
+    ]
+    if not glucose:
+        raise ValueError("No verified CGM history")
+    if len({e.timezone_known for e in events}) > 1:
+        raise ValueError("Mixed clock representations require review")
+    cutoff = max(e.time for e in glucose)
+    partitions = {e.partition for e in glucose if e.time == cutoff}
+    if len(partitions) != 1:
+        raise ValueError("Ambiguous latest source partition")
+    partition = partitions.pop()
+    start = cutoff - HISTORY_LOOKBACK
+    glucose_start = start - timedelta(seconds=5)
+    recent = [e for e in glucose if e.partition == partition and e.time >= glucose_start]
+    if any(b.time < a.time for a, b in zip(recent, recent[1:], strict=False)):
+        raise ValueError("Unresolved clock/order change")
+    unique: dict[datetime, OfflineEvent] = {}
+    conflicts = set()
+    for row in recent:
+        if unique.setdefault(row.time, row).value != row.value:
+            conflicts.add(row.time)
+    segment: list[OfflineEvent] = []
+    for row in unique.values():
+        if row.time in conflicts:
+            continue
+        if segment and not 295 <= (row.time - segment[-1].time).total_seconds() <= 305:
+            segment = []
+        segment.append(row)
+    if not segment or segment[-1].time != cutoff:
+        raise ValueError("Conflicting latest CGM observations")
+    context = sorted(
+        (
+            e
+            for e in events
+            if e.partition == partition and e.kind != "glucose" and start <= e.time <= cutoff
+        ),
+        key=lambda e: e.time,
+    )
+    detailed = detailed_context(context)
+    values = causal_history_features(
+        segment,
+        len(segment) - 1,
+        context,
+        [e.time for e in context],
+        detailed,
+        [e.time for e in detailed],
+        True,
+    )
+    source_hashes = sorted({e.source_sha256 for e in segment + context})
+    return values, {
+        "input_cutoff_local": cutoff.isoformat(),
+        "timezone": "unknown" if cutoff.tzinfo is None else "recorded",
+        "input_sha256": hashlib.sha256(
+            repr((source_hashes, cutoff.isoformat(), values, HISTORY_FEATURE_VERSION)).encode()
+        ).hexdigest(),
+        "source_sha256": source_hashes,
+    }
+
+
+def forecast_history(
+    sources: tuple[SourceData, ...],
+    dataset: str,
+    participant: str,
+    frozen_directory: Path,
+    history_directory: Path,
+) -> dict[str, Any]:
+    from xgboost import XGBRegressor
+
+    report_path = history_directory / "report.json"
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    if (
+        report["feature_version"] != HISTORY_FEATURE_VERSION
+        or report["feature_names"] != list(HISTORY_FEATURE_NAMES)
+        or report["context_policy"] != "event-time-replay"
+    ):
+        raise ValueError("History model feature version, order or context policy mismatch")
+    values, lineage = observed_history_features(sources, dataset, participant)
+    matrix = np.asarray([values], dtype=np.float32)
+    profile = report["selected_on_validation"]
+    if profile not in MODEL_WEIGHTS:
+        raise ValueError("Unsupported history model profile")
+    points = np.full((1, 4), values[11] * 100)
+    artifacts = {}
+    for component, weight in MODEL_WEIGHTS[profile].items():
+        if component == "frozen-v1":
+            path = frozen_directory / "xgb-context.json"
+            expected = report["frozen_model_sha256"]
+            scale = 1.0
+        else:
+            path = history_directory / f"{component}.json"
+            expected = report["artifact_sha256"][path.name]
+            scale = TARGET_SCALE
+        actual = hashlib.sha256(path.read_bytes()).hexdigest()
+        if actual != expected:
+            raise ValueError("Point model checksum mismatch")
+        columns = MODEL_COLUMNS[component]
+        model = XGBRegressor(n_jobs=4)
+        model.load_model(path)
+        if model.n_features_in_ != len(columns):
+            raise ValueError("Point model dimensions mismatch")
+        residual = model.predict(matrix[:, columns])
+        if residual.shape != (1, 4):
+            raise ValueError("Point model horizon mismatch")
+        points += (residual * scale).astype(float) * weight
+        artifacts[component] = actual
+    return _forecast_result(points, np.asarray([report["calibration_radii"]], dtype=float)) | {
+        "model_sha256": artifacts,
+        "model_profile": profile,
+        "feature_version": HISTORY_FEATURE_VERSION,
+        "lineage": lineage,
+        "method": "balanced-per-forecast-history",
+        "availability": "unverified-event-time-replay",
+        "observed_factor_flags": {key: bool(mask[0]) for key, mask in factor_masks(matrix).items()},
+    }
+
+
+def _forecast_result(points: Any, radii: Any) -> dict[str, Any]:
     if (
         points.shape != (1, 4)
         or radii.shape != (1, 4)
@@ -105,14 +249,7 @@ def forecast(
         "status": "eligible_offline_research" if eligible else "abstained",
         "experimental": True,
         "review_required": True,
-        "model_sha256": actual,
-        "feature_version": FEATURE_VERSION,
-        "lineage": lineage,
-        "method": method,
         "nominal_coverage": 0.9,
-        "availability": "unverified-event-time-replay"
-        if allow_event_time_replay
-        else "verified-context-only",
         "points": [
             {
                 "horizon_minutes": h,
