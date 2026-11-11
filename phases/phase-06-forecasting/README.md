@@ -74,3 +74,8 @@ coverage. It adds longer CGM trends, prior recorded-clock patterns, wearable
 sleep duration and reported activity and insulin metadata where the sources
 support them. Use the report commands to reproduce training or run a local
 forecast from observed history. The artifact requires explicit event-time replay.
+
+[Earlier CGM trajectories](ANALOGUE_RESULTS.md) extends the offline benchmark
+with matched past responses. It compares the frozen v4 forecast, tree models
+and a neural comparison on the same held-out anchors. The report includes the
+replay command, long-horizon gains and exercise subgroup results.

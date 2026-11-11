@@ -46,6 +46,7 @@ class Window:
     targets: tuple[float, ...]
     input_ref: str
     fit_only: bool = False
+    label_available_at: datetime | None = None
 
     @property
     def scope(self) -> str:
@@ -176,6 +177,7 @@ def make_windows(
     allow_event_time_replay: bool = False,
     include_history: bool = False,
     score_stride: int | None = None,
+    earliest_cutoff: datetime | None = None,
 ) -> tuple[list[Window], dict[str, int]]:
     if not 1 <= stride <= 36:
         raise ValueError("Bounded positive stride required")
@@ -231,6 +233,8 @@ def make_windows(
                 inputs = segment[index - 11 : index + 1]
                 labels = [segment[index + h] for h in (6, 12, 18, 24)]
                 anchor = inputs[-1]
+                if earliest_cutoff is not None and anchor.time < earliest_cutoff:
+                    continue
                 if any(
                     abs((e.time - anchor.time).total_seconds() - h * 60) > 5
                     for e, h in zip(labels, (30, 60, 90, 120), strict=True)
@@ -277,6 +281,15 @@ def make_windows(
                         tuple(float(e.value) for e in labels if e.value is not None),
                         ref,
                         fit_only=score_stride is not None and (index - 11) % score_stride != 0,
+                        label_available_at=max(
+                            max(e.time, e.available_at or e.time) for e in labels
+                        )
+                        if include_history
+                        and (
+                            allow_event_time_replay
+                            or all(e.available_at is not None for e in labels)
+                        )
+                        else None,
                     )
                 )
     counts["accepted_windows"] = len(windows)

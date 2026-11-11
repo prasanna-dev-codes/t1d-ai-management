@@ -2,12 +2,27 @@
 
 import hashlib
 import json
+from dataclasses import replace
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 
+from t1d_forecasting.analogue_models import (
+    ANALOGUE_MODELS,
+    BASE_MODELS,
+    NEURAL_RECIPES,
+    RECIPES,
+    neural_predict,
+    read_neural,
+)
+from t1d_forecasting.analogues import (
+    ANALOGUE_FEATURE_NAMES,
+    ANALOGUE_FEATURE_VERSION,
+    ANALOGUE_LOOKBACK,
+    AnalogueHistory,
+)
 from t1d_forecasting.datasets import OfflineEvent, SourceData
 from t1d_forecasting.history_features import HISTORY_LOOKBACK
 from t1d_forecasting.history_model import MODEL_COLUMNS, MODEL_WEIGHTS, TARGET_SCALE, factor_masks
@@ -19,6 +34,7 @@ from t1d_forecasting.windows import (
     causal_features,
     causal_history_features,
     detailed_context,
+    make_windows,
 )
 
 
@@ -115,6 +131,13 @@ def forecast(
 def observed_history_features(
     sources: tuple[SourceData, ...], dataset: str, participant: str
 ) -> tuple[tuple[float, ...], dict[str, object]]:
+    values, lineage, _, _ = _history_snapshot(sources, dataset, participant)
+    return values, lineage
+
+
+def _history_snapshot(
+    sources: tuple[SourceData, ...], dataset: str, participant: str
+) -> tuple[tuple[float, ...], dict[str, object], datetime, str]:
     """Apply the training transform to the latest contiguous history within one partition."""
     events = [e for source in sources for e in source.events if e.scope == (dataset, participant)]
     glucose = [
@@ -167,7 +190,7 @@ def observed_history_features(
         True,
     )
     source_hashes = sorted({e.source_sha256 for e in segment + context})
-    return values, {
+    lineage: dict[str, object] = {
         "input_cutoff_local": cutoff.isoformat(),
         "timezone": "unknown" if cutoff.tzinfo is None else "recorded",
         "input_sha256": hashlib.sha256(
@@ -175,6 +198,36 @@ def observed_history_features(
         ).hexdigest(),
         "source_sha256": source_hashes,
     }
+    return values, lineage, cutoff, partition
+
+
+def observed_analogue_features(
+    sources: tuple[SourceData, ...], dataset: str, participant: str
+) -> tuple[tuple[float, ...], dict[str, object]]:
+    values, lineage, cutoff, partition = _history_snapshot(sources, dataset, participant)
+    scope = (dataset, participant)
+    observed = tuple(
+        replace(
+            source,
+            events=tuple(
+                row
+                for row in source.events
+                if row.scope == scope and row.partition == partition and row.time <= cutoff
+            ),
+        )
+        for source in sources
+    )
+    history, _ = make_windows(
+        observed,
+        include_history=True,
+        allow_event_time_replay=True,
+        earliest_cutoff=cutoff - ANALOGUE_LOOKBACK,
+    )
+    extra = AnalogueHistory(history).features(f"{dataset}:{participant}", partition, cutoff, values)
+    identity = hashlib.sha256(
+        repr((lineage["input_sha256"], ANALOGUE_FEATURE_VERSION, extra)).encode()
+    ).hexdigest()
+    return values + extra, lineage | {"input_sha256": identity}
 
 
 def forecast_history(
@@ -230,6 +283,81 @@ def forecast_history(
         "lineage": lineage,
         "method": "balanced-per-forecast-history",
         "availability": "unverified-event-time-replay",
+        "observed_factor_flags": {key: bool(mask[0]) for key, mask in factor_masks(matrix).items()},
+    }
+
+
+def forecast_analogues(
+    sources: tuple[SourceData, ...],
+    dataset: str,
+    participant: str,
+    history_directory: Path,
+    analogue_directory: Path,
+) -> dict[str, Any]:
+    from xgboost import XGBRegressor
+
+    report = json.loads((analogue_directory / "report.json").read_text(encoding="utf-8"))
+    if (
+        report["feature_version"] != ANALOGUE_FEATURE_VERSION
+        or report["feature_names"] != list(ANALOGUE_FEATURE_NAMES)
+        or report["context_policy"] != "event-time-replay"
+    ):
+        raise ValueError("Analogue model feature version, order or context policy mismatch")
+    recipes = RECIPES | NEURAL_RECIPES
+    profiles = report["selected_by_horizon"]
+    if (
+        not isinstance(profiles, list)
+        or len(profiles) != 4
+        or any(not isinstance(key, str) or key not in recipes for key in profiles)
+    ):
+        raise ValueError("Invalid horizon model profiles")
+    values, lineage = observed_analogue_features(sources, dataset, participant)
+    matrix = np.asarray([values], dtype=np.float32)
+    components, artifacts = {}, {}
+    for key in sorted({key for profile in profiles for key in recipes[profile]}):
+        if key in BASE_MODELS:
+            base_name = BASE_MODELS[key]
+            path = history_directory / f"{base_name}.json"
+            inputs = matrix[:, MODEL_COLUMNS[base_name]]
+        elif key in ANALOGUE_MODELS:
+            path = analogue_directory / f"{key}.json"
+            inputs = matrix
+        elif key == "neural":
+            path = analogue_directory / "neural.npz"
+            inputs = matrix
+        else:
+            raise ValueError("Unknown analogue model component")
+        actual = hashlib.sha256(path.read_bytes()).hexdigest()
+        if actual != report["model_sha256"][key]:
+            raise ValueError("Point model checksum mismatch")
+        if key == "neural":
+            residual = neural_predict(inputs, read_neural(path))
+        else:
+            model = XGBRegressor(n_jobs=4)
+            model.load_model(path)
+            if model.n_features_in_ != inputs.shape[1]:
+                raise ValueError("Point model dimensions mismatch")
+            residual = model.predict(inputs)
+        if residual.shape != (1, 4) or not np.isfinite(residual).all():
+            raise ValueError("Point model horizon mismatch")
+        components[key] = (residual * TARGET_SCALE).astype(float) + values[11] * 100
+        artifacts[key] = actual
+    points = np.asarray(
+        [
+            [
+                sum(components[key][0, horizon] * mass for key, mass in recipes[profile].items())
+                for horizon, profile in enumerate(profiles)
+            ]
+        ]
+    )
+    return _forecast_result(points, np.asarray([report["calibration_radii"]], dtype=float)) | {
+        "model_sha256": artifacts,
+        "model_profile_by_horizon": profiles,
+        "feature_version": ANALOGUE_FEATURE_VERSION,
+        "lineage": lineage,
+        "method": "balanced-per-forecast-analogues",
+        "availability": "unverified-event-time-replay",
+        "earlier_episodes_available": bool(values[-1]),
         "observed_factor_flags": {key: bool(mask[0]) for key, mask in factor_masks(matrix).items()},
     }
 
