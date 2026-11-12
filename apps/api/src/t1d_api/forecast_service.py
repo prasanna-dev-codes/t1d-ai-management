@@ -9,6 +9,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 from t1d_forecasting.contracts import ForecastData, ForecastRequest, ForecastResult, Reading
 from t1d_forecasting.engine import Abstain, digest, load_bundle, predict, snapshot
+from t1d_forecasting.safety import validate_forecast_points
 
 from t1d_api.auth import Principal
 from t1d_api.data.errors import DataError
@@ -128,7 +129,11 @@ class ForecastService:
                         artifact_sha256=artifact_sha,
                         input_snapshot_ref=state.sha256,
                         source_revision_refs=[r.id for r in state.readings],
-                        points=predict(state, model, query.horizons_minutes),
+                        points=validate_forecast_points(
+                            predict(state, model, query.horizons_minutes),
+                            query.input_cutoff,
+                            query.horizons_minutes,
+                        ),
                     )
                     final, final_synthetic = canonical_cgm(session, scope, query.input_cutoff)
                     if (
