@@ -5,8 +5,8 @@ from datetime import datetime, timedelta
 from typing import Any
 
 import numpy as np
+from meal_memory import CONTEXT_METHOD, MealAnchor, matches
 from meal_memory import METHOD as MEAL_MEMORY
-from meal_memory import MealAnchor, matches
 from t1d_forecasting.windows import HISTORY_FEATURE_NAMES, Window
 
 WARMUP = timedelta(days=7)
@@ -67,8 +67,19 @@ def replay(
     estimate_recent_error: bool = False,
     query: ForecastQuery | None = None,
     recorded_timing: bool = False,
+    latest_only: bool = False,
+    contextual_meals: bool = False,
+    feedback_routing: tuple[str, ...] | None = None,
 ) -> Replay:
-    """Use observed errors only after their outcome windows and source availability mature."""
+    """Use mature feedback; optionally correct only the final query in the replay arrays."""
+    if latest_only and query is None:
+        raise ValueError("Latest-only replay requires a forecast query")
+    if contextual_meals and meals is None:
+        raise ValueError("Contextual retrieval requires meal anchors")
+    if feedback_routing is not None and (
+        latest_only or len(feedback_routing) != 4 or not set(feedback_routing) <= set(METHODS)
+    ):
+        raise ValueError("Feedback routing requires a complete replay and four known profiles")
     points = np.asarray(baseline, dtype=float)
     cutoffs = [row.cutoff for row in rows]
     inputs = [row.features for row in rows]
@@ -115,8 +126,11 @@ def replay(
         else np.zeros(4)
     )
     forecasts = {method: points.copy() for method in METHODS}
+    meal_methods = (MEAL_MEMORY, CONTEXT_METHOD) if contextual_meals else (MEAL_MEMORY,)
     if meals is not None:
-        forecasts[MEAL_MEMORY] = points.copy()
+        forecasts.update({method: points.copy() for method in meal_methods})
+    if feedback_routing is not None:
+        forecasts["feedback-routed"] = points.copy()
     if timing is not None:
         forecasts[LAG_METHOD] = points.copy()
     rolling_support = np.zeros(len(cutoffs), dtype=bool)
@@ -125,7 +139,9 @@ def replay(
     recent_error = np.full(points.shape, np.nan)
     next_feedback = 0
     active: list[int] = []
-    for index, cutoff in enumerate(cutoffs):
+    indices = (len(cutoffs) - 1,) if latest_only else range(len(cutoffs))
+    for index in indices:
+        cutoff = cutoffs[index]
         if cutoff < warm_until:
             continue
         while next_feedback < len(feedback) and feedback[next_feedback][0] <= cutoff:
@@ -134,6 +150,10 @@ def replay(
         oldest = cutoff - ROLLING_LOOKBACK
         active = [i for i in active if rows[i].label_end >= oldest]
         forecasts["initial-offset"][index] += initial_offset
+        if feedback_routing is not None:
+            forecasts["feedback-routed"][index] = [
+                forecasts[method][index, j] for j, method in enumerate(feedback_routing)
+            ]
         if len(active) < _MIN_HISTORY:
             continue
         rolling_support[index] = True
@@ -163,15 +183,34 @@ def replay(
                 timing_offset, -_MAX_CORRECTION, _MAX_CORRECTION
             )
         if meals is not None:
-            meal_query = meals[index]
-            retrieved = matches(meal_query, active, meals) if meal_query is not None else []
-            if retrieved:
-                meal_support[index] = True
-                indices, scores = zip(*retrieved, strict=True)
-                estimate = np.average(residual[list(indices)], axis=0, weights=scores)
-                contribution = len(retrieved) / (len(retrieved) + 8)
-                correction = (1 - contribution) * correction + contribution * estimate
-            forecasts[MEAL_MEMORY][index] += np.clip(correction, -_MAX_CORRECTION, _MAX_CORRECTION)
+            for method in meal_methods:
+                offset = correction
+                meal_query = meals[index]
+                retrieved = (
+                    matches(meal_query, active, meals, contextual=method == CONTEXT_METHOD)
+                    if meal_query is not None
+                    else []
+                )
+                if retrieved:
+                    meal_support[index] = True
+                    matched, scores = zip(*retrieved, strict=True)
+                    estimate = np.average(residual[list(matched)], axis=0, weights=scores)
+                    contribution = len(retrieved) / (len(retrieved) + 8)
+                    offset = (1 - contribution) * correction + contribution * estimate
+                forecasts[method][index] += np.clip(offset, -_MAX_CORRECTION, _MAX_CORRECTION)
+        if feedback_routing is not None:
+            eligible = [i for i in active if rolling_support[i]]
+            for j, method in enumerate(feedback_routing):
+                chosen = forecasts[method][index, j]
+                # Default to the locked profile until mature, previously issued
+                # corrections have enough evidence to evaluate their error.
+                if method != "frozen-v5" and len(eligible) >= 48:
+                    past = forecasts[method][eligible, j]
+                    past = np.where(past > 0, past, points[eligible, j])
+                    adjusted = np.abs(target[eligible, j] - past)
+                    if float(np.mean(adjusted - np.abs(residual[eligible, j]))) > 0.5:
+                        chosen = points[index, j]
+                forecasts["feedback-routed"][index, j] = chosen
     for prediction in forecasts.values():
         prediction[prediction <= 0] = points[prediction <= 0]
     return Replay(forecasts, rolling_support, context_support, meal_support, recent_error)

@@ -73,6 +73,20 @@ def test_retrieval_counts_each_earlier_meal_once() -> None:
     assert matches(query, [0, 1, 3, 4], anchors) == []
 
 
+def test_contextual_rank_prefers_similar_trend_and_compares_only_recorded_bolus() -> None:
+    query = MealAnchor(("fixture", 5), LOCAL_START + WARMUP, 30, 40, 0.2, 1.0)
+    earlier = replace(query, event_time=LOCAL_START)
+    anchors = [
+        replace(earlier, reference=("fixture", 0)),
+        replace(earlier, reference=("fixture", 1), recorded_bolus=3),
+        replace(earlier, reference=("fixture", 2), trend=-0.2),
+        replace(earlier, reference=("fixture", 3), recorded_bolus=None),
+    ]
+    contextual = matches(query, [0, 1, 2, 3], anchors, contextual=True)
+    assert [i for i, _ in contextual] == [3, 0, 1, 2]
+    assert contextual[0][1] == contextual[1][1]
+
+
 def test_routing_changes_only_forecasts_with_memory_support() -> None:
     track = Evaluation(meal_support=[False, True])
     track.predictions["frozen-v5"] = [[100.0] * 4, [110.0] * 4]

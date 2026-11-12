@@ -8,11 +8,12 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 
 from t1d_forecasting.datasets import OfflineEvent
-from t1d_forecasting.windows import Window
+from t1d_forecasting.windows import HISTORY_FEATURE_NAMES, Window
 from t1d_memory.contracts import DEFINITION
 from t1d_memory.ranking import relative_amount_distance
 
 METHOD = "meal-memory-offset"
+CONTEXT_METHOD = "meal-memory-context-offset"
 _WINDOW = timedelta(minutes=DEFINITION.response_minutes)
 _LIMIT = 5
 _MIN_MATCHES = 3
@@ -24,6 +25,8 @@ class MealAnchor:
     event_time: datetime
     age_minutes: float
     carbs_g: float
+    trend: float | None = None
+    recorded_bolus: float | None = None
 
 
 def meal_anchors(
@@ -61,17 +64,30 @@ def meal_anchors(
             continue
         meal = known[0]
         assert meal.value is not None
+        features = window.features
+        trend = None
+        bolus = None
+        if len(features) >= len(HISTORY_FEATURE_NAMES):
+            trend = features[HISTORY_FEATURE_NAMES.index("cgm_change_15")]
+            if features[HISTORY_FEATURE_NAMES.index("recorded_bolus_240_present")] == 1:
+                bolus = features[HISTORY_FEATURE_NAMES.index("recorded_bolus_240")]
         anchors[window.input_ref] = MealAnchor(
             (meal.source_sha256, meal.source_row),
             meal.time,
             (window.cutoff - meal.time).total_seconds() / 60,
             meal.value,
+            trend,
+            bolus,
         )
     return anchors
 
 
 def matches(
-    query: MealAnchor, candidates: Sequence[int], anchors: Sequence[MealAnchor | None]
+    query: MealAnchor,
+    candidates: Sequence[int],
+    anchors: Sequence[MealAnchor | None],
+    *,
+    contextual: bool = False,
 ) -> list[tuple[int, float]]:
     """Rank matured forecast histories without reading their glucose outcomes."""
     best: dict[tuple[str, int], tuple[int, float]] = {}
@@ -82,8 +98,16 @@ def matches(
         carb_distance = relative_amount_distance(query.carbs_g, item.carbs_g)
         age_distance = abs(query.age_minutes - item.age_minutes) / DEFINITION.response_minutes
         score = 1 - (0.75 * carb_distance + 0.25 * age_distance)
+        if score < 0.6:
+            continue
+        if contextual and query.trend is not None and item.trend is not None:
+            trend_distance = min(1.0, abs(query.trend - item.trend) / 0.5)
+            score = 0.8 * score + 0.2 * (1 - trend_distance)
+            if query.recorded_bolus is not None and item.recorded_bolus is not None:
+                bolus_distance = relative_amount_distance(query.recorded_bolus, item.recorded_bolus)
+                score *= 1 - 0.1 * bolus_distance
         prior = best.get(item.reference)
-        if score >= 0.6 and (prior is None or score > prior[1]):
+        if prior is None or score > prior[1]:
             best[item.reference] = (index, score)
     if len(best) < _MIN_MATCHES:
         return []

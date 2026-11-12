@@ -5,8 +5,9 @@ from datetime import datetime, timedelta
 
 import numpy as np
 import pytest
-from adaptation import WARMUP, replay
+from adaptation import WARMUP, ForecastQuery, replay
 from evaluate import development_scopes, patient_tracks
+from meal_memory import MealAnchor
 from t1d_forecasting.windows import HISTORY_FEATURE_NAMES, Window
 
 START = datetime(2020, 1, 1)
@@ -88,3 +89,71 @@ def test_development_assignment_is_patient_level_and_deterministic() -> None:
     assert first == development_scopes(list(reversed(source)))
     assert {scope.split(":")[0] for scope in first} == {"ohio", "azt1d"}
     assert len(first) == 2
+
+
+@pytest.mark.parametrize("hour", [120, 480])
+def test_latest_query_matches_full_replay(hour: int) -> None:
+    timed = list(FEATURES)
+    timed[HISTORY_FEATURE_NAMES.index("recorded_bolus_60_present")] = 1.0
+    timed[HISTORY_FEATURE_NAMES.index("recorded_bolus_240_present")] = 1.0
+    rows = [
+        replace(row(i, glucose=115 + i % 30), features=tuple(timed) if i % 2 else FEATURES)
+        for i in range(hour - 3)
+    ]
+    rows[-1] = replace(rows[-1], label_available_at=START + timedelta(hours=hour + 1))
+    query = ForecastQuery(rows[0].scope, START + timedelta(hours=hour), tuple(timed))
+    points = np.full((len(rows) + 1, 4), 100.0)
+    allowed = [i % 3 != 0 for i in range(len(rows))]
+    meals: list[MealAnchor | None] = [
+        MealAnchor(("fictional", i), item.cutoff - timedelta(minutes=30), 30, 40)
+        if i % 8 == 0
+        else None
+        for i, item in enumerate(rows)
+    ]
+    meals.append(MealAnchor(("fictional", hour), query.cutoff - timedelta(minutes=30), 30, 40))
+    full = replay(
+        rows,
+        points,
+        START + WARMUP,
+        allowed,
+        meals,
+        query=query,
+        estimate_recent_error=True,
+        recorded_timing=True,
+    )
+    latest = replay(
+        rows,
+        points,
+        START + WARMUP,
+        allowed,
+        meals,
+        query=query,
+        latest_only=True,
+        estimate_recent_error=True,
+        recorded_timing=True,
+    )
+    for method, estimates in full.predictions.items():
+        np.testing.assert_array_equal(latest.predictions[method][-1], estimates[-1])
+    for name in ("rolling_support", "context_support", "meal_support", "recent_error"):
+        np.testing.assert_array_equal(getattr(latest, name)[-1], getattr(full, name)[-1])
+    assert bool(latest.meal_support[-1]) == (hour == 480)
+
+
+def test_feedback_routing_uses_matured_errors_to_drop_a_harmful_correction() -> None:
+    rows = [row(i, glucose=130 if i < 168 else 100) for i in range(230)]
+    rows = [
+        replace(item, label_available_at=START + timedelta(hours=240)) if i >= 225 else item
+        for i, item in enumerate(rows)
+    ]
+    points = np.full((len(rows), 4), 100.0)
+    options = ("initial-offset",) * 4
+    first = replay(rows, points, START + WARMUP, [True] * len(rows), feedback_routing=options)
+    alternate = [
+        replace(item, targets=(900.0,) * 4) if i >= 225 else item for i, item in enumerate(rows)
+    ]
+    second = replay(alternate, points, START + WARMUP, [True] * len(rows), feedback_routing=options)
+    assert (first.predictions["initial-offset"][-1] > 100).all()
+    np.testing.assert_array_equal(first.predictions["feedback-routed"][-1], points[-1])
+    np.testing.assert_array_equal(
+        first.predictions["feedback-routed"], second.predictions["feedback-routed"]
+    )

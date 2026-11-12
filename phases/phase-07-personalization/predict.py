@@ -71,6 +71,7 @@ def predict(
         [True] * len(feedback),
         estimate_recent_error=True,
         query=ForecastQuery(f"{dataset}:{participant}", cutoff, values),
+        latest_only=True,
     )
     warm = cutoff >= warm_until
     profiles = artifact.point_profiles if warm else ("frozen-v5",) * 4

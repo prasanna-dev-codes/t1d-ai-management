@@ -67,6 +67,8 @@ def patient_tracks(
     *,
     personal_intervals: bool = False,
     recorded_timing: bool = False,
+    contextual_meals: bool = False,
+    feedback_routing: tuple[str, ...] | None = None,
 ) -> tuple[Evaluation, Evaluation]:
     warm, cold = Evaluation(), Evaluation()
     grouped: dict[str, list[int]] = defaultdict(list)
@@ -96,6 +98,8 @@ def patient_tracks(
             [meals.get(key) for key in anchors] if meals is not None else None,
             estimate_recent_error=personal_intervals,
             recorded_timing=recorded_timing,
+            contextual_meals=contextual_meals,
+            feedback_routing=feedback_routing,
         )
         official_testing = any(not flag for flag in feedback)
         warm_start = next(

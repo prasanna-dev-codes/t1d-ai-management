@@ -194,12 +194,13 @@ class MemoryService:
                 # Late arrivals/corrections known by cutoff and revocation are checked
                 # again after derived search; no cached graph result grants access.
                 final_events = canonical_events(session, scope, query.input_cutoff)
-                final, _ = build_episodes(
-                    final_events, query.input_cutoff, scope.study_id, scope.patient_id
-                )
-                valid_ids = {e.id for e in final}
-                if any(e.episode_id not in valid_ids for e in evidence):
-                    raise DataError(503, "MEMORY_SNAPSHOT_CHANGED")
+                if final_events != events:
+                    final, _ = build_episodes(
+                        final_events, query.input_cutoff, scope.study_id, scope.patient_id
+                    )
+                    valid_ids = {e.id for e in final}
+                    if any(e.episode_id not in valid_ids for e in evidence):
+                        raise DataError(503, "MEMORY_SNAPSHOT_CHANGED")
                 principal_check(scope, principal)
                 authorize(session, scope, False)
                 audit(
