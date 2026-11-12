@@ -9,16 +9,8 @@ from typing import Any
 
 import numpy as np
 
-from t1d_forecasting.analogue_models import (
-    ANALOGUE_MODELS,
-    BASE_MODELS,
-    NEURAL_RECIPES,
-    RECIPES,
-    neural_predict,
-    read_neural,
-)
+from t1d_forecasting.analogue_models import predict_frozen
 from t1d_forecasting.analogues import (
-    ANALOGUE_FEATURE_NAMES,
     ANALOGUE_FEATURE_VERSION,
     ANALOGUE_LOOKBACK,
     AnalogueHistory,
@@ -117,7 +109,7 @@ def forecast(
         )
     else:
         raise ValueError("Select an explicit supported interval method")
-    return _forecast_result(points, radii) | {
+    return forecast_payload(points, radii) | {
         "model_sha256": actual,
         "feature_version": FEATURE_VERSION,
         "lineage": lineage,
@@ -204,6 +196,13 @@ def _history_snapshot(
 def observed_analogue_features(
     sources: tuple[SourceData, ...], dataset: str, participant: str
 ) -> tuple[tuple[float, ...], dict[str, object]]:
+    values, lineage, _, _ = analogue_snapshot(sources, dataset, participant)
+    return values, lineage
+
+
+def analogue_snapshot(
+    sources: tuple[SourceData, ...], dataset: str, participant: str
+) -> tuple[tuple[float, ...], dict[str, object], datetime, str]:
     values, lineage, cutoff, partition = _history_snapshot(sources, dataset, participant)
     scope = (dataset, participant)
     observed = tuple(
@@ -227,7 +226,7 @@ def observed_analogue_features(
     identity = hashlib.sha256(
         repr((lineage["input_sha256"], ANALOGUE_FEATURE_VERSION, extra)).encode()
     ).hexdigest()
-    return values + extra, lineage | {"input_sha256": identity}
+    return values + extra, lineage | {"input_sha256": identity}, cutoff, partition
 
 
 def forecast_history(
@@ -276,7 +275,7 @@ def forecast_history(
             raise ValueError("Point model horizon mismatch")
         points += (residual * scale).astype(float) * weight
         artifacts[component] = actual
-    return _forecast_result(points, np.asarray([report["calibration_radii"]], dtype=float)) | {
+    return forecast_payload(points, np.asarray([report["calibration_radii"]], dtype=float)) | {
         "model_sha256": artifacts,
         "model_profile": profile,
         "feature_version": HISTORY_FEATURE_VERSION,
@@ -294,65 +293,14 @@ def forecast_analogues(
     history_directory: Path,
     analogue_directory: Path,
 ) -> dict[str, Any]:
-    from xgboost import XGBRegressor
-
-    report = json.loads((analogue_directory / "report.json").read_text(encoding="utf-8"))
-    if (
-        report["feature_version"] != ANALOGUE_FEATURE_VERSION
-        or report["feature_names"] != list(ANALOGUE_FEATURE_NAMES)
-        or report["context_policy"] != "event-time-replay"
-    ):
-        raise ValueError("Analogue model feature version, order or context policy mismatch")
-    recipes = RECIPES | NEURAL_RECIPES
-    profiles = report["selected_by_horizon"]
-    if (
-        not isinstance(profiles, list)
-        or len(profiles) != 4
-        or any(not isinstance(key, str) or key not in recipes for key in profiles)
-    ):
-        raise ValueError("Invalid horizon model profiles")
     values, lineage = observed_analogue_features(sources, dataset, participant)
     matrix = np.asarray([values], dtype=np.float32)
-    components, artifacts = {}, {}
-    for key in sorted({key for profile in profiles for key in recipes[profile]}):
-        if key in BASE_MODELS:
-            base_name = BASE_MODELS[key]
-            path = history_directory / f"{base_name}.json"
-            inputs = matrix[:, MODEL_COLUMNS[base_name]]
-        elif key in ANALOGUE_MODELS:
-            path = analogue_directory / f"{key}.json"
-            inputs = matrix
-        elif key == "neural":
-            path = analogue_directory / "neural.npz"
-            inputs = matrix
-        else:
-            raise ValueError("Unknown analogue model component")
-        actual = hashlib.sha256(path.read_bytes()).hexdigest()
-        if actual != report["model_sha256"][key]:
-            raise ValueError("Point model checksum mismatch")
-        if key == "neural":
-            residual = neural_predict(inputs, read_neural(path))
-        else:
-            model = XGBRegressor(n_jobs=4)
-            model.load_model(path)
-            if model.n_features_in_ != inputs.shape[1]:
-                raise ValueError("Point model dimensions mismatch")
-            residual = model.predict(inputs)
-        if residual.shape != (1, 4) or not np.isfinite(residual).all():
-            raise ValueError("Point model horizon mismatch")
-        components[key] = (residual * TARGET_SCALE).astype(float) + values[11] * 100
-        artifacts[key] = actual
-    points = np.asarray(
-        [
-            [
-                sum(components[key][0, horizon] * mass for key, mass in recipes[profile].items())
-                for horizon, profile in enumerate(profiles)
-            ]
-        ]
+    points, report, artifacts = predict_frozen(
+        matrix, np.asarray([[values[11] * 100]]), history_directory, analogue_directory
     )
-    return _forecast_result(points, np.asarray([report["calibration_radii"]], dtype=float)) | {
+    return forecast_payload(points, np.asarray([report["calibration_radii"]], dtype=float)) | {
         "model_sha256": artifacts,
-        "model_profile_by_horizon": profiles,
+        "model_profile_by_horizon": report["selected_by_horizon"],
         "feature_version": ANALOGUE_FEATURE_VERSION,
         "lineage": lineage,
         "method": "balanced-per-forecast-analogues",
@@ -362,7 +310,7 @@ def forecast_analogues(
     }
 
 
-def _forecast_result(points: Any, radii: Any) -> dict[str, Any]:
+def forecast_payload(points: Any, radii: Any) -> dict[str, Any]:
     if (
         points.shape != (1, 4)
         or radii.shape != (1, 4)

@@ -12,7 +12,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Literal
 
-Dataset = Literal["ohio", "physiocgm", "azt1d"]
+Dataset = Literal["ohio", "physiocgm", "azt1d", "uom"]
 Kind = Literal[
     "glucose",
     "carbohydrate",

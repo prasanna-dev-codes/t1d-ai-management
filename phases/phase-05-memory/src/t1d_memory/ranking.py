@@ -37,12 +37,17 @@ def cosine(left: tuple[float, ...], right: tuple[float, ...]) -> float:
     return min(1.0, max(0.0, sum(a * b for a, b in zip(left, right, strict=True)) / denominator))
 
 
+def relative_amount_distance(left: float, right: float) -> float:
+    """Compute relative distance between two validated nonnegative amounts."""
+    return abs(left - right) / max(1.0, left, right)
+
+
 def nutrient_similarity(left: Nutrients, right: Nutrients) -> float:
     # Dimensionless relative differences; each macronutrient has equal influence.
     distances = []
     for name in ("carbohydrate_g", "protein_g", "fat_g"):
         a, b = float(getattr(left, name)), float(getattr(right, name))
-        distances.append(abs(a - b) / max(1.0, a, b))
+        distances.append(relative_amount_distance(a, b))
     return 1.0 - sum(distances) / 3
 
 

@@ -1,11 +1,14 @@
 """Artifact recipes for the offline CGM trajectory comparisons."""
 
+import hashlib
+import json
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 
-from t1d_forecasting.analogues import ANALOGUE_FEATURE_NAMES
+from t1d_forecasting.analogues import ANALOGUE_FEATURE_NAMES, ANALOGUE_FEATURE_VERSION
+from t1d_forecasting.history_model import MODEL_COLUMNS, TARGET_SCALE
 
 BASE_MODELS = {"v4": "long-context-huber", "v4-cgm": "long-cgm"}
 ANALOGUE_MODELS = ("analogue-huber", "analogue-l1")
@@ -56,3 +59,70 @@ def neural_predict(matrix: Any, parameters: dict[str, Any]) -> Any:
     return (
         state @ parameters[f"weight_{final}"] + parameters[f"bias_{final}"]
     ) / NEURAL_OUTPUT_SCALE
+
+
+def predict_frozen(
+    matrix: Any, last: Any, history_directory: Path, analogue_directory: Path
+) -> tuple[Any, dict[str, Any], dict[str, str]]:
+    """Replay the exported Phase 06 point forecast on one or more feature rows."""
+    from xgboost import XGBRegressor
+
+    report = json.loads((analogue_directory / "report.json").read_text(encoding="utf-8"))
+    if (
+        report["feature_version"] != ANALOGUE_FEATURE_VERSION
+        or report["feature_names"] != list(ANALOGUE_FEATURE_NAMES)
+        or report["context_policy"] != "event-time-replay"
+    ):
+        raise ValueError("Analogue model feature version, order or context policy mismatch")
+    recipes = RECIPES | NEURAL_RECIPES
+    profiles = report["selected_by_horizon"]
+    if (
+        not isinstance(profiles, list)
+        or len(profiles) != 4
+        or any(not isinstance(key, str) or key not in recipes for key in profiles)
+    ):
+        raise ValueError("Invalid horizon model profiles")
+    if matrix.ndim != 2 or matrix.shape[1] != len(ANALOGUE_FEATURE_NAMES):
+        raise ValueError("Invalid analogue feature dimensions")
+    if (
+        last.shape != (len(matrix), 1)
+        or not np.isfinite(matrix).all()
+        or not np.isfinite(last).all()
+    ):
+        raise ValueError("Invalid analogue inputs")
+    components, artifacts = {}, {}
+    for key in sorted({key for profile in profiles for key in recipes[profile]}):
+        if key in BASE_MODELS:
+            base_name = BASE_MODELS[key]
+            path = history_directory / f"{base_name}.json"
+            inputs = matrix[:, MODEL_COLUMNS[base_name]]
+        elif key in ANALOGUE_MODELS:
+            path = analogue_directory / f"{key}.json"
+            inputs = matrix
+        elif key == "neural":
+            path = analogue_directory / "neural.npz"
+            inputs = matrix
+        else:
+            raise ValueError("Unknown analogue model component")
+        actual = hashlib.sha256(path.read_bytes()).hexdigest()
+        if actual != report["model_sha256"][key]:
+            raise ValueError("Point model checksum mismatch")
+        if key == "neural":
+            residual = neural_predict(inputs, read_neural(path))
+        else:
+            model = XGBRegressor(n_jobs=4)
+            model.load_model(path)
+            if model.n_features_in_ != inputs.shape[1]:
+                raise ValueError("Point model dimensions mismatch")
+            residual = model.predict(inputs)
+        if residual.shape != (len(matrix), 4) or not np.isfinite(residual).all():
+            raise ValueError("Point model horizon mismatch")
+        components[key] = (residual * TARGET_SCALE).astype(float) + last
+        artifacts[key] = actual
+    points = np.column_stack(
+        [
+            sum(components[key][:, horizon] * mass for key, mass in recipes[profile].items())
+            for horizon, profile in enumerate(profiles)
+        ]
+    )
+    return points, report, artifacts
