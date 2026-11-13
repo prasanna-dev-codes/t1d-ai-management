@@ -9,7 +9,7 @@ Status: Phase 00 design baseline with Phase 01 foundation and the approved Phase
 4. **Tier 4 — Safety and Clinical Research Simulation:** deterministic input/output eligibility, freshness/completeness checks, uncertainty gates, abstention, and traceable audit. A later restricted simulation may evaluate independently approved clinician-defined protocols; it cannot issue treatment instructions or change settings.
 5. **Tier 5 — Human-in-the-Loop Application:** web dashboard, meal/nutrition corrections and confirmation, history, experimental forecasts, evidence, warnings, abstention explanations, and qualified research review.
 
-`apps/api` orchestrates domain modules in `services/`; the directory name does not imply network services. `apps/web` accesses the API only. Domain logic remains independent of transport, persistence adapters, training scripts, and UI. PostgreSQL is authoritative for structured records; TimescaleDB is an extension for time-series management, pgvector for derived embeddings, Neo4j for derived graph retrieval, and object storage for governed image/model objects. Do not introduce Kafka, Kubernetes, or distributed microservices.
+`apps/api` orchestrates domain modules in `services/` and Archit’s phase-specific modules in `phases/` (Phase 05 lives in `phases/phase-05-memory`); the directory name does not imply network services. `apps/web` accesses the API only. Domain logic remains independent of transport, persistence adapters, training scripts, and UI. PostgreSQL is authoritative for structured records; TimescaleDB is an extension for time-series management, pgvector for derived embeddings, Neo4j for derived graph retrieval, and object storage for governed image/model objects. Do not introduce Kafka, Kubernetes, or distributed microservices.
 
 ```mermaid
 flowchart TD
@@ -142,3 +142,7 @@ EventRevision separates UUID identity from time-inclusive CGM keys, preserves or
 ## Phase 03 approved implementation refinement
 
 The user approved ephemeral synchronous vision transport and cloud-first planning in [ADR 007](decisions/007-ephemeral-vision-and-cloud-training.md). Shared dataset/image/metric/artifact/process logic lives in `services/vision/src/t1d_vision`; API scope/audits stay in the existing backend and the minimal web tester consumes generated contracts. No stored-image/job infrastructure, schema/grant change or default auth bypass is introduced. Dataset acquisition, cloud execution and substantial training remain gated; current artifacts are unavailable. See [inference](vision-inference.md) and [cloud workflow](vision-cloud-workflow.md).
+
+## Project-wide factor extension
+
+The user-approved [eleven-factor matrix](metabolic-factor-requirements.md) defines source, derivation, missingness and phase ownership across all tiers. Forecasting consumes declared versioned feature profiles; Phase 05 stores traceable context rather than substituting similarity for physiological parameters. IOB/ISF and clinical interpretations require their own reviewed definitions. See FR-016 for acceptance.

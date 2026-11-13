@@ -15,6 +15,31 @@ class Settings(BaseSettings):
     )
 
     database_url: SecretStr | None = None
+    memory_neo4j_uri: str | None = None
+    memory_neo4j_user: str | None = Field(default=None, repr=False)
+    memory_neo4j_password: SecretStr | None = None
+
+    @model_validator(mode="after")
+    def memory_graph_boundary(self) -> "Settings":
+        supplied = (self.memory_neo4j_uri, self.memory_neo4j_user, self.memory_neo4j_password)
+        if any(v is not None for v in supplied):
+            if not all(v is not None for v in supplied):
+                raise ValueError("Explicit graph endpoint and credentials required together")
+            parsed = urlsplit(self.memory_neo4j_uri or "")
+            if (
+                parsed.scheme != "bolt"
+                or parsed.hostname not in {"localhost", "127.0.0.1", "::1"}
+                or parsed.username
+                or parsed.password
+                or parsed.path
+                or parsed.query
+                or parsed.fragment
+            ):
+                raise ValueError("Loopback Bolt endpoint without inline credentials required")
+            if not self.memory_neo4j_user or not self.memory_neo4j_password.get_secret_value():  # type: ignore[union-attr]
+                raise ValueError("Nonempty graph credentials required")
+        return self
+
     vision_artifact_dir: Path | None = Field(default=None, repr=False)
 
     @field_validator("vision_artifact_dir")

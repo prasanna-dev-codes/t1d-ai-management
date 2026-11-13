@@ -1,0 +1,1966 @@
+{
+  "pooled": {
+    "protocol": "exploratory-pointwise-intervals-v2",
+    "evaluation": "pooled-patient-disjoint",
+    "point_model_sha256": "7a62f53dfff9743819059d2181cb20b24a8b8940cb6754cfd8351747f686ab43",
+    "source_fingerprint": "804ca642d6a32e9fb2e6baa0f2360ff52652fc3f53673466d8db89866dd4a0df",
+    "feature_names": [
+      "glucose_lag_11_scaled",
+      "glucose_lag_10_scaled",
+      "glucose_lag_9_scaled",
+      "glucose_lag_8_scaled",
+      "glucose_lag_7_scaled",
+      "glucose_lag_6_scaled",
+      "glucose_lag_5_scaled",
+      "glucose_lag_4_scaled",
+      "glucose_lag_3_scaled",
+      "glucose_lag_2_scaled",
+      "glucose_lag_1_scaled",
+      "glucose_lag_0_scaled",
+      "observed_mean_scaled",
+      "observed_std_scaled",
+      "observed_slope_scaled",
+      "recorded_carbohydrate_30_scaled",
+      "recorded_carbohydrate_30_present",
+      "recorded_carbohydrate_60_scaled",
+      "recorded_carbohydrate_60_present",
+      "recorded_carbohydrate_120_scaled",
+      "recorded_carbohydrate_120_present",
+      "recorded_bolus_30_scaled",
+      "recorded_bolus_30_present",
+      "recorded_bolus_60_scaled",
+      "recorded_bolus_60_present",
+      "recorded_bolus_120_scaled",
+      "recorded_bolus_120_present",
+      "recorded_exercise_30_scaled",
+      "recorded_exercise_30_present",
+      "recorded_exercise_60_scaled",
+      "recorded_exercise_60_present",
+      "recorded_exercise_120_scaled",
+      "recorded_exercise_120_present",
+      "last_basal_rate_scaled",
+      "basal_rate_present",
+      "sleep_mode",
+      "exercise_mode",
+      "mode_present"
+    ],
+    "nominal_coverage": 0.9,
+    "target": "individual forecast, not every forecast of a patient",
+    "test_status": "Previously inspected test sources; exploratory re-evaluation, not new independent confirmation",
+    "calibration": {
+      "constant_radii": [
+        32.88191306591034,
+        52.963130950927734,
+        65.25827407836914,
+        72.78412437438965
+      ],
+      "scaled_quantiles": [
+        2.1435069072887027,
+        2.069736321871221,
+        2.0193394149238175,
+        1.9895198115777162
+      ]
+    },
+    "by_method": {
+      "whole-patient-v1": {
+        "all": {
+          "30": {
+            "window_coverage": 1.0,
+            "patient_macro_coverage": 1.0,
+            "patient_bootstrap_coverage_ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_width_mg_dl": 389.4484615325928,
+            "p95_width_mg_dl": 389.4484615325928,
+            "mean_interval_score": 389.4484615325928,
+            "nonpositive_lower_bounds": 20142,
+            "nonpositive_point_predictions": 0
+          },
+          "60": {
+            "window_coverage": 1.0,
+            "patient_macro_coverage": 1.0,
+            "patient_bootstrap_coverage_ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_width_mg_dl": 528.4631614685059,
+            "p95_width_mg_dl": 528.4631614685059,
+            "mean_interval_score": 528.4631614685059,
+            "nonpositive_lower_bounds": 22647,
+            "nonpositive_point_predictions": 0
+          },
+          "90": {
+            "window_coverage": 0.9999122807017544,
+            "patient_macro_coverage": 0.9999110755413277,
+            "patient_bootstrap_coverage_ci95": [
+              0.9997332266239829,
+              1.0
+            ],
+            "mean_width_mg_dl": 462.1699962615967,
+            "p95_width_mg_dl": 462.1699962615967,
+            "mean_interval_score": 462.2363859812419,
+            "nonpositive_lower_bounds": 22498,
+            "nonpositive_point_predictions": 0
+          },
+          "120": {
+            "window_coverage": 0.9999122807017544,
+            "patient_macro_coverage": 0.9999110755413277,
+            "patient_bootstrap_coverage_ci95": [
+              0.9997332266239829,
+              1.0
+            ],
+            "mean_width_mg_dl": 446.5070571899414,
+            "p95_width_mg_dl": 446.5070571899414,
+            "mean_interval_score": 446.6145504708876,
+            "nonpositive_lower_bounds": 22611,
+            "nonpositive_point_predictions": 0
+          }
+        },
+        "by_dataset": {
+          "azt1d": {
+            "30": {
+              "window_coverage": 1.0,
+              "patient_macro_coverage": 1.0,
+              "patient_bootstrap_coverage_ci95": [
+                1.0,
+                1.0
+              ],
+              "mean_width_mg_dl": 389.4484615325928,
+              "p95_width_mg_dl": 389.4484615325928,
+              "mean_interval_score": 389.4484615325928,
+              "nonpositive_lower_bounds": 3907,
+              "nonpositive_point_predictions": 0
+            },
+            "60": {
+              "window_coverage": 1.0,
+              "patient_macro_coverage": 1.0,
+              "patient_bootstrap_coverage_ci95": [
+                1.0,
+                1.0
+              ],
+              "mean_width_mg_dl": 528.4631614685059,
+              "p95_width_mg_dl": 528.4631614685059,
+              "mean_interval_score": 528.4631614685059,
+              "nonpositive_lower_bounds": 4553,
+              "nonpositive_point_predictions": 0
+            },
+            "90": {
+              "window_coverage": 1.0,
+              "patient_macro_coverage": 1.0,
+              "patient_bootstrap_coverage_ci95": [
+                1.0,
+                1.0
+              ],
+              "mean_width_mg_dl": 462.1699962615967,
+              "p95_width_mg_dl": 462.1699962615967,
+              "mean_interval_score": 462.1699962615967,
+              "nonpositive_lower_bounds": 4527,
+              "nonpositive_point_predictions": 0
+            },
+            "120": {
+              "window_coverage": 1.0,
+              "patient_macro_coverage": 1.0,
+              "patient_bootstrap_coverage_ci95": [
+                1.0,
+                1.0
+              ],
+              "mean_width_mg_dl": 446.5070571899414,
+              "p95_width_mg_dl": 446.5070571899414,
+              "mean_interval_score": 446.5070571899414,
+              "nonpositive_lower_bounds": 4548,
+              "nonpositive_point_predictions": 0
+            }
+          },
+          "ohio": {
+            "30": {
+              "window_coverage": 1.0,
+              "patient_macro_coverage": 1.0,
+              "patient_bootstrap_coverage_ci95": [
+                1.0,
+                1.0
+              ],
+              "mean_width_mg_dl": 389.4484615325928,
+              "p95_width_mg_dl": 389.4484615325928,
+              "mean_interval_score": 389.4484615325928,
+              "nonpositive_lower_bounds": 5128,
+              "nonpositive_point_predictions": 0
+            },
+            "60": {
+              "window_coverage": 1.0,
+              "patient_macro_coverage": 1.0,
+              "patient_bootstrap_coverage_ci95": [
+                1.0,
+                1.0
+              ],
+              "mean_width_mg_dl": 528.4631614685059,
+              "p95_width_mg_dl": 528.4631614685059,
+              "mean_interval_score": 528.4631614685059,
+              "nonpositive_lower_bounds": 6446,
+              "nonpositive_point_predictions": 0
+            },
+            "90": {
+              "window_coverage": 0.9996946564885496,
+              "patient_macro_coverage": 0.999733226623983,
+              "patient_bootstrap_coverage_ci95": [
+                0.9991996798719488,
+                1.0
+              ],
+              "mean_width_mg_dl": 462.1699962615967,
+              "p95_width_mg_dl": 462.1699962615967,
+              "mean_interval_score": 462.40109330097226,
+              "nonpositive_lower_bounds": 6363,
+              "nonpositive_point_predictions": 0
+            },
+            "120": {
+              "window_coverage": 0.9996946564885496,
+              "patient_macro_coverage": 0.999733226623983,
+              "patient_bootstrap_coverage_ci95": [
+                0.9991996798719488,
+                1.0
+              ],
+              "mean_width_mg_dl": 446.5070571899414,
+              "p95_width_mg_dl": 446.5070571899414,
+              "mean_interval_score": 446.88123227476166,
+              "nonpositive_lower_bounds": 6425,
+              "nonpositive_point_predictions": 0
+            }
+          },
+          "physiocgm": {
+            "30": {
+              "window_coverage": 1.0,
+              "patient_macro_coverage": 1.0,
+              "patient_bootstrap_coverage_ci95": [
+                1.0,
+                1.0
+              ],
+              "mean_width_mg_dl": 389.4484615325928,
+              "p95_width_mg_dl": 389.4484615325928,
+              "mean_interval_score": 389.4484615325928,
+              "nonpositive_lower_bounds": 11107,
+              "nonpositive_point_predictions": 0
+            },
+            "60": {
+              "window_coverage": 1.0,
+              "patient_macro_coverage": 1.0,
+              "patient_bootstrap_coverage_ci95": [
+                1.0,
+                1.0
+              ],
+              "mean_width_mg_dl": 528.4631614685059,
+              "p95_width_mg_dl": 528.4631614685059,
+              "mean_interval_score": 528.4631614685059,
+              "nonpositive_lower_bounds": 11648,
+              "nonpositive_point_predictions": 0
+            },
+            "90": {
+              "window_coverage": 1.0,
+              "patient_macro_coverage": 1.0,
+              "patient_bootstrap_coverage_ci95": [
+                1.0,
+                1.0
+              ],
+              "mean_width_mg_dl": 462.1699962615967,
+              "p95_width_mg_dl": 462.1699962615967,
+              "mean_interval_score": 462.1699962615967,
+              "nonpositive_lower_bounds": 11608,
+              "nonpositive_point_predictions": 0
+            },
+            "120": {
+              "window_coverage": 1.0,
+              "patient_macro_coverage": 1.0,
+              "patient_bootstrap_coverage_ci95": [
+                1.0,
+                1.0
+              ],
+              "mean_width_mg_dl": 446.5070571899414,
+              "p95_width_mg_dl": 446.5070571899414,
+              "mean_interval_score": 446.5070571899414,
+              "nonpositive_lower_bounds": 11638,
+              "nonpositive_point_predictions": 0
+            }
+          }
+        }
+      },
+      "balanced-per-forecast-v2": {
+        "all": {
+          "30": {
+            "window_coverage": 0.9082894736842105,
+            "patient_macro_coverage": 0.9054168934499773,
+            "patient_bootstrap_coverage_ci95": [
+              0.884331901281439,
+              0.9271500233267008
+            ],
+            "mean_width_mg_dl": 65.76382613182068,
+            "p95_width_mg_dl": 65.76382613182068,
+            "mean_interval_score": 94.03367279133997,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "60": {
+            "window_coverage": 0.9095614035087719,
+            "patient_macro_coverage": 0.9038419284105286,
+            "patient_bootstrap_coverage_ci95": [
+              0.8795982220717431,
+              0.927009710941972
+            ],
+            "mean_width_mg_dl": 105.92626190185547,
+            "p95_width_mg_dl": 105.92626190185547,
+            "mean_interval_score": 143.593268010549,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "90": {
+            "window_coverage": 0.9142105263157895,
+            "patient_macro_coverage": 0.9065888686379859,
+            "patient_bootstrap_coverage_ci95": [
+              0.8820490119707216,
+              0.9315238721995321
+            ],
+            "mean_width_mg_dl": 130.51654815673828,
+            "p95_width_mg_dl": 130.51654815673828,
+            "mean_interval_score": 169.0175926340676,
+            "nonpositive_lower_bounds": 1,
+            "nonpositive_point_predictions": 0
+          },
+          "120": {
+            "window_coverage": 0.9190350877192982,
+            "patient_macro_coverage": 0.9097603793837423,
+            "patient_bootstrap_coverage_ci95": [
+              0.8833634549897078,
+              0.9351081821552356
+            ],
+            "mean_width_mg_dl": 145.5682487487793,
+            "p95_width_mg_dl": 145.5682487487793,
+            "mean_interval_score": 182.9668295659295,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          }
+        },
+        "by_dataset": {
+          "azt1d": {
+            "30": {
+              "window_coverage": 0.9151356080489939,
+              "patient_macro_coverage": 0.910336101089101,
+              "patient_bootstrap_coverage_ci95": [
+                0.87374749498998,
+                0.9606908874329957
+              ],
+              "mean_width_mg_dl": 65.76382613182068,
+              "p95_width_mg_dl": 65.76382613182068,
+              "mean_interval_score": 89.14871345048613,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            },
+            "60": {
+              "window_coverage": 0.9094488188976378,
+              "patient_macro_coverage": 0.9022841599224605,
+              "patient_bootstrap_coverage_ci95": [
+                0.8527054108216433,
+                0.9565217391304349
+              ],
+              "mean_width_mg_dl": 105.92626190185547,
+              "p95_width_mg_dl": 105.92626190185547,
+              "mean_interval_score": 146.0062511835055,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            },
+            "90": {
+              "window_coverage": 0.9129483814523185,
+              "patient_macro_coverage": 0.9066569528771025,
+              "patient_bootstrap_coverage_ci95": [
+                0.8627254509018036,
+                0.9559261465157832
+              ],
+              "mean_width_mg_dl": 130.51654815673828,
+              "p95_width_mg_dl": 130.51654815673828,
+              "mean_interval_score": 175.17920981974962,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            },
+            "120": {
+              "window_coverage": 0.9118547681539807,
+              "patient_macro_coverage": 0.9074712848977823,
+              "patient_bootstrap_coverage_ci95": [
+                0.87374749498998,
+                0.95473496128648
+              ],
+              "mean_width_mg_dl": 145.5682487487793,
+              "p95_width_mg_dl": 145.5682487487793,
+              "mean_interval_score": 191.014378088405,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            }
+          },
+          "ohio": {
+            "30": {
+              "window_coverage": 0.889618320610687,
+              "patient_macro_coverage": 0.8891613504379615,
+              "patient_bootstrap_coverage_ci95": [
+                0.8842305859933303,
+                0.8959583833533413
+              ],
+              "mean_width_mg_dl": 65.76382613182068,
+              "p95_width_mg_dl": 65.76382613182068,
+              "mean_interval_score": 102.24233354831556,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            },
+            "60": {
+              "window_coverage": 0.8893129770992366,
+              "patient_macro_coverage": 0.8874577391244118,
+              "patient_bootstrap_coverage_ci95": [
+                0.8703893442622951,
+                0.9115646258503401
+              ],
+              "mean_width_mg_dl": 105.92626190185547,
+              "p95_width_mg_dl": 105.92626190185547,
+              "mean_interval_score": 156.03123404765856,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            },
+            "90": {
+              "window_coverage": 0.8822900763358779,
+              "patient_macro_coverage": 0.8799777863149467,
+              "patient_bootstrap_coverage_ci95": [
+                0.8596311475409836,
+                0.9103641456582633
+              ],
+              "mean_width_mg_dl": 130.51654815673828,
+              "p95_width_mg_dl": 130.51654815673828,
+              "mean_interval_score": 187.46877577261614,
+              "nonpositive_lower_bounds": 1,
+              "nonpositive_point_predictions": 0
+            },
+            "120": {
+              "window_coverage": 0.8801526717557252,
+              "patient_macro_coverage": 0.8777515497343563,
+              "patient_bootstrap_coverage_ci95": [
+                0.8529713114754097,
+                0.9079631852741098
+              ],
+              "mean_width_mg_dl": 145.5682487487793,
+              "p95_width_mg_dl": 145.5682487487793,
+              "mean_interval_score": 207.24687470013404,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            }
+          },
+          "physiocgm": {
+            "30": {
+              "window_coverage": 0.9160815208083576,
+              "patient_macro_coverage": 0.9167532288228698,
+              "patient_bootstrap_coverage_ci95": [
+                0.8642035723024223,
+                0.9588293650793651
+              ],
+              "mean_width_mg_dl": 65.76382613182068,
+              "p95_width_mg_dl": 65.76382613182068,
+              "mean_interval_score": 91.3420566026256,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            },
+            "60": {
+              "window_coverage": 0.9209624935776675,
+              "patient_macro_coverage": 0.9217838861847136,
+              "patient_bootstrap_coverage_ci95": [
+                0.8690971372644972,
+                0.9603174603174603
+              ],
+              "mean_width_mg_dl": 105.92626190185547,
+              "p95_width_mg_dl": 105.92626190185547,
+              "mean_interval_score": 135.67231950825195,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            },
+            "90": {
+              "window_coverage": 0.9326083233430382,
+              "patient_macro_coverage": 0.9331318667219088,
+              "patient_bootstrap_coverage_ci95": [
+                0.8847565451431367,
+                0.9742063492063492
+              ],
+              "mean_width_mg_dl": 130.51654815673828,
+              "p95_width_mg_dl": 130.51654815673828,
+              "mean_interval_score": 156.25631815809302,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            },
+            "120": {
+              "window_coverage": 0.9436547353998972,
+              "patient_macro_coverage": 0.9440583035190885,
+              "patient_bootstrap_coverage_ci95": [
+                0.8996819182774652,
+                0.9836309523809522
+              ],
+              "mean_width_mg_dl": 145.5682487487793,
+              "p95_width_mg_dl": 145.5682487487793,
+              "mean_interval_score": 166.19788903897296,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            }
+          }
+        }
+      },
+      "scaled-per-forecast-v2": {
+        "all": {
+          "30": {
+            "window_coverage": 0.9032456140350877,
+            "patient_macro_coverage": 0.9029037352467311,
+            "patient_bootstrap_coverage_ci95": [
+              0.8837408396497702,
+              0.9223221068401458
+            ],
+            "mean_width_mg_dl": 60.43403631054639,
+            "p95_width_mg_dl": 88.07410300406066,
+            "mean_interval_score": 87.13805410550448,
+            "nonpositive_lower_bounds": 6,
+            "nonpositive_point_predictions": 0
+          },
+          "60": {
+            "window_coverage": 0.9037280701754385,
+            "patient_macro_coverage": 0.8973342254597733,
+            "patient_bootstrap_coverage_ci95": [
+              0.8676473057204889,
+              0.9221975818717838
+            ],
+            "mean_width_mg_dl": 98.84879824546599,
+            "p95_width_mg_dl": 133.3055948587305,
+            "mean_interval_score": 134.91036403291324,
+            "nonpositive_lower_bounds": 9,
+            "nonpositive_point_predictions": 0
+          },
+          "90": {
+            "window_coverage": 0.9097368421052632,
+            "patient_macro_coverage": 0.902324687803562,
+            "patient_bootstrap_coverage_ci95": [
+              0.8789550801060643,
+              0.9232985677775047
+            ],
+            "mean_width_mg_dl": 123.50523861733794,
+            "p95_width_mg_dl": 162.71487651356293,
+            "mean_interval_score": 160.20793133790772,
+            "nonpositive_lower_bounds": 13,
+            "nonpositive_point_predictions": 0
+          },
+          "120": {
+            "window_coverage": 0.9163157894736842,
+            "patient_macro_coverage": 0.9076329584525548,
+            "patient_bootstrap_coverage_ci95": [
+              0.885769697560857,
+              0.9283066000675778
+            ],
+            "mean_width_mg_dl": 139.15470723966595,
+            "p95_width_mg_dl": 179.49697978271422,
+            "mean_interval_score": 175.02572754178843,
+            "nonpositive_lower_bounds": 22,
+            "nonpositive_point_predictions": 0
+          }
+        },
+        "by_dataset": {
+          "azt1d": {
+            "30": {
+              "window_coverage": 0.9125109361329834,
+              "patient_macro_coverage": 0.9063956673923282,
+              "patient_bootstrap_coverage_ci95": [
+                0.8627254509018036,
+                0.9583085169743896
+              ],
+              "mean_width_mg_dl": 59.64096328580721,
+              "p95_width_mg_dl": 87.49657759394886,
+              "mean_interval_score": 82.76556164114723,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            },
+            "60": {
+              "window_coverage": 0.8952318460192475,
+              "patient_macro_coverage": 0.8832391410000501,
+              "patient_bootstrap_coverage_ci95": [
+                0.8046092184368737,
+                0.9559261465157832
+              ],
+              "mean_width_mg_dl": 94.58291358265348,
+              "p95_width_mg_dl": 130.36602355041663,
+              "mean_interval_score": 140.96280048149072,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            },
+            "90": {
+              "window_coverage": 0.8965441819772528,
+              "patient_macro_coverage": 0.8898950151480657,
+              "patient_bootstrap_coverage_ci95": [
+                0.8426853707414829,
+                0.9452054794520549
+              ],
+              "mean_width_mg_dl": 117.81746299900146,
+              "p95_width_mg_dl": 160.16101885523886,
+              "mean_interval_score": 170.56204586918696,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            },
+            "120": {
+              "window_coverage": 0.9006999125109362,
+              "patient_macro_coverage": 0.8965346108374647,
+              "patient_bootstrap_coverage_ci95": [
+                0.8637274549098196,
+                0.9446098868374032
+              ],
+              "mean_width_mg_dl": 132.72394419940468,
+              "p95_width_mg_dl": 175.19180247184903,
+              "mean_interval_score": 188.5585727798342,
+              "nonpositive_lower_bounds": 1,
+              "nonpositive_point_predictions": 0
+            }
+          },
+          "ohio": {
+            "30": {
+              "window_coverage": 0.9003053435114504,
+              "patient_macro_coverage": 0.9005004334226134,
+              "patient_bootstrap_coverage_ci95": [
+                0.8923296808003811,
+                0.9088114754098361
+              ],
+              "mean_width_mg_dl": 66.27449408129394,
+              "p95_width_mg_dl": 94.70762620322601,
+              "mean_interval_score": 94.20955824895917,
+              "nonpositive_lower_bounds": 6,
+              "nonpositive_point_predictions": 0
+            },
+            "60": {
+              "window_coverage": 0.9012213740458015,
+              "patient_macro_coverage": 0.8999297142428434,
+              "patient_bootstrap_coverage_ci95": [
+                0.8903688524590164,
+                0.9175670268107243
+              ],
+              "mean_width_mg_dl": 107.5889927384545,
+              "p95_width_mg_dl": 143.0344506659307,
+              "mean_interval_score": 145.2257802863781,
+              "nonpositive_lower_bounds": 6,
+              "nonpositive_point_predictions": 0
+            },
+            "90": {
+              "window_coverage": 0.8955725190839695,
+              "patient_macro_coverage": 0.8940883230493676,
+              "patient_bootstrap_coverage_ci95": [
+                0.8832777513101476,
+                0.9147659063625451
+              ],
+              "mean_width_mg_dl": 133.94148996168695,
+              "p95_width_mg_dl": 175.0799533608814,
+              "mean_interval_score": 178.2789792752305,
+              "nonpositive_lower_bounds": 11,
+              "nonpositive_point_predictions": 0
+            },
+            "120": {
+              "window_coverage": 0.8919083969465649,
+              "patient_macro_coverage": 0.8901977713859074,
+              "patient_bootstrap_coverage_ci95": [
+                0.8775614754098361,
+                0.9135654261704683
+              ],
+              "mean_width_mg_dl": 150.7342060277851,
+              "p95_width_mg_dl": 195.260662358563,
+              "mean_interval_score": 199.45530879595012,
+              "nonpositive_lower_bounds": 21,
+              "nonpositive_point_predictions": 0
+            }
+          },
+          "physiocgm": {
+            "30": {
+              "window_coverage": 0.9012673402979963,
+              "patient_macro_coverage": 0.901815104925252,
+              "patient_bootstrap_coverage_ci95": [
+                0.8590653290922438,
+                0.9360119047619048
+              ],
+              "mean_width_mg_dl": 57.46871103830038,
+              "p95_width_mg_dl": 80.5866983937926,
+              "mean_interval_score": 84.88361699362001,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            },
+            "60": {
+              "window_coverage": 0.908460352800137,
+              "patient_macro_coverage": 0.908833821136426,
+              "patient_bootstrap_coverage_ci95": [
+                0.8668950330315633,
+                0.9464285714285715
+              ],
+              "mean_width_mg_dl": 95.61668236511872,
+              "p95_width_mg_dl": 128.03769730453303,
+              "mean_interval_score": 126.75505354283861,
+              "nonpositive_lower_bounds": 3,
+              "nonpositive_point_predictions": 0
+            },
+            "90": {
+              "window_coverage": 0.9228463778044186,
+              "patient_macro_coverage": 0.9229907252132526,
+              "patient_bootstrap_coverage_ci95": [
+                0.8876926841203817,
+                0.9588293650793651
+              ],
+              "mean_width_mg_dl": 119.8785100526478,
+              "p95_width_mg_dl": 155.4298975830269,
+              "mean_interval_score": 146.0184831767095,
+              "nonpositive_lower_bounds": 2,
+              "nonpositive_point_predictions": 0
+            },
+            "120": {
+              "window_coverage": 0.9361191984928926,
+              "patient_macro_coverage": 0.9361664931342926,
+              "patient_bootstrap_coverage_ci95": [
+                0.9048201614876438,
+                0.9699900793650794
+              ],
+              "mean_width_mg_dl": 135.17763338779872,
+              "p95_width_mg_dl": 169.66223989120004,
+              "mean_interval_score": 156.02539138464644,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            }
+          }
+        }
+      }
+    },
+    "limitations": [
+      "Patient-balanced empirical quantiles do not imply distribution-free patient coverage",
+      "Correlated windows and dataset shift limit nominal coverage claims",
+      "Scale learner fits validation residuals only; no test-label tuning",
+      "One mg/dL numerical scale floor is not a treatment threshold",
+      "Negative lower bounds are counted, never silently clipped",
+      "Offline context availability and timezone assumptions remain unchanged"
+    ],
+    "scale_model_sha256": "58b36d407a04a7d0c7f2eac7bd35abe8ff6f4ce708a2ae1126e5be110289e94d"
+  },
+  "external-ohio": {
+    "protocol": "exploratory-pointwise-intervals-v2",
+    "evaluation": "external-ohio",
+    "point_model_sha256": "0557940d4757c5dc158d2f015842d75b5f50e0b4c58eef14b12dd4ea564c2f97",
+    "source_fingerprint": "804ca642d6a32e9fb2e6baa0f2360ff52652fc3f53673466d8db89866dd4a0df",
+    "feature_names": [
+      "glucose_lag_11_scaled",
+      "glucose_lag_10_scaled",
+      "glucose_lag_9_scaled",
+      "glucose_lag_8_scaled",
+      "glucose_lag_7_scaled",
+      "glucose_lag_6_scaled",
+      "glucose_lag_5_scaled",
+      "glucose_lag_4_scaled",
+      "glucose_lag_3_scaled",
+      "glucose_lag_2_scaled",
+      "glucose_lag_1_scaled",
+      "glucose_lag_0_scaled",
+      "observed_mean_scaled",
+      "observed_std_scaled",
+      "observed_slope_scaled",
+      "recorded_carbohydrate_30_scaled",
+      "recorded_carbohydrate_30_present",
+      "recorded_carbohydrate_60_scaled",
+      "recorded_carbohydrate_60_present",
+      "recorded_carbohydrate_120_scaled",
+      "recorded_carbohydrate_120_present",
+      "recorded_bolus_30_scaled",
+      "recorded_bolus_30_present",
+      "recorded_bolus_60_scaled",
+      "recorded_bolus_60_present",
+      "recorded_bolus_120_scaled",
+      "recorded_bolus_120_present",
+      "recorded_exercise_30_scaled",
+      "recorded_exercise_30_present",
+      "recorded_exercise_60_scaled",
+      "recorded_exercise_60_present",
+      "recorded_exercise_120_scaled",
+      "recorded_exercise_120_present",
+      "last_basal_rate_scaled",
+      "basal_rate_present",
+      "sleep_mode",
+      "exercise_mode",
+      "mode_present"
+    ],
+    "nominal_coverage": 0.9,
+    "target": "individual forecast, not every forecast of a patient",
+    "test_status": "Previously inspected test sources; exploratory re-evaluation, not new independent confirmation",
+    "calibration": {
+      "constant_radii": [
+        31.575944900512695,
+        50.58986473083496,
+        60.58323860168457,
+        66.12977409362793
+      ],
+      "scaled_quantiles": [
+        2.151135156939122,
+        2.110608403423118,
+        2.0221885034134157,
+        1.9925304124752703
+      ]
+    },
+    "by_method": {
+      "whole-patient-v1": {
+        "all": {
+          "30": {
+            "window_coverage": 0.9999193580903996,
+            "patient_macro_coverage": 0.9999188179899333,
+            "patient_bootstrap_coverage_ci95": [
+              0.9997564539698004,
+              1.0
+            ],
+            "mean_width_mg_dl": 387.3788604736328,
+            "p95_width_mg_dl": 387.3788604736328,
+            "mean_interval_score": 387.4183804881289,
+            "nonpositive_lower_bounds": 19043,
+            "nonpositive_point_predictions": 0
+          },
+          "60": {
+            "window_coverage": 1.0,
+            "patient_macro_coverage": 1.0,
+            "patient_bootstrap_coverage_ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_width_mg_dl": 570.166259765625,
+            "p95_width_mg_dl": 570.166259765625,
+            "mean_interval_score": 570.166259765625,
+            "nonpositive_lower_bounds": 24528,
+            "nonpositive_point_predictions": 0
+          },
+          "90": {
+            "window_coverage": 0.9995967904519979,
+            "patient_macro_coverage": 0.9995906721241079,
+            "patient_bootstrap_coverage_ci95": [
+              0.9992922446896748,
+              0.9998704126708718
+            ],
+            "mean_width_mg_dl": 447.3050765991211,
+            "p95_width_mg_dl": 447.3050765991211,
+            "mean_interval_score": 447.4723644405021,
+            "nonpositive_lower_bounds": 23757,
+            "nonpositive_point_predictions": 0
+          },
+          "120": {
+            "window_coverage": 0.9987097294463932,
+            "patient_macro_coverage": 0.998674374501756,
+            "patient_bootstrap_coverage_ci95": [
+              0.9978646656911426,
+              0.9994647169785204
+            ],
+            "mean_width_mg_dl": 422.0826721191406,
+            "p95_width_mg_dl": 422.0826721191406,
+            "mean_interval_score": 422.7275749425639,
+            "nonpositive_lower_bounds": 23921,
+            "nonpositive_point_predictions": 0
+          }
+        },
+        "by_dataset": {
+          "ohio": {
+            "30": {
+              "window_coverage": 0.9999193580903996,
+              "patient_macro_coverage": 0.9999188179899333,
+              "patient_bootstrap_coverage_ci95": [
+                0.9997564539698004,
+                1.0
+              ],
+              "mean_width_mg_dl": 387.3788604736328,
+              "p95_width_mg_dl": 387.3788604736328,
+              "mean_interval_score": 387.4183804881289,
+              "nonpositive_lower_bounds": 19043,
+              "nonpositive_point_predictions": 0
+            },
+            "60": {
+              "window_coverage": 1.0,
+              "patient_macro_coverage": 1.0,
+              "patient_bootstrap_coverage_ci95": [
+                1.0,
+                1.0
+              ],
+              "mean_width_mg_dl": 570.166259765625,
+              "p95_width_mg_dl": 570.166259765625,
+              "mean_interval_score": 570.166259765625,
+              "nonpositive_lower_bounds": 24528,
+              "nonpositive_point_predictions": 0
+            },
+            "90": {
+              "window_coverage": 0.9995967904519979,
+              "patient_macro_coverage": 0.9995906721241079,
+              "patient_bootstrap_coverage_ci95": [
+                0.9992922446896748,
+                0.9998704126708718
+              ],
+              "mean_width_mg_dl": 447.3050765991211,
+              "p95_width_mg_dl": 447.3050765991211,
+              "mean_interval_score": 447.4723644405021,
+              "nonpositive_lower_bounds": 23757,
+              "nonpositive_point_predictions": 0
+            },
+            "120": {
+              "window_coverage": 0.9987097294463932,
+              "patient_macro_coverage": 0.998674374501756,
+              "patient_bootstrap_coverage_ci95": [
+                0.9978646656911426,
+                0.9994647169785204
+              ],
+              "mean_width_mg_dl": 422.0826721191406,
+              "p95_width_mg_dl": 422.0826721191406,
+              "mean_interval_score": 422.7275749425639,
+              "nonpositive_lower_bounds": 23921,
+              "nonpositive_point_predictions": 0
+            }
+          }
+        }
+      },
+      "balanced-per-forecast-v2": {
+        "all": {
+          "30": {
+            "window_coverage": 0.8812144671585823,
+            "patient_macro_coverage": 0.8807258733616875,
+            "patient_bootstrap_coverage_ci95": [
+              0.8640277501060315,
+              0.8963193415647248
+            ],
+            "mean_width_mg_dl": 63.15188980102539,
+            "p95_width_mg_dl": 63.15188980102539,
+            "mean_interval_score": 99.08126695465987,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "60": {
+            "window_coverage": 0.8668602072497077,
+            "patient_macro_coverage": 0.8659195278003425,
+            "patient_bootstrap_coverage_ci95": [
+              0.8469740964078215,
+              0.8842768757109275
+            ],
+            "mean_width_mg_dl": 101.17972946166992,
+            "p95_width_mg_dl": 101.17972946166992,
+            "mean_interval_score": 159.33289000596423,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "90": {
+            "window_coverage": 0.8415789685899762,
+            "patient_macro_coverage": 0.840175133855802,
+            "patient_bootstrap_coverage_ci95": [
+              0.8174554225262884,
+              0.8614969593846202
+            ],
+            "mean_width_mg_dl": 121.16647720336914,
+            "p95_width_mg_dl": 121.16647720336914,
+            "mean_interval_score": 203.2951931731622,
+            "nonpositive_lower_bounds": 2,
+            "nonpositive_point_predictions": 0
+          },
+          "120": {
+            "window_coverage": 0.8181928148058546,
+            "patient_macro_coverage": 0.8166743767266782,
+            "patient_bootstrap_coverage_ci95": [
+              0.7894529089739486,
+              0.8417329971987171
+            ],
+            "mean_width_mg_dl": 132.25954818725586,
+            "p95_width_mg_dl": 132.25954818725586,
+            "mean_interval_score": 236.43335810178596,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          }
+        },
+        "by_dataset": {
+          "ohio": {
+            "30": {
+              "window_coverage": 0.8812144671585823,
+              "patient_macro_coverage": 0.8807258733616875,
+              "patient_bootstrap_coverage_ci95": [
+                0.8640277501060315,
+                0.8963193415647248
+              ],
+              "mean_width_mg_dl": 63.15188980102539,
+              "p95_width_mg_dl": 63.15188980102539,
+              "mean_interval_score": 99.08126695465987,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            },
+            "60": {
+              "window_coverage": 0.8668602072497077,
+              "patient_macro_coverage": 0.8659195278003425,
+              "patient_bootstrap_coverage_ci95": [
+                0.8469740964078215,
+                0.8842768757109275
+              ],
+              "mean_width_mg_dl": 101.17972946166992,
+              "p95_width_mg_dl": 101.17972946166992,
+              "mean_interval_score": 159.33289000596423,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            },
+            "90": {
+              "window_coverage": 0.8415789685899762,
+              "patient_macro_coverage": 0.840175133855802,
+              "patient_bootstrap_coverage_ci95": [
+                0.8174554225262884,
+                0.8614969593846202
+              ],
+              "mean_width_mg_dl": 121.16647720336914,
+              "p95_width_mg_dl": 121.16647720336914,
+              "mean_interval_score": 203.2951931731622,
+              "nonpositive_lower_bounds": 2,
+              "nonpositive_point_predictions": 0
+            },
+            "120": {
+              "window_coverage": 0.8181928148058546,
+              "patient_macro_coverage": 0.8166743767266782,
+              "patient_bootstrap_coverage_ci95": [
+                0.7894529089739486,
+                0.8417329971987171
+              ],
+              "mean_width_mg_dl": 132.25954818725586,
+              "p95_width_mg_dl": 132.25954818725586,
+              "mean_interval_score": 236.43335810178596,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            }
+          }
+        }
+      },
+      "scaled-per-forecast-v2": {
+        "all": {
+          "30": {
+            "window_coverage": 0.9086730373775251,
+            "patient_macro_coverage": 0.9086592130439891,
+            "patient_bootstrap_coverage_ci95": [
+              0.8972129825139047,
+              0.9197927524711629
+            ],
+            "mean_width_mg_dl": 66.39934970518244,
+            "p95_width_mg_dl": 94.59366243555878,
+            "mean_interval_score": 91.76020026928832,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "60": {
+            "window_coverage": 0.8947219870166525,
+            "patient_macro_coverage": 0.894059860453559,
+            "patient_bootstrap_coverage_ci95": [
+              0.88104999797065,
+              0.9065307288564227
+            ],
+            "mean_width_mg_dl": 107.64781645477807,
+            "p95_width_mg_dl": 151.21171401184017,
+            "mean_interval_score": 149.4728101371324,
+            "nonpositive_lower_bounds": 11,
+            "nonpositive_point_predictions": 0
+          },
+          "90": {
+            "window_coverage": 0.8643603080520946,
+            "patient_macro_coverage": 0.863296922366374,
+            "patient_bootstrap_coverage_ci95": [
+              0.8479773254112156,
+              0.8773047659870852
+            ],
+            "mean_width_mg_dl": 127.93905608642474,
+            "p95_width_mg_dl": 179.43396110098445,
+            "mean_interval_score": 192.09312518470014,
+            "nonpositive_lower_bounds": 8,
+            "nonpositive_point_predictions": 0
+          },
+          "120": {
+            "window_coverage": 0.8504898996008226,
+            "patient_macro_coverage": 0.849092765567105,
+            "patient_bootstrap_coverage_ci95": [
+              0.8313591902619824,
+              0.8655396001027167
+            ],
+            "mean_width_mg_dl": 141.75846572800737,
+            "p95_width_mg_dl": 195.5069223249148,
+            "mean_interval_score": 222.44410215858971,
+            "nonpositive_lower_bounds": 5,
+            "nonpositive_point_predictions": 0
+          }
+        },
+        "by_dataset": {
+          "ohio": {
+            "30": {
+              "window_coverage": 0.9086730373775251,
+              "patient_macro_coverage": 0.9086592130439891,
+              "patient_bootstrap_coverage_ci95": [
+                0.8972129825139047,
+                0.9197927524711629
+              ],
+              "mean_width_mg_dl": 66.39934970518244,
+              "p95_width_mg_dl": 94.59366243555878,
+              "mean_interval_score": 91.76020026928832,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            },
+            "60": {
+              "window_coverage": 0.8947219870166525,
+              "patient_macro_coverage": 0.894059860453559,
+              "patient_bootstrap_coverage_ci95": [
+                0.88104999797065,
+                0.9065307288564227
+              ],
+              "mean_width_mg_dl": 107.64781645477807,
+              "p95_width_mg_dl": 151.21171401184017,
+              "mean_interval_score": 149.4728101371324,
+              "nonpositive_lower_bounds": 11,
+              "nonpositive_point_predictions": 0
+            },
+            "90": {
+              "window_coverage": 0.8643603080520946,
+              "patient_macro_coverage": 0.863296922366374,
+              "patient_bootstrap_coverage_ci95": [
+                0.8479773254112156,
+                0.8773047659870852
+              ],
+              "mean_width_mg_dl": 127.93905608642474,
+              "p95_width_mg_dl": 179.43396110098445,
+              "mean_interval_score": 192.09312518470014,
+              "nonpositive_lower_bounds": 8,
+              "nonpositive_point_predictions": 0
+            },
+            "120": {
+              "window_coverage": 0.8504898996008226,
+              "patient_macro_coverage": 0.849092765567105,
+              "patient_bootstrap_coverage_ci95": [
+                0.8313591902619824,
+                0.8655396001027167
+              ],
+              "mean_width_mg_dl": 141.75846572800737,
+              "p95_width_mg_dl": 195.5069223249148,
+              "mean_interval_score": 222.44410215858971,
+              "nonpositive_lower_bounds": 5,
+              "nonpositive_point_predictions": 0
+            }
+          }
+        }
+      }
+    },
+    "limitations": [
+      "Patient-balanced empirical quantiles do not imply distribution-free patient coverage",
+      "Correlated windows and dataset shift limit nominal coverage claims",
+      "Scale learner fits validation residuals only; no test-label tuning",
+      "One mg/dL numerical scale floor is not a treatment threshold",
+      "Negative lower bounds are counted, never silently clipped",
+      "Offline context availability and timezone assumptions remain unchanged"
+    ],
+    "scale_model_sha256": "998f81561c80fab31053d4595172476d2aa6a19cf4fbeaa4cc96151adf92379c"
+  },
+  "external-physiocgm": {
+    "protocol": "exploratory-pointwise-intervals-v2",
+    "evaluation": "external-physiocgm",
+    "point_model_sha256": "49e15c4975e348cd78764e4d155c06d072f9299184295fbbf3d440cb9b01a5f0",
+    "source_fingerprint": "804ca642d6a32e9fb2e6baa0f2360ff52652fc3f53673466d8db89866dd4a0df",
+    "feature_names": [
+      "glucose_lag_11_scaled",
+      "glucose_lag_10_scaled",
+      "glucose_lag_9_scaled",
+      "glucose_lag_8_scaled",
+      "glucose_lag_7_scaled",
+      "glucose_lag_6_scaled",
+      "glucose_lag_5_scaled",
+      "glucose_lag_4_scaled",
+      "glucose_lag_3_scaled",
+      "glucose_lag_2_scaled",
+      "glucose_lag_1_scaled",
+      "glucose_lag_0_scaled",
+      "observed_mean_scaled",
+      "observed_std_scaled",
+      "observed_slope_scaled",
+      "recorded_carbohydrate_30_scaled",
+      "recorded_carbohydrate_30_present",
+      "recorded_carbohydrate_60_scaled",
+      "recorded_carbohydrate_60_present",
+      "recorded_carbohydrate_120_scaled",
+      "recorded_carbohydrate_120_present",
+      "recorded_bolus_30_scaled",
+      "recorded_bolus_30_present",
+      "recorded_bolus_60_scaled",
+      "recorded_bolus_60_present",
+      "recorded_bolus_120_scaled",
+      "recorded_bolus_120_present",
+      "recorded_exercise_30_scaled",
+      "recorded_exercise_30_present",
+      "recorded_exercise_60_scaled",
+      "recorded_exercise_60_present",
+      "recorded_exercise_120_scaled",
+      "recorded_exercise_120_present",
+      "last_basal_rate_scaled",
+      "basal_rate_present",
+      "sleep_mode",
+      "exercise_mode",
+      "mode_present"
+    ],
+    "nominal_coverage": 0.9,
+    "target": "individual forecast, not every forecast of a patient",
+    "test_status": "Previously inspected test sources; exploratory re-evaluation, not new independent confirmation",
+    "calibration": {
+      "constant_radii": [
+        32.27277326583862,
+        52.26089334487915,
+        64.42335510253906,
+        72.00908660888672
+      ],
+      "scaled_quantiles": [
+        2.028271209686511,
+        2.027483115622439,
+        1.946824501200443,
+        1.9140027555544437
+      ]
+    },
+    "by_method": {
+      "whole-patient-v1": {
+        "all": {
+          "30": {
+            "window_coverage": 0.9999441543573563,
+            "patient_macro_coverage": 0.9999479166666667,
+            "patient_bootstrap_coverage_ci95": [
+              0.9998437499999999,
+              1.0
+            ],
+            "mean_width_mg_dl": 352.7664394378662,
+            "p95_width_mg_dl": 352.7664394378662,
+            "mean_interval_score": 352.7894099887654,
+            "nonpositive_lower_bounds": 30591,
+            "nonpositive_point_predictions": 0
+          },
+          "60": {
+            "window_coverage": 0.9998883087147126,
+            "patient_macro_coverage": 0.9998966083034034,
+            "patient_bootstrap_coverage_ci95": [
+              0.9997418888692917,
+              1.0
+            ],
+            "mean_width_mg_dl": 462.15961837768555,
+            "p95_width_mg_dl": 462.15961837768555,
+            "mean_interval_score": 462.1862560595549,
+            "nonpositive_lower_bounds": 34688,
+            "nonpositive_point_predictions": 0
+          },
+          "90": {
+            "window_coverage": 1.0,
+            "patient_macro_coverage": 1.0,
+            "patient_bootstrap_coverage_ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_width_mg_dl": 556.0464172363281,
+            "p95_width_mg_dl": 556.0464172363281,
+            "mean_interval_score": 556.0464172363281,
+            "nonpositive_lower_bounds": 35690,
+            "nonpositive_point_predictions": 0
+          },
+          "120": {
+            "window_coverage": 1.0,
+            "patient_macro_coverage": 1.0,
+            "patient_bootstrap_coverage_ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_width_mg_dl": 568.0408248901367,
+            "p95_width_mg_dl": 568.0408248901367,
+            "mean_interval_score": 568.0408248901367,
+            "nonpositive_lower_bounds": 35794,
+            "nonpositive_point_predictions": 0
+          }
+        },
+        "by_dataset": {
+          "physiocgm": {
+            "30": {
+              "window_coverage": 0.9999441543573563,
+              "patient_macro_coverage": 0.9999479166666667,
+              "patient_bootstrap_coverage_ci95": [
+                0.9998437499999999,
+                1.0
+              ],
+              "mean_width_mg_dl": 352.7664394378662,
+              "p95_width_mg_dl": 352.7664394378662,
+              "mean_interval_score": 352.7894099887654,
+              "nonpositive_lower_bounds": 30591,
+              "nonpositive_point_predictions": 0
+            },
+            "60": {
+              "window_coverage": 0.9998883087147126,
+              "patient_macro_coverage": 0.9998966083034034,
+              "patient_bootstrap_coverage_ci95": [
+                0.9997418888692917,
+                1.0
+              ],
+              "mean_width_mg_dl": 462.15961837768555,
+              "p95_width_mg_dl": 462.15961837768555,
+              "mean_interval_score": 462.1862560595549,
+              "nonpositive_lower_bounds": 34688,
+              "nonpositive_point_predictions": 0
+            },
+            "90": {
+              "window_coverage": 1.0,
+              "patient_macro_coverage": 1.0,
+              "patient_bootstrap_coverage_ci95": [
+                1.0,
+                1.0
+              ],
+              "mean_width_mg_dl": 556.0464172363281,
+              "p95_width_mg_dl": 556.0464172363281,
+              "mean_interval_score": 556.0464172363281,
+              "nonpositive_lower_bounds": 35690,
+              "nonpositive_point_predictions": 0
+            },
+            "120": {
+              "window_coverage": 1.0,
+              "patient_macro_coverage": 1.0,
+              "patient_bootstrap_coverage_ci95": [
+                1.0,
+                1.0
+              ],
+              "mean_width_mg_dl": 568.0408248901367,
+              "p95_width_mg_dl": 568.0408248901367,
+              "mean_interval_score": 568.0408248901367,
+              "nonpositive_lower_bounds": 35794,
+              "nonpositive_point_predictions": 0
+            }
+          }
+        }
+      },
+      "balanced-per-forecast-v2": {
+        "all": {
+          "30": {
+            "window_coverage": 0.892804288945355,
+            "patient_macro_coverage": 0.8912684808574781,
+            "patient_bootstrap_coverage_ci95": [
+              0.8667045406216581,
+              0.9145229831836083
+            ],
+            "mean_width_mg_dl": 64.54554653167725,
+            "p95_width_mg_dl": 64.54554653167725,
+            "mean_interval_score": 98.18140759527878,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "60": {
+            "window_coverage": 0.8957920308267947,
+            "patient_macro_coverage": 0.8937693500652081,
+            "patient_bootstrap_coverage_ci95": [
+              0.8704739987158593,
+              0.9157050040362759
+            ],
+            "mean_width_mg_dl": 104.5217866897583,
+            "p95_width_mg_dl": 104.5217866897583,
+            "mean_interval_score": 147.94448238562697,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "90": {
+            "window_coverage": 0.9010694440566275,
+            "patient_macro_coverage": 0.9000874328874108,
+            "patient_bootstrap_coverage_ci95": [
+              0.8801699708006666,
+              0.9203791433692075
+            ],
+            "mean_width_mg_dl": 128.84671020507812,
+            "p95_width_mg_dl": 128.84671020507812,
+            "mean_interval_score": 172.87448104979254,
+            "nonpositive_lower_bounds": 1,
+            "nonpositive_point_predictions": 0
+          },
+          "120": {
+            "window_coverage": 0.904503951079217,
+            "patient_macro_coverage": 0.9038810254304522,
+            "patient_bootstrap_coverage_ci95": [
+              0.8845206578506883,
+              0.9250115863635043
+            ],
+            "mean_width_mg_dl": 144.01817321777344,
+            "p95_width_mg_dl": 144.01817321777344,
+            "mean_interval_score": 185.37767052573477,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          }
+        },
+        "by_dataset": {
+          "physiocgm": {
+            "30": {
+              "window_coverage": 0.892804288945355,
+              "patient_macro_coverage": 0.8912684808574781,
+              "patient_bootstrap_coverage_ci95": [
+                0.8667045406216581,
+                0.9145229831836083
+              ],
+              "mean_width_mg_dl": 64.54554653167725,
+              "p95_width_mg_dl": 64.54554653167725,
+              "mean_interval_score": 98.18140759527878,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            },
+            "60": {
+              "window_coverage": 0.8957920308267947,
+              "patient_macro_coverage": 0.8937693500652081,
+              "patient_bootstrap_coverage_ci95": [
+                0.8704739987158593,
+                0.9157050040362759
+              ],
+              "mean_width_mg_dl": 104.5217866897583,
+              "p95_width_mg_dl": 104.5217866897583,
+              "mean_interval_score": 147.94448238562697,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            },
+            "90": {
+              "window_coverage": 0.9010694440566275,
+              "patient_macro_coverage": 0.9000874328874108,
+              "patient_bootstrap_coverage_ci95": [
+                0.8801699708006666,
+                0.9203791433692075
+              ],
+              "mean_width_mg_dl": 128.84671020507812,
+              "p95_width_mg_dl": 128.84671020507812,
+              "mean_interval_score": 172.87448104979254,
+              "nonpositive_lower_bounds": 1,
+              "nonpositive_point_predictions": 0
+            },
+            "120": {
+              "window_coverage": 0.904503951079217,
+              "patient_macro_coverage": 0.9038810254304522,
+              "patient_bootstrap_coverage_ci95": [
+                0.8845206578506883,
+                0.9250115863635043
+              ],
+              "mean_width_mg_dl": 144.01817321777344,
+              "p95_width_mg_dl": 144.01817321777344,
+              "mean_interval_score": 185.37767052573477,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            }
+          }
+        }
+      },
+      "scaled-per-forecast-v2": {
+        "all": {
+          "30": {
+            "window_coverage": 0.8702705721386089,
+            "patient_macro_coverage": 0.8692745890633194,
+            "patient_bootstrap_coverage_ci95": [
+              0.8460900061710956,
+              0.8908175618600218
+            ],
+            "mean_width_mg_dl": 57.24044760591952,
+            "p95_width_mg_dl": 80.45713125384316,
+            "mean_interval_score": 93.53447531210931,
+            "nonpositive_lower_bounds": 3,
+            "nonpositive_point_predictions": 0
+          },
+          "60": {
+            "window_coverage": 0.888197023427247,
+            "patient_macro_coverage": 0.8868599292641888,
+            "patient_bootstrap_coverage_ci95": [
+              0.8658590944630197,
+              0.9066241027220806
+            ],
+            "mean_width_mg_dl": 99.46204042333345,
+            "p95_width_mg_dl": 133.18181306737122,
+            "mean_interval_score": 141.906399777142,
+            "nonpositive_lower_bounds": 27,
+            "nonpositive_point_predictions": 0
+          },
+          "90": {
+            "window_coverage": 0.8901516209197777,
+            "patient_macro_coverage": 0.8894842858304399,
+            "patient_bootstrap_coverage_ci95": [
+              0.8720301737823236,
+              0.9080023402120401
+            ],
+            "mean_width_mg_dl": 123.0102086355962,
+            "p95_width_mg_dl": 155.864086738324,
+            "mean_interval_score": 166.8622750878745,
+            "nonpositive_lower_bounds": 27,
+            "nonpositive_point_predictions": 0
+          },
+          "120": {
+            "window_coverage": 0.9013207494485242,
+            "patient_macro_coverage": 0.9007793674894817,
+            "patient_bootstrap_coverage_ci95": [
+              0.8851401922061745,
+              0.9187630141050819
+            ],
+            "mean_width_mg_dl": 139.79738359258846,
+            "p95_width_mg_dl": 175.20135961026267,
+            "mean_interval_score": 179.12046306314969,
+            "nonpositive_lower_bounds": 5,
+            "nonpositive_point_predictions": 0
+          }
+        },
+        "by_dataset": {
+          "physiocgm": {
+            "30": {
+              "window_coverage": 0.8702705721386089,
+              "patient_macro_coverage": 0.8692745890633194,
+              "patient_bootstrap_coverage_ci95": [
+                0.8460900061710956,
+                0.8908175618600218
+              ],
+              "mean_width_mg_dl": 57.24044760591952,
+              "p95_width_mg_dl": 80.45713125384316,
+              "mean_interval_score": 93.53447531210931,
+              "nonpositive_lower_bounds": 3,
+              "nonpositive_point_predictions": 0
+            },
+            "60": {
+              "window_coverage": 0.888197023427247,
+              "patient_macro_coverage": 0.8868599292641888,
+              "patient_bootstrap_coverage_ci95": [
+                0.8658590944630197,
+                0.9066241027220806
+              ],
+              "mean_width_mg_dl": 99.46204042333345,
+              "p95_width_mg_dl": 133.18181306737122,
+              "mean_interval_score": 141.906399777142,
+              "nonpositive_lower_bounds": 27,
+              "nonpositive_point_predictions": 0
+            },
+            "90": {
+              "window_coverage": 0.8901516209197777,
+              "patient_macro_coverage": 0.8894842858304399,
+              "patient_bootstrap_coverage_ci95": [
+                0.8720301737823236,
+                0.9080023402120401
+              ],
+              "mean_width_mg_dl": 123.0102086355962,
+              "p95_width_mg_dl": 155.864086738324,
+              "mean_interval_score": 166.8622750878745,
+              "nonpositive_lower_bounds": 27,
+              "nonpositive_point_predictions": 0
+            },
+            "120": {
+              "window_coverage": 0.9013207494485242,
+              "patient_macro_coverage": 0.9007793674894817,
+              "patient_bootstrap_coverage_ci95": [
+                0.8851401922061745,
+                0.9187630141050819
+              ],
+              "mean_width_mg_dl": 139.79738359258846,
+              "p95_width_mg_dl": 175.20135961026267,
+              "mean_interval_score": 179.12046306314969,
+              "nonpositive_lower_bounds": 5,
+              "nonpositive_point_predictions": 0
+            }
+          }
+        }
+      }
+    },
+    "limitations": [
+      "Patient-balanced empirical quantiles do not imply distribution-free patient coverage",
+      "Correlated windows and dataset shift limit nominal coverage claims",
+      "Scale learner fits validation residuals only; no test-label tuning",
+      "One mg/dL numerical scale floor is not a treatment threshold",
+      "Negative lower bounds are counted, never silently clipped",
+      "Offline context availability and timezone assumptions remain unchanged"
+    ],
+    "scale_model_sha256": "1c212b5d78548f9f99dd031428de6b7e8b2759b17b633ce2eb94975c81b2792e"
+  },
+  "external-azt1d": {
+    "protocol": "exploratory-pointwise-intervals-v2",
+    "evaluation": "external-azt1d",
+    "point_model_sha256": "16b76cf2492dbebc133f980e02c387f13f784846321a820d2c8154c2e59ce157",
+    "source_fingerprint": "804ca642d6a32e9fb2e6baa0f2360ff52652fc3f53673466d8db89866dd4a0df",
+    "feature_names": [
+      "glucose_lag_11_scaled",
+      "glucose_lag_10_scaled",
+      "glucose_lag_9_scaled",
+      "glucose_lag_8_scaled",
+      "glucose_lag_7_scaled",
+      "glucose_lag_6_scaled",
+      "glucose_lag_5_scaled",
+      "glucose_lag_4_scaled",
+      "glucose_lag_3_scaled",
+      "glucose_lag_2_scaled",
+      "glucose_lag_1_scaled",
+      "glucose_lag_0_scaled",
+      "observed_mean_scaled",
+      "observed_std_scaled",
+      "observed_slope_scaled",
+      "recorded_carbohydrate_30_scaled",
+      "recorded_carbohydrate_30_present",
+      "recorded_carbohydrate_60_scaled",
+      "recorded_carbohydrate_60_present",
+      "recorded_carbohydrate_120_scaled",
+      "recorded_carbohydrate_120_present",
+      "recorded_bolus_30_scaled",
+      "recorded_bolus_30_present",
+      "recorded_bolus_60_scaled",
+      "recorded_bolus_60_present",
+      "recorded_bolus_120_scaled",
+      "recorded_bolus_120_present",
+      "recorded_exercise_30_scaled",
+      "recorded_exercise_30_present",
+      "recorded_exercise_60_scaled",
+      "recorded_exercise_60_present",
+      "recorded_exercise_120_scaled",
+      "recorded_exercise_120_present",
+      "last_basal_rate_scaled",
+      "basal_rate_present",
+      "sleep_mode",
+      "exercise_mode",
+      "mode_present"
+    ],
+    "nominal_coverage": 0.9,
+    "target": "individual forecast, not every forecast of a patient",
+    "test_status": "Previously inspected test sources; exploratory re-evaluation, not new independent confirmation",
+    "calibration": {
+      "constant_radii": [
+        32.63472354412079,
+        52.44394302368164,
+        64.35665512084961,
+        72.11238288879395
+      ],
+      "scaled_quantiles": [
+        2.091565362230509,
+        2.00016645875163,
+        1.921502052980278,
+        1.883028680514317
+      ]
+    },
+    "by_method": {
+      "whole-patient-v1": {
+        "all": {
+          "30": {
+            "window_coverage": 1.0,
+            "patient_macro_coverage": 1.0,
+            "patient_bootstrap_coverage_ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_width_mg_dl": 385.22429752349854,
+            "p95_width_mg_dl": 385.22429752349854,
+            "mean_interval_score": 385.22429752349854,
+            "nonpositive_lower_bounds": 35006,
+            "nonpositive_point_predictions": 0
+          },
+          "60": {
+            "window_coverage": 1.0,
+            "patient_macro_coverage": 1.0,
+            "patient_bootstrap_coverage_ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_width_mg_dl": 557.1723251342773,
+            "p95_width_mg_dl": 557.1723251342773,
+            "mean_interval_score": 557.1723251342773,
+            "nonpositive_lower_bounds": 40715,
+            "nonpositive_point_predictions": 0
+          },
+          "90": {
+            "window_coverage": 1.0,
+            "patient_macro_coverage": 1.0,
+            "patient_bootstrap_coverage_ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_width_mg_dl": 564.0730514526367,
+            "p95_width_mg_dl": 564.0730514526367,
+            "mean_interval_score": 564.0730514526367,
+            "nonpositive_lower_bounds": 40822,
+            "nonpositive_point_predictions": 0
+          },
+          "120": {
+            "window_coverage": 1.0,
+            "patient_macro_coverage": 1.0,
+            "patient_bootstrap_coverage_ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_width_mg_dl": 601.1143493652344,
+            "p95_width_mg_dl": 601.1143493652344,
+            "mean_interval_score": 601.1143493652344,
+            "nonpositive_lower_bounds": 40888,
+            "nonpositive_point_predictions": 0
+          }
+        },
+        "by_dataset": {
+          "azt1d": {
+            "30": {
+              "window_coverage": 1.0,
+              "patient_macro_coverage": 1.0,
+              "patient_bootstrap_coverage_ci95": [
+                1.0,
+                1.0
+              ],
+              "mean_width_mg_dl": 385.22429752349854,
+              "p95_width_mg_dl": 385.22429752349854,
+              "mean_interval_score": 385.22429752349854,
+              "nonpositive_lower_bounds": 35006,
+              "nonpositive_point_predictions": 0
+            },
+            "60": {
+              "window_coverage": 1.0,
+              "patient_macro_coverage": 1.0,
+              "patient_bootstrap_coverage_ci95": [
+                1.0,
+                1.0
+              ],
+              "mean_width_mg_dl": 557.1723251342773,
+              "p95_width_mg_dl": 557.1723251342773,
+              "mean_interval_score": 557.1723251342773,
+              "nonpositive_lower_bounds": 40715,
+              "nonpositive_point_predictions": 0
+            },
+            "90": {
+              "window_coverage": 1.0,
+              "patient_macro_coverage": 1.0,
+              "patient_bootstrap_coverage_ci95": [
+                1.0,
+                1.0
+              ],
+              "mean_width_mg_dl": 564.0730514526367,
+              "p95_width_mg_dl": 564.0730514526367,
+              "mean_interval_score": 564.0730514526367,
+              "nonpositive_lower_bounds": 40822,
+              "nonpositive_point_predictions": 0
+            },
+            "120": {
+              "window_coverage": 1.0,
+              "patient_macro_coverage": 1.0,
+              "patient_bootstrap_coverage_ci95": [
+                1.0,
+                1.0
+              ],
+              "mean_width_mg_dl": 601.1143493652344,
+              "p95_width_mg_dl": 601.1143493652344,
+              "mean_interval_score": 601.1143493652344,
+              "nonpositive_lower_bounds": 40888,
+              "nonpositive_point_predictions": 0
+            }
+          }
+        }
+      },
+      "balanced-per-forecast-v2": {
+        "all": {
+          "30": {
+            "window_coverage": 0.8951833740831295,
+            "patient_macro_coverage": 0.8937896830179204,
+            "patient_bootstrap_coverage_ci95": [
+              0.8804135453842732,
+              0.908208236186886
+            ],
+            "mean_width_mg_dl": 65.26944708824158,
+            "p95_width_mg_dl": 65.26944708824158,
+            "mean_interval_score": 96.81036518509788,
+            "nonpositive_lower_bounds": 0,
+            "nonpositive_point_predictions": 0
+          },
+          "60": {
+            "window_coverage": 0.8973105134474327,
+            "patient_macro_coverage": 0.8961256418187341,
+            "patient_bootstrap_coverage_ci95": [
+              0.8823388344536254,
+              0.9130167308332859
+            ],
+            "mean_width_mg_dl": 104.88788604736328,
+            "p95_width_mg_dl": 104.88788604736328,
+            "mean_interval_score": 148.93176409670423,
+            "nonpositive_lower_bounds": 1,
+            "nonpositive_point_predictions": 0
+          },
+          "90": {
+            "window_coverage": 0.8991931540342298,
+            "patient_macro_coverage": 0.8981226057131272,
+            "patient_bootstrap_coverage_ci95": [
+              0.8827003472535101,
+              0.917094651769119
+            ],
+            "mean_width_mg_dl": 128.71331024169922,
+            "p95_width_mg_dl": 128.71331024169922,
+            "mean_interval_score": 178.66119032691844,
+            "nonpositive_lower_bounds": 2,
+            "nonpositive_point_predictions": 0
+          },
+          "120": {
+            "window_coverage": 0.9039608801955991,
+            "patient_macro_coverage": 0.9029306581889746,
+            "patient_bootstrap_coverage_ci95": [
+              0.8847079025113129,
+              0.9229239049126206
+            ],
+            "mean_width_mg_dl": 144.2247657775879,
+            "p95_width_mg_dl": 144.2247657775879,
+            "mean_interval_score": 195.33396760531863,
+            "nonpositive_lower_bounds": 2,
+            "nonpositive_point_predictions": 0
+          }
+        },
+        "by_dataset": {
+          "azt1d": {
+            "30": {
+              "window_coverage": 0.8951833740831295,
+              "patient_macro_coverage": 0.8937896830179204,
+              "patient_bootstrap_coverage_ci95": [
+                0.8804135453842732,
+                0.908208236186886
+              ],
+              "mean_width_mg_dl": 65.26944708824158,
+              "p95_width_mg_dl": 65.26944708824158,
+              "mean_interval_score": 96.81036518509788,
+              "nonpositive_lower_bounds": 0,
+              "nonpositive_point_predictions": 0
+            },
+            "60": {
+              "window_coverage": 0.8973105134474327,
+              "patient_macro_coverage": 0.8961256418187341,
+              "patient_bootstrap_coverage_ci95": [
+                0.8823388344536254,
+                0.9130167308332859
+              ],
+              "mean_width_mg_dl": 104.88788604736328,
+              "p95_width_mg_dl": 104.88788604736328,
+              "mean_interval_score": 148.93176409670423,
+              "nonpositive_lower_bounds": 1,
+              "nonpositive_point_predictions": 0
+            },
+            "90": {
+              "window_coverage": 0.8991931540342298,
+              "patient_macro_coverage": 0.8981226057131272,
+              "patient_bootstrap_coverage_ci95": [
+                0.8827003472535101,
+                0.917094651769119
+              ],
+              "mean_width_mg_dl": 128.71331024169922,
+              "p95_width_mg_dl": 128.71331024169922,
+              "mean_interval_score": 178.66119032691844,
+              "nonpositive_lower_bounds": 2,
+              "nonpositive_point_predictions": 0
+            },
+            "120": {
+              "window_coverage": 0.9039608801955991,
+              "patient_macro_coverage": 0.9029306581889746,
+              "patient_bootstrap_coverage_ci95": [
+                0.8847079025113129,
+                0.9229239049126206
+              ],
+              "mean_width_mg_dl": 144.2247657775879,
+              "p95_width_mg_dl": 144.2247657775879,
+              "mean_interval_score": 195.33396760531863,
+              "nonpositive_lower_bounds": 2,
+              "nonpositive_point_predictions": 0
+            }
+          }
+        }
+      },
+      "scaled-per-forecast-v2": {
+        "all": {
+          "30": {
+            "window_coverage": 0.9026894865525672,
+            "patient_macro_coverage": 0.9017539419972144,
+            "patient_bootstrap_coverage_ci95": [
+              0.8911287685740744,
+              0.9138465173011476
+            ],
+            "mean_width_mg_dl": 63.41636033992219,
+            "p95_width_mg_dl": 93.76675361146675,
+            "mean_interval_score": 90.84818503501613,
+            "nonpositive_lower_bounds": 11,
+            "nonpositive_point_predictions": 0
+          },
+          "60": {
+            "window_coverage": 0.9016870415647922,
+            "patient_macro_coverage": 0.9010538884189855,
+            "patient_bootstrap_coverage_ci95": [
+              0.8893885487564894,
+              0.9152448521037392
+            ],
+            "mean_width_mg_dl": 102.07322545547366,
+            "p95_width_mg_dl": 139.64950115443241,
+            "mean_interval_score": 142.03527733920106,
+            "nonpositive_lower_bounds": 16,
+            "nonpositive_point_predictions": 0
+          },
+          "90": {
+            "window_coverage": 0.9005378973105135,
+            "patient_macro_coverage": 0.8998982869522942,
+            "patient_bootstrap_coverage_ci95": [
+              0.8873457791032872,
+              0.9157200942619801
+            ],
+            "mean_width_mg_dl": 124.8766414002652,
+            "p95_width_mg_dl": 172.00019338019598,
+            "mean_interval_score": 173.35769150911642,
+            "nonpositive_lower_bounds": 30,
+            "nonpositive_point_predictions": 0
+          },
+          "120": {
+            "window_coverage": 0.9016870415647922,
+            "patient_macro_coverage": 0.9009201424779251,
+            "patient_bootstrap_coverage_ci95": [
+              0.8856442246435483,
+              0.9181199501251889
+            ],
+            "mean_width_mg_dl": 138.64153932910094,
+            "p95_width_mg_dl": 183.53008740253807,
+            "mean_interval_score": 191.3735900496412,
+            "nonpositive_lower_bounds": 52,
+            "nonpositive_point_predictions": 0
+          }
+        },
+        "by_dataset": {
+          "azt1d": {
+            "30": {
+              "window_coverage": 0.9026894865525672,
+              "patient_macro_coverage": 0.9017539419972144,
+              "patient_bootstrap_coverage_ci95": [
+                0.8911287685740744,
+                0.9138465173011476
+              ],
+              "mean_width_mg_dl": 63.41636033992219,
+              "p95_width_mg_dl": 93.76675361146675,
+              "mean_interval_score": 90.84818503501613,
+              "nonpositive_lower_bounds": 11,
+              "nonpositive_point_predictions": 0
+            },
+            "60": {
+              "window_coverage": 0.9016870415647922,
+              "patient_macro_coverage": 0.9010538884189855,
+              "patient_bootstrap_coverage_ci95": [
+                0.8893885487564894,
+                0.9152448521037392
+              ],
+              "mean_width_mg_dl": 102.07322545547366,
+              "p95_width_mg_dl": 139.64950115443241,
+              "mean_interval_score": 142.03527733920106,
+              "nonpositive_lower_bounds": 16,
+              "nonpositive_point_predictions": 0
+            },
+            "90": {
+              "window_coverage": 0.9005378973105135,
+              "patient_macro_coverage": 0.8998982869522942,
+              "patient_bootstrap_coverage_ci95": [
+                0.8873457791032872,
+                0.9157200942619801
+              ],
+              "mean_width_mg_dl": 124.8766414002652,
+              "p95_width_mg_dl": 172.00019338019598,
+              "mean_interval_score": 173.35769150911642,
+              "nonpositive_lower_bounds": 30,
+              "nonpositive_point_predictions": 0
+            },
+            "120": {
+              "window_coverage": 0.9016870415647922,
+              "patient_macro_coverage": 0.9009201424779251,
+              "patient_bootstrap_coverage_ci95": [
+                0.8856442246435483,
+                0.9181199501251889
+              ],
+              "mean_width_mg_dl": 138.64153932910094,
+              "p95_width_mg_dl": 183.53008740253807,
+              "mean_interval_score": 191.3735900496412,
+              "nonpositive_lower_bounds": 52,
+              "nonpositive_point_predictions": 0
+            }
+          }
+        }
+      }
+    },
+    "limitations": [
+      "Patient-balanced empirical quantiles do not imply distribution-free patient coverage",
+      "Correlated windows and dataset shift limit nominal coverage claims",
+      "Scale learner fits validation residuals only; no test-label tuning",
+      "One mg/dL numerical scale floor is not a treatment threshold",
+      "Negative lower bounds are counted, never silently clipped",
+      "Offline context availability and timezone assumptions remain unchanged"
+    ],
+    "scale_model_sha256": "98b0550cfe16a3aff5a1bf49079f462ccfd62ffbf076e49f12fc2dc656af2b3c"
+  }
+}

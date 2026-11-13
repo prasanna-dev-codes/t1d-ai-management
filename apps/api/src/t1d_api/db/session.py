@@ -72,7 +72,7 @@ class Database:
             if (
                 role
                 or versions != {"timescaledb": "2.29.0", "vector": "0.8.1"}
-                or migration != "0002_runtime_chunk_guard"
+                or migration not in {"0002_runtime_chunk_guard", "0003_memory"}
             ):
                 raise DataError(503, "DATABASE_CONFIGURATION")
         return True

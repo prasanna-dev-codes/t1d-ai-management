@@ -234,6 +234,9 @@ def test_log_formatter_is_allowlisted() -> None:
 def test_no_future_phase_routes_or_test_bypass() -> None:
     app = create_app()
     assert set(app.openapi()["paths"]) == {
+        "/api/v1/patients/{patient_id}/memory/rebuild",
+        "/api/v1/patients/{patient_id}/historical-retrievals",
+        "/api/v1/patients/{patient_id}/forecasts",
         "/api/v1/health/live",
         "/api/v1/health/ready",
         "/api/v1/auth/session",

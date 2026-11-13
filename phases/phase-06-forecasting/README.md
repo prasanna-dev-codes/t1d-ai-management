@@ -1,0 +1,81 @@
+# Phase 06 — Glucose forecasting
+
+Owner: Archit. Branch: `workstream/archit-phases-05-08`.
+
+Implemented research slice: four-horizon persistence, observed-window linear trend
+and a trained ridge candidate; portable SHA-256-checked JSON weights/calibration;
+patient-disjoint chronological synthetic evaluation; protected forecast API with
+current consent, grants, source approval, revision/cutoff and audit checks.
+
+This bundle is qualified only on fictional data. The API explicitly abstains on
+nonsynthetic source types. It cannot provide medical advice or treatment actions.
+Read [the model card and evaluation protocol](MODEL_CARD.md) before interpreting results.
+
+```powershell
+uv sync --frozen --all-packages
+uv run python -m pytest phases/phase-06-forecasting/tests tests/test_forecast_api.py -q
+uv run python scripts/evaluate_forecasting.py
+uv run python scripts/run_memory_tests.py --tb=short
+```
+
+The final command needs Docker and runs actual disposable TimescaleDB/pgvector
+and Neo4j integration tests, including Phase 06. Hosted branch CI runs the same
+qualification and exports the synthetic evaluation report. No persistent database
+is migrated or changed by this implementation; canonical Phase 02 storage and
+audit tables are reused.
+
+## API
+
+`POST /api/v1/patients/{patient_id}/forecasts`, authenticated researcher/clinician,
+current scoped grant/consent, `X-Study-ID` header. Example body:
+
+```json
+{"input_cutoff":"2026-11-07T12:00:00+05:30","horizons_minutes":[30,60,90,120],"model_profile":"persistence-v1"}
+```
+
+Use a real applicable cutoff no later than server time; the example is syntax,
+not a valid seeded request. Supported profiles: persistence-v1, linear-v1,
+ridge-v1. The default stays persistence; no automatic promotion based on test scores.
+No client-supplied glucose arrays, weights, model paths, context guesses or doses.
+Eligible results include all requested target times, points and intervals in
+mg/dL, immutable model/feature/policy versions, input hash and source revision IDs.
+Abstentions have data=null and explicit reasons. Identity remains deny-all until
+an existing approved authenticator is configured; there is no test bypass route.
+
+Domain code/artifacts/tests live here. API integration, generated shared contracts,
+root workspace and real-service tests retain their existing shared locations.
+Phase 07 personalization and Phase 08 clinical simulation are not implemented.
+
+## Three-dataset offline research extension
+
+The first approved offline experiment now fits actual OhioT1DM, PhysioCGM and
+AZT1D data, including recorded context with missingness masks. See
+[real-data results](REAL_DATA_RESULTS.md) and [protocol decisions](MULTIDATASET_DECISIONS.md).
+Install optional training tools using `uv sync --frozen --all-packages --extra research`.
+Run `scripts/train_multidataset_forecasting.py --help` for the three explicit source
+paths, external output directory and required context-availability policy. Raw
+records and research weights are not included in Git. Aggregate reports are in
+results/. The existing synthetic HTTP API is intentionally unchanged; the new
+local-clock context artifacts are not silently substituted into it.
+
+## Exploratory uncertainty v2 and project-wide context
+
+See [the v2 report](UNCERTAINTY_V2.md) for per-forecast intervals, external coverage
+misses and history-only offline inference. The original v1 results remain intact.
+The [eleven-factor project matrix](../../docs/metabolic-factor-requirements.md)
+and [Prasanna handoff](../../docs/prasanna-phase-handoff.md) distinguish current
+features from later verified physiological/profile inputs.
+
+## Offline history benchmark
+
+[History benchmark v4](HISTORY_RESULTS.md) documents the improved point model,
+held-out results, activity subgroup regression and source-specific factor
+coverage. It adds longer CGM trends, prior recorded-clock patterns, wearable
+sleep duration and reported activity and insulin metadata where the sources
+support them. Use the report commands to reproduce training or run a local
+forecast from observed history. The artifact requires explicit event-time replay.
+
+[Earlier CGM trajectories](ANALOGUE_RESULTS.md) extends the offline benchmark
+with matched past responses. It compares the frozen v4 forecast, tree models
+and a neural comparison on the same held-out anchors. The report includes the
+replay command, long-horizon gains and exercise subgroup results.

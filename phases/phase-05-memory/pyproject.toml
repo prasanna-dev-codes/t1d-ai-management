@@ -1,0 +1,13 @@
+[project]
+name = "t1d-memory"
+version = "0.1.0"
+description = "Patient-scoped experimental historical evidence retrieval"
+requires-python = ">=3.12,<3.13"
+dependencies = ["pydantic==2.14.2", "neo4j==6.4.0"]
+
+[build-system]
+requires = ["hatchling==1.33.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/t1d_memory"]

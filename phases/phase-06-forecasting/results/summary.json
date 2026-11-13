@@ -1,0 +1,4073 @@
+{
+  "protocol": "three-dataset-context-replay-v1",
+  "python": "3.12.14",
+  "inventory": {
+    "ohio": {
+      "ambiguous_glucose_excluded": 0,
+      "conflicting_timestamps_excluded": 0,
+      "cadence_or_clock_breaks": 526,
+      "verified_glucose_records": 166533,
+      "candidate_windows": 24801,
+      "accepted_windows": 24801
+    },
+    "physiocgm": {
+      "ambiguous_glucose_excluded": 0,
+      "conflicting_timestamps_excluded": 84,
+      "cadence_or_clock_breaks": 743,
+      "verified_glucose_records": 226714,
+      "candidate_windows": 35813,
+      "accepted_windows": 35813
+    },
+    "azt1d": {
+      "ambiguous_glucose_excluded": 13003,
+      "conflicting_timestamps_excluded": 182,
+      "cadence_or_clock_breaks": 4178,
+      "identical_timestamp_duplicates_collapsed": 5051,
+      "verified_glucose_records": 287946,
+      "candidate_windows": 40971,
+      "horizon_alignment_excluded": 71,
+      "accepted_windows": 40900
+    }
+  },
+  "data_assumptions": [
+    "Unknown timezone retained; local elapsed time only; no UTC conversion",
+    "Context policy: event-time-replay",
+    "Context absence is unknown, not verified zero exposure",
+    "Subject 14 mixed CGM/BGM retained but excluded from glucose training",
+    "Calibration nominal 90% is not a clinical or domain-shift guarantee",
+    "Shared-cohort aliases across datasets cannot be excluded by timestamps alone",
+    "API real-data serving is unchanged and remains blocked"
+  ],
+  "runs": {
+    "pooled": {
+      "evaluation": "pooled-patient-disjoint",
+      "feature_version": "offline-local12-context-mask-replay-v1",
+      "partitions": {
+        "fit": {
+          "windows": 42099,
+          "patients": 28,
+          "by_dataset": {
+            "ohio": 8082,
+            "physiocgm": 9840,
+            "azt1d": 24177
+          }
+        },
+        "validation": {
+          "windows": 10455,
+          "patients": 28,
+          "by_dataset": {
+            "ohio": 2004,
+            "physiocgm": 2447,
+            "azt1d": 6004
+          }
+        },
+        "calibration": {
+          "windows": 22493,
+          "patients": 9,
+          "by_dataset": {
+            "ohio": 4669,
+            "physiocgm": 11816,
+            "azt1d": 6008
+          }
+        },
+        "test": {
+          "windows": 22800,
+          "patients": 9,
+          "by_dataset": {
+            "ohio": 6550,
+            "physiocgm": 11678,
+            "azt1d": 4572
+          }
+        }
+      },
+      "selected_on_validation": "xgb-context",
+      "selected_context_on_validation": "xgb-context",
+      "training": {
+        "persistence": {
+          "fit_and_evaluation_seconds": 0.004597199993440881,
+          "validation_dataset_patient_macro_mae": 31.009165069409544
+        },
+        "linear": {
+          "fit_and_evaluation_seconds": 0.011848400012240745,
+          "validation_dataset_patient_macro_mae": 48.951122283292136
+        },
+        "ridge-cgm": {
+          "fit_and_evaluation_seconds": 0.16466989999753423,
+          "validation_dataset_patient_macro_mae": 27.136698362020145
+        },
+        "ridge-context": {
+          "fit_and_evaluation_seconds": 0.3825191000069026,
+          "validation_dataset_patient_macro_mae": 26.809613549735236
+        },
+        "xgb-cgm": {
+          "fit_and_evaluation_seconds": 2.5918339000054402,
+          "validation_dataset_patient_macro_mae": 26.997086914236494
+        },
+        "xgb-context": {
+          "fit_and_evaluation_seconds": 2.9833588000037707,
+          "validation_dataset_patient_macro_mae": 26.409046458680123
+        }
+      },
+      "source_fingerprint": "804ca642d6a32e9fb2e6baa0f2360ff52652fc3f53673466d8db89866dd4a0df",
+      "test_results": {
+        "persistence": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 16.168438596491228,
+              "rmse_mg_dl": 22.839920576259118,
+              "bias_mg_dl": 0.15907017543859633,
+              "patient_macro_mae": 16.51874472898599,
+              "patient_bootstrap_mae_ci95": [
+                14.808251046389408,
+                18.18424869372414
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 412.0,
+              "nonpositive_predictions": 0
+            },
+            "60": {
+              "mae_mg_dl": 26.000666666666664,
+              "rmse_mg_dl": 35.78799710576306,
+              "bias_mg_dl": 0.30224561403508754,
+              "patient_macro_mae": 26.860213149452438,
+              "patient_bootstrap_mae_ci95": [
+                23.911297657973993,
+                29.875682224826956
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 506.0,
+              "nonpositive_predictions": 0
+            },
+            "90": {
+              "mae_mg_dl": 32.25743859649123,
+              "rmse_mg_dl": 43.97663143398664,
+              "bias_mg_dl": 0.40956140350877185,
+              "patient_macro_mae": 33.729423368136764,
+              "patient_bootstrap_mae_ci95": [
+                29.543244349880403,
+                37.63727984679717
+              ],
+              "window_coverage": 0.9999122807017544,
+              "whole_patient_coverage": 0.8888888888888888,
+              "interval_width_mg_dl": 516.0,
+              "nonpositive_predictions": 0
+            },
+            "120": {
+              "mae_mg_dl": 36.43104385964912,
+              "rmse_mg_dl": 49.578860432188094,
+              "bias_mg_dl": 0.48511403508771916,
+              "patient_macro_mae": 38.4656145881645,
+              "patient_bootstrap_mae_ci95": [
+                33.15556814845746,
+                43.440653362737955
+              ],
+              "window_coverage": 0.9998245614035087,
+              "whole_patient_coverage": 0.7777777777777778,
+              "interval_width_mg_dl": 530.0,
+              "nonpositive_predictions": 0
+            }
+          },
+          "by_dataset": {
+            "azt1d": {
+              "30": {
+                "mae_mg_dl": 15.665441819772527,
+                "rmse_mg_dl": 22.41403798655303,
+                "bias_mg_dl": 0.15809273840769877,
+                "patient_macro_mae": 16.109361396086314,
+                "patient_bootstrap_mae_ci95": [
+                  13.250148898153663,
+                  19.06052104208417
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 412.0,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 26.11268591426072,
+                "rmse_mg_dl": 36.49449196806278,
+                "bias_mg_dl": 0.2627296587926506,
+                "patient_macro_mae": 26.963561690486767,
+                "patient_bootstrap_mae_ci95": [
+                  21.877307921381774,
+                  32.525250501002006
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 506.0,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 33.71732283464567,
+                "rmse_mg_dl": 46.06053151484003,
+                "bias_mg_dl": 0.33202099737532764,
+                "patient_macro_mae": 34.73836541283736,
+                "patient_bootstrap_mae_ci95": [
+                  28.4514592019059,
+                  41.4565130260521
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 516.0,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 39.145844269466316,
+                "rmse_mg_dl": 52.61746547289123,
+                "bias_mg_dl": 0.41986001749781243,
+                "patient_macro_mae": 40.29021568374528,
+                "patient_bootstrap_mae_ci95": [
+                  33.02501488981537,
+                  47.87254509018036
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 530.0,
+                "nonpositive_predictions": 0
+              }
+            },
+            "ohio": {
+              "30": {
+                "mae_mg_dl": 18.181832061068704,
+                "rmse_mg_dl": 25.339848834026174,
+                "bias_mg_dl": 0.2505343511450379,
+                "patient_macro_mae": 18.253200250856647,
+                "patient_bootstrap_mae_ci95": [
+                  17.16846738695478,
+                  19.109575988565982
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 412.0,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 29.48503816793893,
+                "rmse_mg_dl": 40.08969904433867,
+                "bias_mg_dl": 0.5259541984732822,
+                "patient_macro_mae": 29.67536339249915,
+                "patient_bootstrap_mae_ci95": [
+                  27.13765506202481,
+                  31.250512295081972
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 506.0,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 37.422442748091605,
+                "rmse_mg_dl": 50.22345639757467,
+                "bias_mg_dl": 0.8087022900763358,
+                "patient_macro_mae": 37.71731986791077,
+                "patient_bootstrap_mae_ci95": [
+                  33.863145258103245,
+                  40.368852459016395
+                ],
+                "window_coverage": 0.9996946564885496,
+                "whole_patient_coverage": 0.6666666666666666,
+                "interval_width_mg_dl": 516.0,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 43.24793893129771,
+                "rmse_mg_dl": 57.69343831344671,
+                "bias_mg_dl": 0.8827480916030533,
+                "patient_macro_mae": 43.61636950718114,
+                "patient_bootstrap_mae_ci95": [
+                  38.93957583033213,
+                  47.30686475409836
+                ],
+                "window_coverage": 0.9993893129770992,
+                "whole_patient_coverage": 0.3333333333333333,
+                "interval_width_mg_dl": 530.0,
+                "nonpositive_predictions": 0
+              }
+            },
+            "physiocgm": {
+              "30": {
+                "mae_mg_dl": 15.236084946052406,
+                "rmse_mg_dl": 21.486070476584295,
+                "bias_mg_dl": 0.10815208083575954,
+                "patient_macro_mae": 15.193672540015008,
+                "patient_bootstrap_mae_ci95": [
+                  11.567708333333334,
+                  19.379985319305113
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 412.0,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 24.002483301935264,
+                "rmse_mg_dl": 32.8285453942789,
+                "bias_mg_dl": 0.19224182222983388,
+                "patient_macro_mae": 23.94171436537141,
+                "patient_bootstrap_mae_ci95": [
+                  17.767609126984127,
+                  30.816735992170297
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 506.0,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 28.788919335502655,
+                "rmse_mg_dl": 39.12075819213706,
+                "bias_mg_dl": 0.21604726836787122,
+                "patient_macro_mae": 28.732584823662133,
+                "patient_bootstrap_mae_ci95": [
+                  20.173363095238095,
+                  37.646195253241984
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 516.0,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 31.544699434834733,
+                "rmse_mg_dl": 42.99134142562811,
+                "bias_mg_dl": 0.28763486898441515,
+                "patient_macro_mae": 31.490258573567086,
+                "patient_bootstrap_mae_ci95": [
+                  21.144345238095237,
+                  41.96256422804013
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 530.0,
+                "nonpositive_predictions": 0
+              }
+            }
+          }
+        },
+        "linear": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 20.197418937351426,
+              "rmse_mg_dl": 29.186026370846267,
+              "bias_mg_dl": 0.08081195745864833,
+              "patient_macro_mae": 20.20909368226797,
+              "patient_bootstrap_mae_ci95": [
+                18.27561250060972,
+                22.235700769507616
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 513.0475251717974,
+              "nonpositive_predictions": 32
+            },
+            "60": {
+              "mae_mg_dl": 38.68890453223518,
+              "rmse_mg_dl": 54.58337636260142,
+              "bias_mg_dl": 0.14572917807519134,
+              "patient_macro_mae": 39.0292092059036,
+              "patient_bootstrap_mae_ci95": [
+                35.278901768929266,
+                42.866764174218304
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 935.0629370629372,
+              "nonpositive_predictions": 323
+            },
+            "90": {
+              "mae_mg_dl": 55.53520047540333,
+              "rmse_mg_dl": 77.69695760472221,
+              "bias_mg_dl": 0.1747867495689276,
+              "patient_macro_mae": 56.45350765049247,
+              "patient_bootstrap_mae_ci95": [
+                50.624380435980164,
+                62.076793184292185
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 1187.8741258741259,
+              "nonpositive_predictions": 836
+            },
+            "120": {
+              "mae_mg_dl": 71.47725360693028,
+              "rmse_mg_dl": 99.6072642368453,
+              "bias_mg_dl": 0.17208116316792688,
+              "patient_macro_mae": 73.03354342333984,
+              "patient_bootstrap_mae_ci95": [
+                64.96285927787582,
+                80.61498582618007
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 1515.832167832168,
+              "nonpositive_predictions": 1503
+            }
+          },
+          "by_dataset": {
+            "azt1d": {
+              "30": {
+                "mae_mg_dl": 18.43049974520448,
+                "rmse_mg_dl": 27.32118112025972,
+                "bias_mg_dl": -0.004161890739769246,
+                "patient_macro_mae": 18.91287365137882,
+                "patient_bootstrap_mae_ci95": [
+                  15.094465986663723,
+                  22.29101139341621
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 513.0475251717974,
+                "nonpositive_predictions": 5
+              },
+              "60": {
+                "mae_mg_dl": 36.168542981186405,
+                "rmse_mg_dl": 52.66860440772845,
+                "bias_mg_dl": -0.06177959950228537,
+                "patient_macro_mae": 37.35667710692277,
+                "patient_bootstrap_mae_ci95": [
+                  29.299932943768557,
+                  45.352670375716464
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 935.0629370629372,
+                "nonpositive_predictions": 37
+              },
+              "90": {
+                "mae_mg_dl": 53.46158715858393,
+                "rmse_mg_dl": 76.97002938219222,
+                "bias_mg_dl": -0.15474289006707634,
+                "patient_macro_mae": 55.126218778870964,
+                "patient_bootstrap_mae_ci95": [
+                  43.64526420571686,
+                  66.37547402497303
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 1187.8741258741259,
+                "nonpositive_predictions": 107
+              },
+              "120": {
+                "mae_mg_dl": 70.03397374335286,
+                "rmse_mg_dl": 100.20803040029801,
+                "bias_mg_dl": -0.2291584990920596,
+                "patient_macro_mae": 72.00274357842542,
+                "patient_bootstrap_mae_ci95": [
+                  58.05196649687419,
+                  85.3969281219782
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 1515.832167832168,
+                "nonpositive_predictions": 212
+              }
+            },
+            "ohio": {
+              "30": {
+                "mae_mg_dl": 21.758076122350932,
+                "rmse_mg_dl": 31.310044972009276,
+                "bias_mg_dl": 0.13927507606896897,
+                "patient_macro_mae": 21.77025827846312,
+                "patient_bootstrap_mae_ci95": [
+                  21.192139315602432,
+                  22.76031876651219
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 513.0475251717974,
+                "nonpositive_predictions": 13
+              },
+              "60": {
+                "mae_mg_dl": 41.74212672823359,
+                "rmse_mg_dl": 58.541608333812114,
+                "bias_mg_dl": 0.3034356483211443,
+                "patient_macro_mae": 41.88307398093127,
+                "patient_bootstrap_mae_ci95": [
+                  39.661607300262766,
+                  43.86904519967883
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 935.0629370629372,
+                "nonpositive_predictions": 110
+              },
+              "90": {
+                "mae_mg_dl": 60.546848876314534,
+                "rmse_mg_dl": 83.94522428586579,
+                "bias_mg_dl": 0.47492446484812834,
+                "patient_macro_mae": 60.84634929196432,
+                "patient_bootstrap_mae_ci95": [
+                  56.70453356167642,
+                  62.92118895448814
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 1187.8741258741259,
+                "nonpositive_predictions": 280
+              },
+              "120": {
+                "mae_mg_dl": 78.99844125340307,
+                "rmse_mg_dl": 108.32059438276775,
+                "bias_mg_dl": 0.43771099129877694,
+                "patient_macro_mae": 79.44439457740737,
+                "patient_bootstrap_mae_ci95": [
+                  73.63363807061286,
+                  83.50352158087814
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 1515.832167832168,
+                "nonpositive_predictions": 476
+              }
+            },
+            "physiocgm": {
+              "30": {
+                "mae_mg_dl": 20.013830136593512,
+                "rmse_mg_dl": 28.653258922202017,
+                "bias_mg_dl": 0.08128866640414968,
+                "patient_macro_mae": 19.94414911696197,
+                "patient_bootstrap_mae_ci95": [
+                  15.939313504525293,
+                  25.072979025938718
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 513.0475251717974,
+                "nonpositive_predictions": 14
+              },
+              "60": {
+                "mae_mg_dl": 37.9631370744175,
+                "rmse_mg_dl": 52.996189153483144,
+                "bias_mg_dl": 0.13851499336661394,
+                "patient_macro_mae": 37.84787652985674,
+                "patient_bootstrap_mae_ci95": [
+                  29.920163380551013,
+                  47.49905258857306
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 935.0629370629372,
+                "nonpositive_predictions": 176
+              },
+              "90": {
+                "mae_mg_dl": 53.53607931240709,
+                "rmse_mg_dl": 74.25868032585282,
+                "bias_mg_dl": 0.13545702507304153,
+                "patient_macro_mae": 53.387954880642134,
+                "patient_bootstrap_mae_ci95": [
+                  40.62059411061395,
+                  68.10151313513917
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 1187.8741258741259,
+                "nonpositive_predictions": 449
+              },
+              "120": {
+                "mae_mg_dl": 67.82379380661165,
+                "rmse_mg_dl": 94.11924429917705,
+                "bias_mg_dl": 0.1801812112579754,
+                "patient_macro_mae": 67.65349211418675,
+                "patient_bootstrap_mae_ci95": [
+                  49.62875435311933,
+                  87.56728780570721
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 1515.832167832168,
+                "nonpositive_predictions": 815
+              }
+            }
+          }
+        },
+        "ridge-cgm": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 14.518911472949556,
+              "rmse_mg_dl": 20.530312886046513,
+              "bias_mg_dl": 1.5628872212505995,
+              "patient_macro_mae": 14.53347118578471,
+              "patient_bootstrap_mae_ci95": [
+                13.385543237488475,
+                15.55473396348032
+              ],
+              "window_coverage": 0.9999561403508772,
+              "whole_patient_coverage": 0.8888888888888888,
+              "interval_width_mg_dl": 396.6878527070902,
+              "nonpositive_predictions": 0
+            },
+            "60": {
+              "mae_mg_dl": 24.36025179984912,
+              "rmse_mg_dl": 32.494096620339576,
+              "bias_mg_dl": 3.7275357592485205,
+              "patient_macro_mae": 24.56577558677849,
+              "patient_bootstrap_mae_ci95": [
+                22.660519080710692,
+                26.346012774097044
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 495.3963605948875,
+              "nonpositive_predictions": 0
+            },
+            "90": {
+              "mae_mg_dl": 30.317865687845064,
+              "rmse_mg_dl": 39.18341543492619,
+              "bias_mg_dl": 5.775044925096598,
+              "patient_macro_mae": 30.74675065485654,
+              "patient_bootstrap_mae_ci95": [
+                28.357459068719727,
+                33.059125572895546
+              ],
+              "window_coverage": 0.9999561403508772,
+              "whole_patient_coverage": 0.8888888888888888,
+              "interval_width_mg_dl": 454.99322592275763,
+              "nonpositive_predictions": 0
+            },
+            "120": {
+              "mae_mg_dl": 34.076020113527406,
+              "rmse_mg_dl": 43.09564677719312,
+              "bias_mg_dl": 7.4748917286370675,
+              "patient_macro_mae": 34.59467663619336,
+              "patient_bootstrap_mae_ci95": [
+                32.0359757927798,
+                37.235410816122844
+              ],
+              "window_coverage": 0.9998684210526316,
+              "whole_patient_coverage": 0.8888888888888888,
+              "interval_width_mg_dl": 449.42649986423453,
+              "nonpositive_predictions": 0
+            }
+          },
+          "by_dataset": {
+            "azt1d": {
+              "30": {
+                "mae_mg_dl": 13.33408797803058,
+                "rmse_mg_dl": 19.118706997324843,
+                "bias_mg_dl": -0.23365564896837498,
+                "patient_macro_mae": 13.44598204289795,
+                "patient_bootstrap_mae_ci95": [
+                  11.749013219377188,
+                  14.424939601932644
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 396.6878527070902,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 22.75006961207172,
+                "rmse_mg_dl": 31.419487656921376,
+                "bias_mg_dl": -0.43014150065074325,
+                "patient_macro_mae": 23.248159372291138,
+                "patient_bootstrap_mae_ci95": [
+                  19.305482842504357,
+                  26.736324939913327
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 495.3963605948875,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 28.837724915761612,
+                "rmse_mg_dl": 38.67632586168126,
+                "bias_mg_dl": -0.6156655517606807,
+                "patient_macro_mae": 29.428985095827404,
+                "patient_bootstrap_mae_ci95": [
+                  24.34766627145625,
+                  33.666227469656775
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 454.99322592275763,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 32.451597210590954,
+                "rmse_mg_dl": 42.71791459615273,
+                "bias_mg_dl": -0.8026485460715234,
+                "patient_macro_mae": 33.030378818316905,
+                "patient_bootstrap_mae_ci95": [
+                  27.283092024060434,
+                  37.36438490313569
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 449.42649986423453,
+                "nonpositive_predictions": 0
+              }
+            },
+            "ohio": {
+              "30": {
+                "mae_mg_dl": 16.01763666518106,
+                "rmse_mg_dl": 22.883792577783925,
+                "bias_mg_dl": -0.8283762519519843,
+                "patient_macro_mae": 16.038677953985168,
+                "patient_bootstrap_mae_ci95": [
+                  15.538610253596337,
+                  16.961920065861502
+                ],
+                "window_coverage": 0.9998473282442748,
+                "whole_patient_coverage": 0.6666666666666666,
+                "interval_width_mg_dl": 396.6878527070902,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 26.64638013668563,
+                "rmse_mg_dl": 35.7005492568527,
+                "bias_mg_dl": -1.6612170019353687,
+                "patient_macro_mae": 26.785266661650525,
+                "patient_bootstrap_mae_ci95": [
+                  24.789441267263708,
+                  28.02342824130721
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 495.3963605948875,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 33.46956920390246,
+                "rmse_mg_dl": 43.56144973557528,
+                "bias_mg_dl": -2.350783477295276,
+                "patient_macro_mae": 33.724313366397986,
+                "patient_bootstrap_mae_ci95": [
+                  30.288550455549522,
+                  35.72614397868553
+                ],
+                "window_coverage": 0.9998473282442748,
+                "whole_patient_coverage": 0.6666666666666666,
+                "interval_width_mg_dl": 454.99322592275763,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 37.94272769616189,
+                "rmse_mg_dl": 48.616824798764256,
+                "bias_mg_dl": -3.0887402122064365,
+                "patient_macro_mae": 38.249422903435665,
+                "patient_bootstrap_mae_ci95": [
+                  34.321155687293434,
+                  41.22593121082608
+                ],
+                "window_coverage": 0.9995419847328244,
+                "whole_patient_coverage": 0.6666666666666666,
+                "interval_width_mg_dl": 449.42649986423453,
+                "nonpositive_predictions": 0
+              }
+            },
+            "physiocgm": {
+              "30": {
+                "mae_mg_dl": 14.142165712515679,
+                "rmse_mg_dl": 19.649375995657397,
+                "bias_mg_dl": 3.6074641823841906,
+                "patient_macro_mae": 14.11575356047102,
+                "patient_bootstrap_mae_ci95": [
+                  11.875810867704688,
+                  16.70653766133471
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 396.6878527070902,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 23.708394663031104,
+                "rmse_mg_dl": 30.985662354952304,
+                "bias_mg_dl": 8.377752493108249,
+                "patient_macro_mae": 23.66390072639382,
+                "patient_bootstrap_mae_ci95": [
+                  20.687189101074715,
+                  27.314629496897854
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 495.3963605948875,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 29.12960961486934,
+                "rmse_mg_dl": 36.70983183471364,
+                "bias_mg_dl": 12.834687358377833,
+                "patient_macro_mae": 29.086953502344247,
+                "patient_bootstrap_mae_ci95": [
+                  26.301654307560806,
+                  32.52556070158786
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 454.99322592275763,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 32.54321713750151,
+                "rmse_mg_dl": 39.8235566978736,
+                "bias_mg_dl": 16.640562506894696,
+                "patient_macro_mae": 32.50422818682752,
+                "patient_bootstrap_mae_ci95": [
+                  30.451875830812394,
+                  35.2051290019148
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 449.42649986423453,
+                "nonpositive_predictions": 0
+              }
+            }
+          }
+        },
+        "ridge-context": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 14.442321928233465,
+              "rmse_mg_dl": 20.46160525259024,
+              "bias_mg_dl": 1.6661506909003245,
+              "patient_macro_mae": 14.465686513174802,
+              "patient_bootstrap_mae_ci95": [
+                13.398061067413254,
+                15.453631106699167
+              ],
+              "window_coverage": 0.9999561403508772,
+              "whole_patient_coverage": 0.8888888888888888,
+              "interval_width_mg_dl": 397.3685239470698,
+              "nonpositive_predictions": 0
+            },
+            "60": {
+              "mae_mg_dl": 24.320345139118864,
+              "rmse_mg_dl": 32.64437095628266,
+              "bias_mg_dl": 3.8197731798774286,
+              "patient_macro_mae": 24.556855907873004,
+              "patient_bootstrap_mae_ci95": [
+                22.84709536774949,
+                26.19463892495991
+              ],
+              "window_coverage": 0.9999122807017544,
+              "whole_patient_coverage": 0.8888888888888888,
+              "interval_width_mg_dl": 498.4436335269819,
+              "nonpositive_predictions": 0
+            },
+            "90": {
+              "mae_mg_dl": 30.394118545942337,
+              "rmse_mg_dl": 39.636601273482796,
+              "bias_mg_dl": 5.7614171891234935,
+              "patient_macro_mae": 30.864494345208747,
+              "patient_bootstrap_mae_ci95": [
+                28.578836340486824,
+                33.15370227019524
+              ],
+              "window_coverage": 0.9997807017543859,
+              "whole_patient_coverage": 0.7777777777777778,
+              "interval_width_mg_dl": 455.7159756361908,
+              "nonpositive_predictions": 0
+            },
+            "120": {
+              "mae_mg_dl": 34.2206753766667,
+              "rmse_mg_dl": 43.64731761989086,
+              "bias_mg_dl": 7.39209329294141,
+              "patient_macro_mae": 34.78794180293297,
+              "patient_bootstrap_mae_ci95": [
+                32.161476842041424,
+                37.66079822985386
+              ],
+              "window_coverage": 0.9996929824561404,
+              "whole_patient_coverage": 0.7777777777777778,
+              "interval_width_mg_dl": 449.7292118414791,
+              "nonpositive_predictions": 0
+            }
+          },
+          "by_dataset": {
+            "azt1d": {
+              "30": {
+                "mae_mg_dl": 13.435473341954633,
+                "rmse_mg_dl": 19.498057611558927,
+                "bias_mg_dl": -1.2241789458000032,
+                "patient_macro_mae": 13.54973649558571,
+                "patient_bootstrap_mae_ci95": [
+                  12.16005660192439,
+                  14.466773279790983
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 397.3685239470698,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 23.094753692880342,
+                "rmse_mg_dl": 32.642605442799855,
+                "bias_mg_dl": -3.1892164008630632,
+                "patient_macro_mae": 23.591305009744463,
+                "patient_bootstrap_mae_ci95": [
+                  20.32374465692332,
+                  26.90905936527638
+                ],
+                "window_coverage": 0.9995625546806649,
+                "whole_patient_coverage": 0.6666666666666666,
+                "interval_width_mg_dl": 498.4436335269819,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 29.098157278318702,
+                "rmse_mg_dl": 40.39782195771913,
+                "bias_mg_dl": -4.525096921324653,
+                "patient_macro_mae": 29.718085209521803,
+                "patient_bootstrap_mae_ci95": [
+                  25.166941413702677,
+                  33.97377925785793
+                ],
+                "window_coverage": 0.9993438320209974,
+                "whole_patient_coverage": 0.6666666666666666,
+                "interval_width_mg_dl": 455.7159756361908,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 32.6749078964832,
+                "rmse_mg_dl": 44.530951362792734,
+                "bias_mg_dl": -5.073973625060227,
+                "patient_macro_mae": 33.29031197404133,
+                "patient_bootstrap_mae_ci95": [
+                  27.837108442758787,
+                  37.74016638357624
+                ],
+                "window_coverage": 0.9993438320209974,
+                "whole_patient_coverage": 0.6666666666666666,
+                "interval_width_mg_dl": 449.7292118414791,
+                "nonpositive_predictions": 0
+              }
+            },
+            "ohio": {
+              "30": {
+                "mae_mg_dl": 15.721211271220236,
+                "rmse_mg_dl": 22.463696653660808,
+                "bias_mg_dl": 0.441953685565895,
+                "patient_macro_mae": 15.755245731002114,
+                "patient_bootstrap_mae_ci95": [
+                  15.108382456671178,
+                  16.645779741122716
+                ],
+                "window_coverage": 0.9998473282442748,
+                "whole_patient_coverage": 0.6666666666666666,
+                "interval_width_mg_dl": 397.3685239470698,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 26.23543096566307,
+                "rmse_mg_dl": 35.32257601424788,
+                "bias_mg_dl": 0.6015505817900801,
+                "patient_macro_mae": 26.398587596642017,
+                "patient_bootstrap_mae_ci95": [
+                  24.128252187660518,
+                  27.576802125898883
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 498.4436335269819,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 33.425344753554285,
+                "rmse_mg_dl": 43.722754976827304,
+                "bias_mg_dl": 0.1140730595070386,
+                "patient_macro_mae": 33.71768671969733,
+                "patient_bootstrap_mae_ci95": [
+                  29.891518920586606,
+                  36.33246739039601
+                ],
+                "window_coverage": 0.9996946564885496,
+                "whole_patient_coverage": 0.6666666666666666,
+                "interval_width_mg_dl": 455.7159756361908,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 38.11568792144517,
+                "rmse_mg_dl": 49.00006978712312,
+                "bias_mg_dl": -0.6877705411709927,
+                "patient_macro_mae": 38.471986866977346,
+                "patient_bootstrap_mae_ci95": [
+                  34.02027484188427,
+                  42.23439015404244
+                ],
+                "window_coverage": 0.9993893129770992,
+                "whole_patient_coverage": 0.6666666666666666,
+                "interval_width_mg_dl": 449.7292118414791,
+                "nonpositive_predictions": 0
+              }
+            },
+            "physiocgm": {
+              "30": {
+                "mae_mg_dl": 14.119200378302263,
+                "rmse_mg_dl": 19.635398614211258,
+                "bias_mg_dl": 3.484362498053468,
+                "patient_macro_mae": 14.092077312936574,
+                "patient_bootstrap_mae_ci95": [
+                  11.792742648204666,
+                  16.75179029354021
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 397.3685239470698,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 23.726030353054295,
+                "rmse_mg_dl": 31.04195136281409,
+                "bias_mg_dl": 8.368879052511241,
+                "patient_macro_mae": 23.68067511723253,
+                "patient_bootstrap_mae_ci95": [
+                  20.578077188515934,
+                  27.46322675399297
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 498.4436335269819,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 29.20132896345535,
+                "rmse_mg_dl": 36.82608331145049,
+                "bias_mg_dl": 12.956146300440219,
+                "patient_macro_mae": 29.157711106407117,
+                "patient_bootstrap_mae_ci95": [
+                  26.228007234026197,
+                  32.74695214096282
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 455.7159756361908,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 32.6412025860433,
+                "rmse_mg_dl": 39.955358624573506,
+                "bias_mg_dl": 16.804489770295387,
+                "patient_macro_mae": 32.60152656778023,
+                "patient_bootstrap_mae_ci95": [
+                  30.430558543367955,
+                  35.42388341782398
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 449.7292118414791,
+                "nonpositive_predictions": 0
+              }
+            }
+          }
+        },
+        "xgb-cgm": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 14.464423313078225,
+              "rmse_mg_dl": 20.36501877427572,
+              "bias_mg_dl": 1.9027128073097832,
+              "patient_macro_mae": 14.503993569657196,
+              "patient_bootstrap_mae_ci95": [
+                13.27632457986906,
+                15.60581111511208
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 377.8624858856201,
+              "nonpositive_predictions": 0
+            },
+            "60": {
+              "mae_mg_dl": 23.979747776528804,
+              "rmse_mg_dl": 31.937750693454564,
+              "bias_mg_dl": 4.171323358166343,
+              "patient_macro_mae": 24.208977430544195,
+              "patient_bootstrap_mae_ci95": [
+                22.171095903403064,
+                26.18774791056714
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 566.7730255126953,
+              "nonpositive_predictions": 0
+            },
+            "90": {
+              "mae_mg_dl": 29.90469372066291,
+              "rmse_mg_dl": 38.68998621357077,
+              "bias_mg_dl": 6.19904961383922,
+              "patient_macro_mae": 30.279798667081625,
+              "patient_bootstrap_mae_ci95": [
+                27.836690570164592,
+                32.67973769615513
+              ],
+              "window_coverage": 0.9999122807017544,
+              "whole_patient_coverage": 0.8888888888888888,
+              "interval_width_mg_dl": 449.0583267211914,
+              "nonpositive_predictions": 0
+            },
+            "120": {
+              "mae_mg_dl": 33.901854751966056,
+              "rmse_mg_dl": 42.85199425599628,
+              "bias_mg_dl": 7.955472585550713,
+              "patient_macro_mae": 34.3312643732161,
+              "patient_bootstrap_mae_ci95": [
+                31.759085436940733,
+                37.00356489169532
+              ],
+              "window_coverage": 0.9998245614035087,
+              "whole_patient_coverage": 0.8888888888888888,
+              "interval_width_mg_dl": 449.288818359375,
+              "nonpositive_predictions": 0
+            }
+          },
+          "by_dataset": {
+            "azt1d": {
+              "30": {
+                "mae_mg_dl": 13.192570890095379,
+                "rmse_mg_dl": 18.988527380071755,
+                "bias_mg_dl": -0.5219483331315165,
+                "patient_macro_mae": 13.398208405498464,
+                "patient_bootstrap_mae_ci95": [
+                  11.33099335722155,
+                  14.944131672890569
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 377.8624858856201,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 22.188164684768726,
+                "rmse_mg_dl": 30.978634168317996,
+                "bias_mg_dl": -0.9251424792898966,
+                "patient_macro_mae": 22.754968970718583,
+                "patient_bootstrap_mae_ci95": [
+                  18.430428922224618,
+                  26.685325543558548
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 566.7730255126953,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 27.993078131564467,
+                "rmse_mg_dl": 38.028069463525036,
+                "bias_mg_dl": -1.1880781391928052,
+                "patient_macro_mae": 28.60983777206492,
+                "patient_bootstrap_mae_ci95": [
+                  23.298290449909604,
+                  33.03249027814477
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 449.0583267211914,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 31.834102384798364,
+                "rmse_mg_dl": 42.1259531531178,
+                "bias_mg_dl": -1.1426045989439872,
+                "patient_macro_mae": 32.4068191627139,
+                "patient_bootstrap_mae_ci95": [
+                  26.621515865471242,
+                  36.71906734647562
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 449.288818359375,
+                "nonpositive_predictions": 0
+              }
+            },
+            "ohio": {
+              "30": {
+                "mae_mg_dl": 16.036477138802752,
+                "rmse_mg_dl": 22.65061355384244,
+                "bias_mg_dl": -0.4078219247342069,
+                "patient_macro_mae": 16.06531951766502,
+                "patient_bootstrap_mae_ci95": [
+                  15.524638078942084,
+                  16.792089350546412
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 377.8624858856201,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 26.482441812527885,
+                "rmse_mg_dl": 35.371504564150555,
+                "bias_mg_dl": -1.0637379541151397,
+                "patient_macro_mae": 26.637451877403375,
+                "patient_bootstrap_mae_ci95": [
+                  24.61221044189578,
+                  28.033501882378975
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 566.7730255126953,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 33.180377733547466,
+                "rmse_mg_dl": 43.3834900875042,
+                "bias_mg_dl": -1.8345849491225001,
+                "patient_macro_mae": 33.4493705277095,
+                "patient_bootstrap_mae_ci95": [
+                  29.93959690674151,
+                  35.88469946222689
+                ],
+                "window_coverage": 0.9996946564885496,
+                "whole_patient_coverage": 0.6666666666666666,
+                "interval_width_mg_dl": 449.0583267211914,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 37.747768859462084,
+                "rmse_mg_dl": 48.586852494737805,
+                "bias_mg_dl": -2.6001246015928894,
+                "patient_macro_mae": 38.06013817359919,
+                "patient_bootstrap_mae_ci95": [
+                  34.11200504701654,
+                  41.23541543186455
+                ],
+                "window_coverage": 0.9993893129770992,
+                "whole_patient_coverage": 0.6666666666666666,
+                "interval_width_mg_dl": 449.288818359375,
+                "nonpositive_predictions": 0
+              }
+            },
+            "physiocgm": {
+              "30": {
+                "mae_mg_dl": 14.080621011261295,
+                "rmse_mg_dl": 19.514039855609166,
+                "bias_mg_dl": 4.147922023698356,
+                "patient_macro_mae": 14.0484527858081,
+                "patient_bootstrap_mae_ci95": [
+                  11.896494308206632,
+                  16.687727211467028
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 377.8624858856201,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 23.277441898787163,
+                "rmse_mg_dl": 30.232625057184208,
+                "bias_mg_dl": 9.102877854166826,
+                "patient_macro_mae": 23.23451144351063,
+                "patient_bootstrap_mae_ci95": [
+                  20.52739605973595,
+                  26.60914673374698
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 566.7730255126953,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 28.81582372485577,
+                "rmse_mg_dl": 36.06572913669363,
+                "bias_mg_dl": 13.597084763202268,
+                "patient_macro_mae": 28.780187701470467,
+                "patient_bootstrap_mae_ci95": [
+                  26.418693268578313,
+                  31.683870178462076
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 449.0583267211914,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 32.55428037438357,
+                "rmse_mg_dl": 39.576851297000886,
+                "bias_mg_dl": 17.437881428100837,
+                "patient_macro_mae": 32.5268357833352,
+                "patient_bootstrap_mae_ci95": [
+                  30.925792356370483,
+                  34.56810751670114
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 449.288818359375,
+                "nonpositive_predictions": 0
+              }
+            }
+          }
+        },
+        "xgb-context": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 14.363989588188325,
+              "rmse_mg_dl": 20.255197598248238,
+              "bias_mg_dl": 1.9648218738097012,
+              "patient_macro_mae": 14.417761837883331,
+              "patient_bootstrap_mae_ci95": [
+                13.184807180667612,
+                15.539594289368054
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 389.4484615325928,
+              "nonpositive_predictions": 0
+            },
+            "60": {
+              "mae_mg_dl": 23.757847401903675,
+              "rmse_mg_dl": 31.78964280827306,
+              "bias_mg_dl": 4.233444106765981,
+              "patient_macro_mae": 23.973995483569325,
+              "patient_bootstrap_mae_ci95": [
+                22.029997357583408,
+                25.91510055991782
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 528.4631614685059,
+              "nonpositive_predictions": 0
+            },
+            "90": {
+              "mae_mg_dl": 29.728125883394714,
+              "rmse_mg_dl": 38.60289393440056,
+              "bias_mg_dl": 6.275558895453803,
+              "patient_macro_mae": 30.093293546579375,
+              "patient_bootstrap_mae_ci95": [
+                27.799584764290206,
+                32.4815642605966
+              ],
+              "window_coverage": 0.9999122807017544,
+              "whole_patient_coverage": 0.8888888888888888,
+              "interval_width_mg_dl": 462.1699962615967,
+              "nonpositive_predictions": 0
+            },
+            "120": {
+              "mae_mg_dl": 33.67778868272332,
+              "rmse_mg_dl": 42.714193802510536,
+              "bias_mg_dl": 7.769687413604734,
+              "patient_macro_mae": 34.11699349548543,
+              "patient_bootstrap_mae_ci95": [
+                31.660989272818714,
+                36.8028064429808
+              ],
+              "window_coverage": 0.9999122807017544,
+              "whole_patient_coverage": 0.8888888888888888,
+              "interval_width_mg_dl": 446.5070571899414,
+              "nonpositive_predictions": 0
+            }
+          },
+          "by_dataset": {
+            "azt1d": {
+              "30": {
+                "mae_mg_dl": 13.180545326545207,
+                "rmse_mg_dl": 18.876289901483673,
+                "bias_mg_dl": -0.8570934170962593,
+                "patient_macro_mae": 13.420087820092952,
+                "patient_bootstrap_mae_ci95": [
+                  11.353151158693159,
+                  15.138757384599808
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 389.4484615325928,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 22.081508784853646,
+                "rmse_mg_dl": 30.99950471612979,
+                "bias_mg_dl": -2.1639373840027987,
+                "patient_macro_mae": 22.631273313721593,
+                "patient_bootstrap_mae_ci95": [
+                  18.718483076910108,
+                  26.375627959357626
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 528.4631614685059,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 27.889863642329825,
+                "rmse_mg_dl": 38.058236738967736,
+                "bias_mg_dl": -2.821170938256248,
+                "patient_macro_mae": 28.442294504231153,
+                "patient_bootstrap_mae_ci95": [
+                  24.022154980093386,
+                  32.32241048843027
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 462.1699962615967,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 31.71973656898353,
+                "rmse_mg_dl": 42.21203065323282,
+                "bias_mg_dl": -2.9304136291226133,
+                "patient_macro_mae": 32.255899479262894,
+                "patient_bootstrap_mae_ci95": [
+                  27.421637933454992,
+                  36.152819568105414
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 446.5070571899414,
+                "nonpositive_predictions": 0
+              }
+            },
+            "ohio": {
+              "30": {
+                "mae_mg_dl": 15.805081028100174,
+                "rmse_mg_dl": 22.279329769976254,
+                "bias_mg_dl": 0.9263391876067851,
+                "patient_macro_mae": 15.848035481334042,
+                "patient_bootstrap_mae_ci95": [
+                  15.121333926042752,
+                  16.638199304888516
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 389.4484615325928,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 26.029596790441715,
+                "rmse_mg_dl": 34.77720452508947,
+                "bias_mg_dl": 0.9850086126611604,
+                "patient_macro_mae": 26.200520394654067,
+                "patient_bootstrap_mae_ci95": [
+                  23.94194299124238,
+                  27.670715266941247
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 528.4631614685059,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 32.93784144723461,
+                "rmse_mg_dl": 43.02999818217989,
+                "bias_mg_dl": 0.20234702444599784,
+                "patient_macro_mae": 33.23036898707679,
+                "patient_bootstrap_mae_ci95": [
+                  29.445610070312654,
+                  35.96609564871359
+                ],
+                "window_coverage": 0.9996946564885496,
+                "whole_patient_coverage": 0.6666666666666666,
+                "interval_width_mg_dl": 462.1699962615967,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 37.524423131470975,
+                "rmse_mg_dl": 48.28063475394997,
+                "bias_mg_dl": -0.9767782109404225,
+                "patient_macro_mae": 37.84033967179655,
+                "patient_bootstrap_mae_ci95": [
+                  33.821459931693,
+                  40.9811658152736
+                ],
+                "window_coverage": 0.9996946564885496,
+                "whole_patient_coverage": 0.6666666666666666,
+                "interval_width_mg_dl": 446.5070571899414,
+                "nonpositive_predictions": 0
+              }
+            },
+            "physiocgm": {
+              "30": {
+                "mae_mg_dl": 14.019029683479449,
+                "rmse_mg_dl": 19.573159910240534,
+                "bias_mg_dl": 3.6520849586402497,
+                "patient_macro_mae": 13.985162212222995,
+                "patient_bootstrap_mae_ci95": [
+                  11.655721619336484,
+                  16.82101397314762
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 389.4484615325928,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 23.139955781954068,
+                "rmse_mg_dl": 30.30611177786282,
+                "bias_mg_dl": 8.560048033995084,
+                "patient_macro_mae": 23.090192742332324,
+                "patient_bootstrap_mae_ci95": [
+                  20.00987174876181,
+                  26.95027722464589
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 528.4631614685059,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 28.64753828474746,
+                "rmse_mg_dl": 36.10856516112948,
+                "bias_mg_dl": 13.243343323851086,
+                "patient_macro_mae": 28.607217148430195,
+                "patient_bootstrap_mae_ci95": [
+                  25.833821586875683,
+                  31.983517016854993
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 462.1699962615967,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 32.286862036441526,
+                "rmse_mg_dl": 39.46012526666236,
+                "bias_mg_dl": 16.8645848111146,
+                "patient_macro_mae": 32.25474133539686,
+                "patient_bootstrap_mae_ci95": [
+                  30.16882935898759,
+                  34.83379798623247
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 446.5070571899414,
+                "nonpositive_predictions": 0
+              }
+            }
+          }
+        }
+      },
+      "calibration_radii": {
+        "persistence": [
+          206.0,
+          253.0,
+          258.0,
+          265.0
+        ],
+        "linear": [
+          256.5237625858987,
+          467.5314685314686,
+          593.9370629370629,
+          757.916083916084
+        ],
+        "ridge-cgm": [
+          198.3439263535451,
+          247.69818029744374,
+          227.49661296137882,
+          224.71324993211726
+        ],
+        "ridge-context": [
+          198.6842619735349,
+          249.22181676349095,
+          227.8579878180954,
+          224.86460592073956
+        ],
+        "xgb-cgm": [
+          188.93124294281006,
+          283.38651275634766,
+          224.5291633605957,
+          224.6444091796875
+        ],
+        "xgb-context": [
+          194.7242307662964,
+          264.23158073425293,
+          231.08499813079834,
+          223.2535285949707
+        ]
+      },
+      "artifact_sha256": {
+        "ridge-cgm.json": "10a4918fb4ffbc1eb06400fd3517da6339d27e1674c4c6bbb47f0c04556e63f7",
+        "ridge-context.json": "39f42f08a13c994d968630fb19c0f5f396773243edb07f19cc100cb970a64a38",
+        "xgb-cgm.json": "60e0d827cc2c45a703e39cb1b3e3186ed94c9ebdf8555d5f4da3864f19ce44d2",
+        "xgb-context.json": "7a62f53dfff9743819059d2181cb20b24a8b8940cb6754cfd8351747f686ab43"
+      }
+    },
+    "external-ohio": {
+      "evaluation": "external-ohio",
+      "feature_version": "offline-local12-context-mask-replay-v1",
+      "partitions": {
+        "fit": {
+          "windows": 38835,
+          "patients": 24,
+          "by_dataset": {
+            "physiocgm": 12954,
+            "azt1d": 25881
+          }
+        },
+        "validation": {
+          "windows": 9652,
+          "patients": 24,
+          "by_dataset": {
+            "physiocgm": 3226,
+            "azt1d": 6426
+          }
+        },
+        "calibration": {
+          "windows": 28041,
+          "patients": 10,
+          "by_dataset": {
+            "physiocgm": 19596,
+            "azt1d": 8445
+          }
+        },
+        "test": {
+          "windows": 24801,
+          "patients": 12,
+          "by_dataset": {
+            "ohio": 24801
+          }
+        }
+      },
+      "selected_on_validation": "xgb-context",
+      "selected_context_on_validation": "xgb-context",
+      "training": {
+        "persistence": {
+          "fit_and_evaluation_seconds": 0.004098400007933378,
+          "validation_dataset_patient_macro_mae": 28.75768712514421
+        },
+        "linear": {
+          "fit_and_evaluation_seconds": 0.01091340000857599,
+          "validation_dataset_patient_macro_mae": 47.35323160479966
+        },
+        "ridge-cgm": {
+          "fit_and_evaluation_seconds": 0.14759279999998398,
+          "validation_dataset_patient_macro_mae": 25.23236798647503
+        },
+        "ridge-context": {
+          "fit_and_evaluation_seconds": 0.34659410000313073,
+          "validation_dataset_patient_macro_mae": 25.052651577905532
+        },
+        "xgb-cgm": {
+          "fit_and_evaluation_seconds": 1.2011187999887625,
+          "validation_dataset_patient_macro_mae": 24.944504013526114
+        },
+        "xgb-context": {
+          "fit_and_evaluation_seconds": 2.9903582999977516,
+          "validation_dataset_patient_macro_mae": 24.61359216387426
+        }
+      },
+      "source_fingerprint": "804ca642d6a32e9fb2e6baa0f2360ff52652fc3f53673466d8db89866dd4a0df",
+      "test_results": {
+        "persistence": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 17.52167251320511,
+              "rmse_mg_dl": 24.50585550751237,
+              "bias_mg_dl": 0.09761703157130727,
+              "patient_macro_mae": 17.563799332272716,
+              "patient_bootstrap_mae_ci95": [
+                16.44969031971701,
+                18.636830459107102
+              ],
+              "window_coverage": 0.9999596790451998,
+              "whole_patient_coverage": 0.9166666666666666,
+              "interval_width_mg_dl": 412.0,
+              "nonpositive_predictions": 0
+            },
+            "60": {
+              "mae_mg_dl": 29.174307487601308,
+              "rmse_mg_dl": 39.7813426061464,
+              "bias_mg_dl": 0.19144389339139525,
+              "patient_macro_mae": 29.290825331467712,
+              "patient_bootstrap_mae_ci95": [
+                27.404001935425484,
+                31.136181983332495
+              ],
+              "window_coverage": 0.9998790371355993,
+              "whole_patient_coverage": 0.75,
+              "interval_width_mg_dl": 480.0,
+              "nonpositive_predictions": 0
+            },
+            "90": {
+              "mae_mg_dl": 37.759445183661946,
+              "rmse_mg_dl": 50.75723995020421,
+              "bias_mg_dl": 0.2894238135559047,
+              "patient_macro_mae": 37.93796574479458,
+              "patient_bootstrap_mae_ci95": [
+                35.54605943665339,
+                40.43319905294153
+              ],
+              "window_coverage": 0.9992742228135962,
+              "whole_patient_coverage": 0.4166666666666667,
+              "interval_width_mg_dl": 450.0,
+              "nonpositive_predictions": 0
+            },
+            "120": {
+              "mae_mg_dl": 44.376396113059954,
+              "rmse_mg_dl": 59.03248223061718,
+              "bias_mg_dl": 0.28898028305310247,
+              "patient_macro_mae": 44.60650618019243,
+              "patient_bootstrap_mae_ci95": [
+                41.87544087408805,
+                47.53140409668494
+              ],
+              "window_coverage": 0.9987903713559937,
+              "whole_patient_coverage": 0.4166666666666667,
+              "interval_width_mg_dl": 474.0,
+              "nonpositive_predictions": 0
+            }
+          },
+          "by_dataset": {
+            "ohio": {
+              "30": {
+                "mae_mg_dl": 17.52167251320511,
+                "rmse_mg_dl": 24.50585550751237,
+                "bias_mg_dl": 0.09761703157130727,
+                "patient_macro_mae": 17.563799332272716,
+                "patient_bootstrap_mae_ci95": [
+                  16.44969031971701,
+                  18.636830459107102
+                ],
+                "window_coverage": 0.9999596790451998,
+                "whole_patient_coverage": 0.9166666666666666,
+                "interval_width_mg_dl": 412.0,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 29.174307487601308,
+                "rmse_mg_dl": 39.7813426061464,
+                "bias_mg_dl": 0.19144389339139525,
+                "patient_macro_mae": 29.290825331467712,
+                "patient_bootstrap_mae_ci95": [
+                  27.404001935425484,
+                  31.136181983332495
+                ],
+                "window_coverage": 0.9998790371355993,
+                "whole_patient_coverage": 0.75,
+                "interval_width_mg_dl": 480.0,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 37.759445183661946,
+                "rmse_mg_dl": 50.75723995020421,
+                "bias_mg_dl": 0.2894238135559047,
+                "patient_macro_mae": 37.93796574479458,
+                "patient_bootstrap_mae_ci95": [
+                  35.54605943665339,
+                  40.43319905294153
+                ],
+                "window_coverage": 0.9992742228135962,
+                "whole_patient_coverage": 0.4166666666666667,
+                "interval_width_mg_dl": 450.0,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 44.376396113059954,
+                "rmse_mg_dl": 59.03248223061718,
+                "bias_mg_dl": 0.28898028305310247,
+                "patient_macro_mae": 44.60650618019243,
+                "patient_bootstrap_mae_ci95": [
+                  41.87544087408805,
+                  47.53140409668494
+                ],
+                "window_coverage": 0.9987903713559937,
+                "whole_patient_coverage": 0.4166666666666667,
+                "interval_width_mg_dl": 474.0,
+                "nonpositive_predictions": 0
+              }
+            }
+          }
+        },
+        "linear": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 20.353749703523743,
+              "rmse_mg_dl": 29.518696438428513,
+              "bias_mg_dl": 0.06547624761979949,
+              "patient_macro_mae": 20.376764884650452,
+              "patient_bootstrap_mae_ci95": [
+                18.87455383101443,
+                21.821415140149927
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 513.0475251717974,
+              "nonpositive_predictions": 28
+            },
+            "60": {
+              "mae_mg_dl": 39.62215466369547,
+              "rmse_mg_dl": 56.110120627549165,
+              "bias_mg_dl": 0.12716232548837936,
+              "patient_macro_mae": 39.725664007843804,
+              "patient_bootstrap_mae_ci95": [
+                36.701937507988205,
+                42.63259576923996
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 838.8521639883621,
+              "nonpositive_predictions": 317
+            },
+            "90": {
+              "mae_mg_dl": 58.55651718001231,
+              "rmse_mg_dl": 81.71280108273172,
+              "bias_mg_dl": 0.19300146170138094,
+              "patient_macro_mae": 58.76291542529916,
+              "patient_bootstrap_mae_ci95": [
+                54.55336817852638,
+                62.91226367664808
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 1187.8741258741259,
+              "nonpositive_predictions": 878
+            },
+            "120": {
+              "mae_mg_dl": 77.36367527744889,
+              "rmse_mg_dl": 106.76662869923078,
+              "bias_mg_dl": 0.16041714724707076,
+              "patient_macro_mae": 77.67018499261236,
+              "patient_bootstrap_mae_ci95": [
+                72.0867190064891,
+                82.90030104140422
+              ],
+              "window_coverage": 0.9999596790451998,
+              "whole_patient_coverage": 0.9166666666666666,
+              "interval_width_mg_dl": 1515.832167832168,
+              "nonpositive_predictions": 1566
+            }
+          },
+          "by_dataset": {
+            "ohio": {
+              "30": {
+                "mae_mg_dl": 20.353749703523743,
+                "rmse_mg_dl": 29.518696438428513,
+                "bias_mg_dl": 0.06547624761979949,
+                "patient_macro_mae": 20.376764884650452,
+                "patient_bootstrap_mae_ci95": [
+                  18.87455383101443,
+                  21.821415140149927
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 513.0475251717974,
+                "nonpositive_predictions": 28
+              },
+              "60": {
+                "mae_mg_dl": 39.62215466369547,
+                "rmse_mg_dl": 56.110120627549165,
+                "bias_mg_dl": 0.12716232548837936,
+                "patient_macro_mae": 39.725664007843804,
+                "patient_bootstrap_mae_ci95": [
+                  36.701937507988205,
+                  42.63259576923996
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 838.8521639883621,
+                "nonpositive_predictions": 317
+              },
+              "90": {
+                "mae_mg_dl": 58.55651718001231,
+                "rmse_mg_dl": 81.71280108273172,
+                "bias_mg_dl": 0.19300146170138094,
+                "patient_macro_mae": 58.76291542529916,
+                "patient_bootstrap_mae_ci95": [
+                  54.55336817852638,
+                  62.91226367664808
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 1187.8741258741259,
+                "nonpositive_predictions": 878
+              },
+              "120": {
+                "mae_mg_dl": 77.36367527744889,
+                "rmse_mg_dl": 106.76662869923078,
+                "bias_mg_dl": 0.16041714724707076,
+                "patient_macro_mae": 77.67018499261236,
+                "patient_bootstrap_mae_ci95": [
+                  72.0867190064891,
+                  82.90030104140422
+                ],
+                "window_coverage": 0.9999596790451998,
+                "whole_patient_coverage": 0.9166666666666666,
+                "interval_width_mg_dl": 1515.832167832168,
+                "nonpositive_predictions": 1566
+              }
+            }
+          }
+        },
+        "ridge-cgm": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 15.554516996868998,
+              "rmse_mg_dl": 21.703584688569034,
+              "bias_mg_dl": -2.583463014988331,
+              "patient_macro_mae": 15.567436520194365,
+              "patient_bootstrap_mae_ci95": [
+                14.671467918704474,
+                16.467298900918383
+              ],
+              "window_coverage": 0.9998790371355993,
+              "whole_patient_coverage": 0.8333333333333334,
+              "interval_width_mg_dl": 381.6628486032613,
+              "nonpositive_predictions": 0
+            },
+            "60": {
+              "mae_mg_dl": 27.20621311102452,
+              "rmse_mg_dl": 36.12807069504643,
+              "bias_mg_dl": -5.790827998019567,
+              "patient_macro_mae": 27.279889429407792,
+              "patient_bootstrap_mae_ci95": [
+                25.749647439555535,
+                28.895890249851664
+              ],
+              "window_coverage": 0.9998790371355993,
+              "whole_patient_coverage": 0.8333333333333334,
+              "interval_width_mg_dl": 460.36738846828825,
+              "nonpositive_predictions": 0
+            },
+            "90": {
+              "mae_mg_dl": 35.19454547075255,
+              "rmse_mg_dl": 45.75057331030461,
+              "bias_mg_dl": -8.665441406537646,
+              "patient_macro_mae": 35.31658723256202,
+              "patient_bootstrap_mae_ci95": [
+                33.3016022407073,
+                37.40778662450561
+              ],
+              "window_coverage": 0.9991129389943953,
+              "whole_patient_coverage": 0.4166666666666667,
+              "interval_width_mg_dl": 407.2372744013546,
+              "nonpositive_predictions": 0
+            },
+            "120": {
+              "mae_mg_dl": 40.50139570241232,
+              "rmse_mg_dl": 52.19259275335168,
+              "bias_mg_dl": -11.094456006051878,
+              "patient_macro_mae": 40.63947772640415,
+              "patient_bootstrap_mae_ci95": [
+                38.167823606759356,
+                43.40330916404555
+              ],
+              "window_coverage": 0.9985484456271925,
+              "whole_patient_coverage": 0.4166666666666667,
+              "interval_width_mg_dl": 418.6610503758401,
+              "nonpositive_predictions": 0
+            }
+          },
+          "by_dataset": {
+            "ohio": {
+              "30": {
+                "mae_mg_dl": 15.554516996868998,
+                "rmse_mg_dl": 21.703584688569034,
+                "bias_mg_dl": -2.583463014988331,
+                "patient_macro_mae": 15.567436520194365,
+                "patient_bootstrap_mae_ci95": [
+                  14.671467918704474,
+                  16.467298900918383
+                ],
+                "window_coverage": 0.9998790371355993,
+                "whole_patient_coverage": 0.8333333333333334,
+                "interval_width_mg_dl": 381.6628486032613,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 27.20621311102452,
+                "rmse_mg_dl": 36.12807069504643,
+                "bias_mg_dl": -5.790827998019567,
+                "patient_macro_mae": 27.279889429407792,
+                "patient_bootstrap_mae_ci95": [
+                  25.749647439555535,
+                  28.895890249851664
+                ],
+                "window_coverage": 0.9998790371355993,
+                "whole_patient_coverage": 0.8333333333333334,
+                "interval_width_mg_dl": 460.36738846828825,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 35.19454547075255,
+                "rmse_mg_dl": 45.75057331030461,
+                "bias_mg_dl": -8.665441406537646,
+                "patient_macro_mae": 35.31658723256202,
+                "patient_bootstrap_mae_ci95": [
+                  33.3016022407073,
+                  37.40778662450561
+                ],
+                "window_coverage": 0.9991129389943953,
+                "whole_patient_coverage": 0.4166666666666667,
+                "interval_width_mg_dl": 407.2372744013546,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 40.50139570241232,
+                "rmse_mg_dl": 52.19259275335168,
+                "bias_mg_dl": -11.094456006051878,
+                "patient_macro_mae": 40.63947772640415,
+                "patient_bootstrap_mae_ci95": [
+                  38.167823606759356,
+                  43.40330916404555
+                ],
+                "window_coverage": 0.9985484456271925,
+                "whole_patient_coverage": 0.4166666666666667,
+                "interval_width_mg_dl": 418.6610503758401,
+                "nonpositive_predictions": 0
+              }
+            }
+          }
+        },
+        "ridge-context": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 15.408868962733603,
+              "rmse_mg_dl": 21.41105751515225,
+              "bias_mg_dl": -2.0855574379161697,
+              "patient_macro_mae": 15.426030854706822,
+              "patient_bootstrap_mae_ci95": [
+                14.459842135159317,
+                16.389643281679103
+              ],
+              "window_coverage": 0.999798395225999,
+              "whole_patient_coverage": 0.6666666666666666,
+              "interval_width_mg_dl": 377.7508228048889,
+              "nonpositive_predictions": 0
+            },
+            "60": {
+              "mae_mg_dl": 26.967773032636828,
+              "rmse_mg_dl": 35.64400028800033,
+              "bias_mg_dl": -4.606048503588699,
+              "patient_macro_mae": 27.04814101689001,
+              "patient_bootstrap_mae_ci95": [
+                25.3576024779573,
+                28.742277932182773
+              ],
+              "window_coverage": 0.9999596790451998,
+              "whole_patient_coverage": 0.9166666666666666,
+              "interval_width_mg_dl": 537.5153407046542,
+              "nonpositive_predictions": 0
+            },
+            "90": {
+              "mae_mg_dl": 35.15055864574826,
+              "rmse_mg_dl": 45.519652670215606,
+              "bias_mg_dl": -6.988894748102149,
+              "patient_macro_mae": 35.28108373682454,
+              "patient_bootstrap_mae_ci95": [
+                33.048256274443105,
+                37.52912089738578
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 647.5048547874771,
+              "nonpositive_predictions": 0
+            },
+            "120": {
+              "mae_mg_dl": 40.67747318196525,
+              "rmse_mg_dl": 52.209058104273936,
+              "bias_mg_dl": -9.364579255768003,
+              "patient_macro_mae": 40.827032310526945,
+              "patient_bootstrap_mae_ci95": [
+                38.4096312834577,
+                43.57012019699165
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 889.341630371576,
+              "nonpositive_predictions": 0
+            }
+          },
+          "by_dataset": {
+            "ohio": {
+              "30": {
+                "mae_mg_dl": 15.408868962733603,
+                "rmse_mg_dl": 21.41105751515225,
+                "bias_mg_dl": -2.0855574379161697,
+                "patient_macro_mae": 15.426030854706822,
+                "patient_bootstrap_mae_ci95": [
+                  14.459842135159317,
+                  16.389643281679103
+                ],
+                "window_coverage": 0.999798395225999,
+                "whole_patient_coverage": 0.6666666666666666,
+                "interval_width_mg_dl": 377.7508228048889,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 26.967773032636828,
+                "rmse_mg_dl": 35.64400028800033,
+                "bias_mg_dl": -4.606048503588699,
+                "patient_macro_mae": 27.04814101689001,
+                "patient_bootstrap_mae_ci95": [
+                  25.3576024779573,
+                  28.742277932182773
+                ],
+                "window_coverage": 0.9999596790451998,
+                "whole_patient_coverage": 0.9166666666666666,
+                "interval_width_mg_dl": 537.5153407046542,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 35.15055864574826,
+                "rmse_mg_dl": 45.519652670215606,
+                "bias_mg_dl": -6.988894748102149,
+                "patient_macro_mae": 35.28108373682454,
+                "patient_bootstrap_mae_ci95": [
+                  33.048256274443105,
+                  37.52912089738578
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 647.5048547874771,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 40.67747318196525,
+                "rmse_mg_dl": 52.209058104273936,
+                "bias_mg_dl": -9.364579255768003,
+                "patient_macro_mae": 40.827032310526945,
+                "patient_bootstrap_mae_ci95": [
+                  38.4096312834577,
+                  43.57012019699165
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 889.341630371576,
+                "nonpositive_predictions": 0
+              }
+            }
+          }
+        },
+        "xgb-cgm": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 15.830175107789861,
+              "rmse_mg_dl": 22.016460773877263,
+              "bias_mg_dl": -2.3021457335774214,
+              "patient_macro_mae": 15.858840578839256,
+              "patient_bootstrap_mae_ci95": [
+                14.914320067863537,
+                16.851649289116274
+              ],
+              "window_coverage": 0.9999193580903996,
+              "whole_patient_coverage": 0.9166666666666666,
+              "interval_width_mg_dl": 387.8318748474121,
+              "nonpositive_predictions": 0
+            },
+            "60": {
+              "mae_mg_dl": 26.876343696171617,
+              "rmse_mg_dl": 35.92217895799171,
+              "bias_mg_dl": -5.238226664849184,
+              "patient_macro_mae": 26.96576300102616,
+              "patient_bootstrap_mae_ci95": [
+                25.428846279514932,
+                28.584657318404805
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 543.1274261474609,
+              "nonpositive_predictions": 0
+            },
+            "90": {
+              "mae_mg_dl": 34.69610933241512,
+              "rmse_mg_dl": 45.34798430649673,
+              "bias_mg_dl": -8.103466149443918,
+              "patient_macro_mae": 34.83526024651398,
+              "patient_bootstrap_mae_ci95": [
+                32.83484432646895,
+                36.887285539118686
+              ],
+              "window_coverage": 0.9997580742711988,
+              "whole_patient_coverage": 0.75,
+              "interval_width_mg_dl": 459.2045078277588,
+              "nonpositive_predictions": 0
+            },
+            "120": {
+              "mae_mg_dl": 40.065006362852735,
+              "rmse_mg_dl": 51.83287402238728,
+              "bias_mg_dl": -10.59485900872736,
+              "patient_macro_mae": 40.21876159143738,
+              "patient_bootstrap_mae_ci95": [
+                37.8332890857585,
+                42.72615645525863
+              ],
+              "window_coverage": 0.9987903713559937,
+              "whole_patient_coverage": 0.5,
+              "interval_width_mg_dl": 432.0368877410889,
+              "nonpositive_predictions": 0
+            }
+          },
+          "by_dataset": {
+            "ohio": {
+              "30": {
+                "mae_mg_dl": 15.830175107789861,
+                "rmse_mg_dl": 22.016460773877263,
+                "bias_mg_dl": -2.3021457335774214,
+                "patient_macro_mae": 15.858840578839256,
+                "patient_bootstrap_mae_ci95": [
+                  14.914320067863537,
+                  16.851649289116274
+                ],
+                "window_coverage": 0.9999193580903996,
+                "whole_patient_coverage": 0.9166666666666666,
+                "interval_width_mg_dl": 387.8318748474121,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 26.876343696171617,
+                "rmse_mg_dl": 35.92217895799171,
+                "bias_mg_dl": -5.238226664849184,
+                "patient_macro_mae": 26.96576300102616,
+                "patient_bootstrap_mae_ci95": [
+                  25.428846279514932,
+                  28.584657318404805
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 543.1274261474609,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 34.69610933241512,
+                "rmse_mg_dl": 45.34798430649673,
+                "bias_mg_dl": -8.103466149443918,
+                "patient_macro_mae": 34.83526024651398,
+                "patient_bootstrap_mae_ci95": [
+                  32.83484432646895,
+                  36.887285539118686
+                ],
+                "window_coverage": 0.9997580742711988,
+                "whole_patient_coverage": 0.75,
+                "interval_width_mg_dl": 459.2045078277588,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 40.065006362852735,
+                "rmse_mg_dl": 51.83287402238728,
+                "bias_mg_dl": -10.59485900872736,
+                "patient_macro_mae": 40.21876159143738,
+                "patient_bootstrap_mae_ci95": [
+                  37.8332890857585,
+                  42.72615645525863
+                ],
+                "window_coverage": 0.9987903713559937,
+                "whole_patient_coverage": 0.5,
+                "interval_width_mg_dl": 432.0368877410889,
+                "nonpositive_predictions": 0
+              }
+            }
+          }
+        },
+        "xgb-context": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 15.499800521007023,
+              "rmse_mg_dl": 21.56217625752062,
+              "bias_mg_dl": -1.9181017085093297,
+              "patient_macro_mae": 15.527999160166104,
+              "patient_bootstrap_mae_ci95": [
+                14.56316754952134,
+                16.523756591318186
+              ],
+              "window_coverage": 0.9999193580903996,
+              "whole_patient_coverage": 0.9166666666666666,
+              "interval_width_mg_dl": 387.3788604736328,
+              "nonpositive_predictions": 0
+            },
+            "60": {
+              "mae_mg_dl": 26.52735544783719,
+              "rmse_mg_dl": 35.33794088519769,
+              "bias_mg_dl": -4.538054940421209,
+              "patient_macro_mae": 26.615441689343,
+              "patient_bootstrap_mae_ci95": [
+                25.040182161685347,
+                28.293424136843953
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 570.166259765625,
+              "nonpositive_predictions": 0
+            },
+            "90": {
+              "mae_mg_dl": 34.67279592759938,
+              "rmse_mg_dl": 45.149075694343324,
+              "bias_mg_dl": -7.5646674576877615,
+              "patient_macro_mae": 34.80824060890396,
+              "patient_bootstrap_mae_ci95": [
+                32.72675324475398,
+                36.95605930355385
+              ],
+              "window_coverage": 0.9995967904519979,
+              "whole_patient_coverage": 0.5833333333333334,
+              "interval_width_mg_dl": 447.3050765991211,
+              "nonpositive_predictions": 0
+            },
+            "120": {
+              "mae_mg_dl": 40.313896386423075,
+              "rmse_mg_dl": 51.9119532793836,
+              "bias_mg_dl": -10.015738007393168,
+              "patient_macro_mae": 40.462045846050806,
+              "patient_bootstrap_mae_ci95": [
+                38.114181889045284,
+                42.991827014015996
+              ],
+              "window_coverage": 0.9987097294463932,
+              "whole_patient_coverage": 0.5,
+              "interval_width_mg_dl": 422.0826721191406,
+              "nonpositive_predictions": 0
+            }
+          },
+          "by_dataset": {
+            "ohio": {
+              "30": {
+                "mae_mg_dl": 15.499800521007023,
+                "rmse_mg_dl": 21.56217625752062,
+                "bias_mg_dl": -1.9181017085093297,
+                "patient_macro_mae": 15.527999160166104,
+                "patient_bootstrap_mae_ci95": [
+                  14.56316754952134,
+                  16.523756591318186
+                ],
+                "window_coverage": 0.9999193580903996,
+                "whole_patient_coverage": 0.9166666666666666,
+                "interval_width_mg_dl": 387.3788604736328,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 26.52735544783719,
+                "rmse_mg_dl": 35.33794088519769,
+                "bias_mg_dl": -4.538054940421209,
+                "patient_macro_mae": 26.615441689343,
+                "patient_bootstrap_mae_ci95": [
+                  25.040182161685347,
+                  28.293424136843953
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 570.166259765625,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 34.67279592759938,
+                "rmse_mg_dl": 45.149075694343324,
+                "bias_mg_dl": -7.5646674576877615,
+                "patient_macro_mae": 34.80824060890396,
+                "patient_bootstrap_mae_ci95": [
+                  32.72675324475398,
+                  36.95605930355385
+                ],
+                "window_coverage": 0.9995967904519979,
+                "whole_patient_coverage": 0.5833333333333334,
+                "interval_width_mg_dl": 447.3050765991211,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 40.313896386423075,
+                "rmse_mg_dl": 51.9119532793836,
+                "bias_mg_dl": -10.015738007393168,
+                "patient_macro_mae": 40.462045846050806,
+                "patient_bootstrap_mae_ci95": [
+                  38.114181889045284,
+                  42.991827014015996
+                ],
+                "window_coverage": 0.9987097294463932,
+                "whole_patient_coverage": 0.5,
+                "interval_width_mg_dl": 422.0826721191406,
+                "nonpositive_predictions": 0
+              }
+            }
+          }
+        }
+      },
+      "calibration_radii": {
+        "persistence": [
+          206.0,
+          240.0,
+          225.0,
+          237.0
+        ],
+        "linear": [
+          256.5237625858987,
+          419.42608199418106,
+          593.9370629370629,
+          757.916083916084
+        ],
+        "ridge-cgm": [
+          190.83142430163065,
+          230.18369423414413,
+          203.6186372006773,
+          209.33052518792005
+        ],
+        "ridge-context": [
+          188.87541140244446,
+          268.7576703523271,
+          323.75242739373857,
+          444.670815185788
+        ],
+        "xgb-cgm": [
+          193.91593742370605,
+          271.56371307373047,
+          229.6022539138794,
+          216.01844387054444
+        ],
+        "xgb-context": [
+          193.6894302368164,
+          285.0831298828125,
+          223.65253829956055,
+          211.0413360595703
+        ]
+      },
+      "artifact_sha256": {
+        "ridge-cgm.json": "d03b8ebcd6f9526bd5e9a427d1e009913869950ed12a0164894220fc6147c9bd",
+        "ridge-context.json": "b7d40b0bc6aad63b37332de74f9bf6bf4b5bbf2b32dbce02411d7d3fcd753a7f",
+        "xgb-cgm.json": "57f58c9991c8bee589dc5a77ee96cfe81b671e7e3bf965f9c026931d7ed8d04a",
+        "xgb-context.json": "0557940d4757c5dc158d2f015842d75b5f50e0b4c58eef14b12dd4ea564c2f97"
+      }
+    },
+    "external-physiocgm": {
+      "evaluation": "external-physiocgm",
+      "feature_version": "offline-local12-context-mask-replay-v1",
+      "partitions": {
+        "fit": {
+          "windows": 34978,
+          "patients": 26,
+          "by_dataset": {
+            "ohio": 9097,
+            "azt1d": 25881
+          }
+        },
+        "validation": {
+          "windows": 8681,
+          "patients": 26,
+          "by_dataset": {
+            "ohio": 2255,
+            "azt1d": 6426
+          }
+        },
+        "calibration": {
+          "windows": 17135,
+          "patients": 10,
+          "by_dataset": {
+            "ohio": 8690,
+            "azt1d": 8445
+          }
+        },
+        "test": {
+          "windows": 35813,
+          "patients": 10,
+          "by_dataset": {
+            "physiocgm": 35813
+          }
+        }
+      },
+      "selected_on_validation": "xgb-context",
+      "selected_context_on_validation": "xgb-context",
+      "training": {
+        "persistence": {
+          "fit_and_evaluation_seconds": 0.003695999999763444,
+          "validation_dataset_patient_macro_mae": 32.50604151968411
+        },
+        "linear": {
+          "fit_and_evaluation_seconds": 0.01155060000019148,
+          "validation_dataset_patient_macro_mae": 50.57727543477951
+        },
+        "ridge-cgm": {
+          "fit_and_evaluation_seconds": 0.150104399988777,
+          "validation_dataset_patient_macro_mae": 28.35009137481435
+        },
+        "ridge-context": {
+          "fit_and_evaluation_seconds": 0.294883700000355,
+          "validation_dataset_patient_macro_mae": 27.731754385908914
+        },
+        "xgb-cgm": {
+          "fit_and_evaluation_seconds": 1.5526488999894354,
+          "validation_dataset_patient_macro_mae": 28.07998463414284
+        },
+        "xgb-context": {
+          "fit_and_evaluation_seconds": 2.4969583000056446,
+          "validation_dataset_patient_macro_mae": 27.23998464617575
+        }
+      },
+      "source_fingerprint": "804ca642d6a32e9fb2e6baa0f2360ff52652fc3f53673466d8db89866dd4a0df",
+      "test_results": {
+        "persistence": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 16.46904755256471,
+              "rmse_mg_dl": 23.118545559803604,
+              "bias_mg_dl": 0.06444587161086746,
+              "patient_macro_mae": 16.64232980245819,
+              "patient_bootstrap_mae_ci95": [
+                14.786673861088046,
+                18.435857232529948
+              ],
+              "window_coverage": 0.9999441543573563,
+              "whole_patient_coverage": 0.9,
+              "interval_width_mg_dl": 366.0,
+              "nonpositive_predictions": 0
+            },
+            "60": {
+              "mae_mg_dl": 26.240806411079774,
+              "rmse_mg_dl": 35.79913137132818,
+              "bias_mg_dl": 0.12068243375310632,
+              "patient_macro_mae": 26.615206762417436,
+              "patient_bootstrap_mae_ci95": [
+                23.518493907339373,
+                29.430259571447387
+              ],
+              "window_coverage": 0.9999720771786781,
+              "whole_patient_coverage": 0.9,
+              "interval_width_mg_dl": 498.0,
+              "nonpositive_predictions": 0
+            },
+            "90": {
+              "mae_mg_dl": 32.522184681540224,
+              "rmse_mg_dl": 43.82029903786747,
+              "bias_mg_dl": 0.14896825175215694,
+              "patient_macro_mae": 33.02934070969856,
+              "patient_bootstrap_mae_ci95": [
+                29.02776762199996,
+                36.54254732846166
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 640.0,
+              "nonpositive_predictions": 0
+            },
+            "120": {
+              "mae_mg_dl": 36.76846396559908,
+              "rmse_mg_dl": 49.43528385768803,
+              "bias_mg_dl": 0.2386563538379917,
+              "patient_macro_mae": 37.37740136895859,
+              "patient_bootstrap_mae_ci95": [
+                32.61372559402314,
+                41.51618864327808
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 688.0,
+              "nonpositive_predictions": 0
+            }
+          },
+          "by_dataset": {
+            "physiocgm": {
+              "30": {
+                "mae_mg_dl": 16.46904755256471,
+                "rmse_mg_dl": 23.118545559803604,
+                "bias_mg_dl": 0.06444587161086746,
+                "patient_macro_mae": 16.64232980245819,
+                "patient_bootstrap_mae_ci95": [
+                  14.786673861088046,
+                  18.435857232529948
+                ],
+                "window_coverage": 0.9999441543573563,
+                "whole_patient_coverage": 0.9,
+                "interval_width_mg_dl": 366.0,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 26.240806411079774,
+                "rmse_mg_dl": 35.79913137132818,
+                "bias_mg_dl": 0.12068243375310632,
+                "patient_macro_mae": 26.615206762417436,
+                "patient_bootstrap_mae_ci95": [
+                  23.518493907339373,
+                  29.430259571447387
+                ],
+                "window_coverage": 0.9999720771786781,
+                "whole_patient_coverage": 0.9,
+                "interval_width_mg_dl": 498.0,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 32.522184681540224,
+                "rmse_mg_dl": 43.82029903786747,
+                "bias_mg_dl": 0.14896825175215694,
+                "patient_macro_mae": 33.02934070969856,
+                "patient_bootstrap_mae_ci95": [
+                  29.02776762199996,
+                  36.54254732846166
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 640.0,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 36.76846396559908,
+                "rmse_mg_dl": 49.43528385768803,
+                "bias_mg_dl": 0.2386563538379917,
+                "patient_macro_mae": 37.37740136895859,
+                "patient_bootstrap_mae_ci95": [
+                  32.61372559402314,
+                  41.51618864327808
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 688.0,
+                "nonpositive_predictions": 0
+              }
+            }
+          }
+        },
+        "linear": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 20.69935426395893,
+              "rmse_mg_dl": 29.9265372683947,
+              "bias_mg_dl": 0.0601744202245689,
+              "patient_macro_mae": 20.886059365237763,
+              "patient_bootstrap_mae_ci95": [
+                18.5122131487817,
+                23.28953833738823
+              ],
+              "window_coverage": 0.9999720771786781,
+              "whole_patient_coverage": 0.9,
+              "interval_width_mg_dl": 487.93006993007,
+              "nonpositive_predictions": 64
+            },
+            "60": {
+              "mae_mg_dl": 39.22676764168659,
+              "rmse_mg_dl": 55.17326915912459,
+              "bias_mg_dl": 0.11213953098050904,
+              "patient_macro_mae": 39.70502516249006,
+              "patient_bootstrap_mae_ci95": [
+                35.295358879885214,
+                44.20813512603439
+              ],
+              "window_coverage": 0.9998883087147126,
+              "whole_patient_coverage": 0.8,
+              "interval_width_mg_dl": 763.020979020979,
+              "nonpositive_predictions": 581
+            },
+            "90": {
+              "mae_mg_dl": 56.32346442747472,
+              "rmse_mg_dl": 78.18694076169758,
+              "bias_mg_dl": 0.13615389759326108,
+              "patient_macro_mae": 57.06429080953778,
+              "patient_bootstrap_mae_ci95": [
+                50.51071420443384,
+                63.52695409984548
+              ],
+              "window_coverage": 0.9999720771786781,
+              "whole_patient_coverage": 0.9,
+              "interval_width_mg_dl": 1139.4685314685314,
+              "nonpositive_predictions": 1490
+            },
+            "120": {
+              "mae_mg_dl": 72.64970560130814,
+              "rmse_mg_dl": 100.2759148426548,
+              "bias_mg_dl": 0.22157054829279718,
+              "patient_macro_mae": 73.59348133516548,
+              "patient_bootstrap_mae_ci95": [
+                64.83311610049644,
+                81.95253446663861
+              ],
+              "window_coverage": 0.9999720771786781,
+              "whole_patient_coverage": 0.9,
+              "interval_width_mg_dl": 1353.958041958042,
+              "nonpositive_predictions": 2578
+            }
+          },
+          "by_dataset": {
+            "physiocgm": {
+              "30": {
+                "mae_mg_dl": 20.69935426395893,
+                "rmse_mg_dl": 29.9265372683947,
+                "bias_mg_dl": 0.0601744202245689,
+                "patient_macro_mae": 20.886059365237763,
+                "patient_bootstrap_mae_ci95": [
+                  18.5122131487817,
+                  23.28953833738823
+                ],
+                "window_coverage": 0.9999720771786781,
+                "whole_patient_coverage": 0.9,
+                "interval_width_mg_dl": 487.93006993007,
+                "nonpositive_predictions": 64
+              },
+              "60": {
+                "mae_mg_dl": 39.22676764168659,
+                "rmse_mg_dl": 55.17326915912459,
+                "bias_mg_dl": 0.11213953098050904,
+                "patient_macro_mae": 39.70502516249006,
+                "patient_bootstrap_mae_ci95": [
+                  35.295358879885214,
+                  44.20813512603439
+                ],
+                "window_coverage": 0.9998883087147126,
+                "whole_patient_coverage": 0.8,
+                "interval_width_mg_dl": 763.020979020979,
+                "nonpositive_predictions": 581
+              },
+              "90": {
+                "mae_mg_dl": 56.32346442747472,
+                "rmse_mg_dl": 78.18694076169758,
+                "bias_mg_dl": 0.13615389759326108,
+                "patient_macro_mae": 57.06429080953778,
+                "patient_bootstrap_mae_ci95": [
+                  50.51071420443384,
+                  63.52695409984548
+                ],
+                "window_coverage": 0.9999720771786781,
+                "whole_patient_coverage": 0.9,
+                "interval_width_mg_dl": 1139.4685314685314,
+                "nonpositive_predictions": 1490
+              },
+              "120": {
+                "mae_mg_dl": 72.64970560130814,
+                "rmse_mg_dl": 100.2759148426548,
+                "bias_mg_dl": 0.22157054829279718,
+                "patient_macro_mae": 73.59348133516548,
+                "patient_bootstrap_mae_ci95": [
+                  64.83311610049644,
+                  81.95253446663861
+                ],
+                "window_coverage": 0.9999720771786781,
+                "whole_patient_coverage": 0.9,
+                "interval_width_mg_dl": 1353.958041958042,
+                "nonpositive_predictions": 2578
+              }
+            }
+          }
+        },
+        "ridge-cgm": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 15.088938495728017,
+              "rmse_mg_dl": 20.87714763541987,
+              "bias_mg_dl": 2.9206452906777454,
+              "patient_macro_mae": 15.107119967759544,
+              "patient_bootstrap_mae_ci95": [
+                13.8991627861033,
+                16.37632219329617
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 412.5818811934814,
+              "nonpositive_predictions": 0
+            },
+            "60": {
+              "mae_mg_dl": 25.164785712429353,
+              "rmse_mg_dl": 32.96386487382049,
+              "bias_mg_dl": 6.87555897545432,
+              "patient_macro_mae": 25.21651257637566,
+              "patient_bootstrap_mae_ci95": [
+                23.76000103415159,
+                26.71453511519137
+              ],
+              "window_coverage": 0.9999441543573563,
+              "whole_patient_coverage": 0.8,
+              "interval_width_mg_dl": 441.3090510893531,
+              "nonpositive_predictions": 0
+            },
+            "90": {
+              "mae_mg_dl": 31.285455606220328,
+              "rmse_mg_dl": 39.650148508779324,
+              "bias_mg_dl": 10.565204913304624,
+              "patient_macro_mae": 31.32344235128147,
+              "patient_bootstrap_mae_ci95": [
+                30.210596016804516,
+                32.47703563588887
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 581.7313623511293,
+              "nonpositive_predictions": 0
+            },
+            "120": {
+              "mae_mg_dl": 35.24763354839091,
+              "rmse_mg_dl": 43.74430527581691,
+              "bias_mg_dl": 13.738289316169778,
+              "patient_macro_mae": 35.191927487651455,
+              "patient_bootstrap_mae_ci95": [
+                34.39804920546616,
+                35.97779584941704
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 599.5009361799143,
+              "nonpositive_predictions": 0
+            }
+          },
+          "by_dataset": {
+            "physiocgm": {
+              "30": {
+                "mae_mg_dl": 15.088938495728017,
+                "rmse_mg_dl": 20.87714763541987,
+                "bias_mg_dl": 2.9206452906777454,
+                "patient_macro_mae": 15.107119967759544,
+                "patient_bootstrap_mae_ci95": [
+                  13.8991627861033,
+                  16.37632219329617
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 412.5818811934814,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 25.164785712429353,
+                "rmse_mg_dl": 32.96386487382049,
+                "bias_mg_dl": 6.87555897545432,
+                "patient_macro_mae": 25.21651257637566,
+                "patient_bootstrap_mae_ci95": [
+                  23.76000103415159,
+                  26.71453511519137
+                ],
+                "window_coverage": 0.9999441543573563,
+                "whole_patient_coverage": 0.8,
+                "interval_width_mg_dl": 441.3090510893531,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 31.285455606220328,
+                "rmse_mg_dl": 39.650148508779324,
+                "bias_mg_dl": 10.565204913304624,
+                "patient_macro_mae": 31.32344235128147,
+                "patient_bootstrap_mae_ci95": [
+                  30.210596016804516,
+                  32.47703563588887
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 581.7313623511293,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 35.24763354839091,
+                "rmse_mg_dl": 43.74430527581691,
+                "bias_mg_dl": 13.738289316169778,
+                "patient_macro_mae": 35.191927487651455,
+                "patient_bootstrap_mae_ci95": [
+                  34.39804920546616,
+                  35.97779584941704
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 599.5009361799143,
+                "nonpositive_predictions": 0
+              }
+            }
+          }
+        },
+        "ridge-context": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 15.209901985039343,
+              "rmse_mg_dl": 20.97397495142691,
+              "bias_mg_dl": 3.4828208092353967,
+              "patient_macro_mae": 15.230474503148965,
+              "patient_bootstrap_mae_ci95": [
+                14.000602030301549,
+                16.506960595991487
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 409.95513541472695,
+              "nonpositive_predictions": 0
+            },
+            "60": {
+              "mae_mg_dl": 25.72344198383822,
+              "rmse_mg_dl": 33.48300543429527,
+              "bias_mg_dl": 8.799062757907514,
+              "patient_macro_mae": 25.7618217359527,
+              "patient_bootstrap_mae_ci95": [
+                24.294129826151096,
+                27.285844738031955
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 516.9822558648547,
+              "nonpositive_predictions": 0
+            },
+            "90": {
+              "mae_mg_dl": 32.3708549888991,
+              "rmse_mg_dl": 40.650656800936055,
+              "bias_mg_dl": 13.675093148103524,
+              "patient_macro_mae": 32.360878796284126,
+              "patient_bootstrap_mae_ci95": [
+                31.29898846221948,
+                33.491588037238216
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 646.3114911430291,
+              "nonpositive_predictions": 0
+            },
+            "120": {
+              "mae_mg_dl": 36.75113021679477,
+              "rmse_mg_dl": 45.14094020371021,
+              "bias_mg_dl": 17.606511227262757,
+              "patient_macro_mae": 36.61960411571665,
+              "patient_bootstrap_mae_ci95": [
+                35.910509278950386,
+                37.352663250148666
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 857.8603398093437,
+              "nonpositive_predictions": 0
+            }
+          },
+          "by_dataset": {
+            "physiocgm": {
+              "30": {
+                "mae_mg_dl": 15.209901985039343,
+                "rmse_mg_dl": 20.97397495142691,
+                "bias_mg_dl": 3.4828208092353967,
+                "patient_macro_mae": 15.230474503148965,
+                "patient_bootstrap_mae_ci95": [
+                  14.000602030301549,
+                  16.506960595991487
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 409.95513541472695,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 25.72344198383822,
+                "rmse_mg_dl": 33.48300543429527,
+                "bias_mg_dl": 8.799062757907514,
+                "patient_macro_mae": 25.7618217359527,
+                "patient_bootstrap_mae_ci95": [
+                  24.294129826151096,
+                  27.285844738031955
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 516.9822558648547,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 32.3708549888991,
+                "rmse_mg_dl": 40.650656800936055,
+                "bias_mg_dl": 13.675093148103524,
+                "patient_macro_mae": 32.360878796284126,
+                "patient_bootstrap_mae_ci95": [
+                  31.29898846221948,
+                  33.491588037238216
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 646.3114911430291,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 36.75113021679477,
+                "rmse_mg_dl": 45.14094020371021,
+                "bias_mg_dl": 17.606511227262757,
+                "patient_macro_mae": 36.61960411571665,
+                "patient_bootstrap_mae_ci95": [
+                  35.910509278950386,
+                  37.352663250148666
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 857.8603398093437,
+                "nonpositive_predictions": 0
+              }
+            }
+          }
+        },
+        "xgb-cgm": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 15.130157442892381,
+              "rmse_mg_dl": 20.83505256793934,
+              "bias_mg_dl": 3.6292045792239738,
+              "patient_macro_mae": 15.169700682963125,
+              "patient_bootstrap_mae_ci95": [
+                14.02717930110448,
+                16.402108656149803
+              ],
+              "window_coverage": 0.9999720771786781,
+              "whole_patient_coverage": 0.9,
+              "interval_width_mg_dl": 358.83754110336304,
+              "nonpositive_predictions": 0
+            },
+            "60": {
+              "mae_mg_dl": 24.912556122105222,
+              "rmse_mg_dl": 32.49698724116664,
+              "bias_mg_dl": 7.9687725051595075,
+              "patient_macro_mae": 24.976959656519952,
+              "patient_bootstrap_mae_ci95": [
+                23.752860749940503,
+                26.288637046166883
+              ],
+              "window_coverage": 0.9998883087147126,
+              "whole_patient_coverage": 0.8,
+              "interval_width_mg_dl": 435.4248275756836,
+              "nonpositive_predictions": 0
+            },
+            "90": {
+              "mae_mg_dl": 31.20252228756589,
+              "rmse_mg_dl": 39.33317158777328,
+              "bias_mg_dl": 11.86167482088665,
+              "patient_macro_mae": 31.20105002897455,
+              "patient_bootstrap_mae_ci95": [
+                30.364586016765536,
+                32.11470397939077
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 512.2198181152344,
+              "nonpositive_predictions": 0
+            },
+            "120": {
+              "mae_mg_dl": 35.38188786701951,
+              "rmse_mg_dl": 43.69736736601487,
+              "bias_mg_dl": 14.920391694170167,
+              "patient_macro_mae": 35.287593989596935,
+              "patient_bootstrap_mae_ci95": [
+                34.64720749716369,
+                35.96095468424977
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 534.1410980224609,
+              "nonpositive_predictions": 0
+            }
+          },
+          "by_dataset": {
+            "physiocgm": {
+              "30": {
+                "mae_mg_dl": 15.130157442892381,
+                "rmse_mg_dl": 20.83505256793934,
+                "bias_mg_dl": 3.6292045792239738,
+                "patient_macro_mae": 15.169700682963125,
+                "patient_bootstrap_mae_ci95": [
+                  14.02717930110448,
+                  16.402108656149803
+                ],
+                "window_coverage": 0.9999720771786781,
+                "whole_patient_coverage": 0.9,
+                "interval_width_mg_dl": 358.83754110336304,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 24.912556122105222,
+                "rmse_mg_dl": 32.49698724116664,
+                "bias_mg_dl": 7.9687725051595075,
+                "patient_macro_mae": 24.976959656519952,
+                "patient_bootstrap_mae_ci95": [
+                  23.752860749940503,
+                  26.288637046166883
+                ],
+                "window_coverage": 0.9998883087147126,
+                "whole_patient_coverage": 0.8,
+                "interval_width_mg_dl": 435.4248275756836,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 31.20252228756589,
+                "rmse_mg_dl": 39.33317158777328,
+                "bias_mg_dl": 11.86167482088665,
+                "patient_macro_mae": 31.20105002897455,
+                "patient_bootstrap_mae_ci95": [
+                  30.364586016765536,
+                  32.11470397939077
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 512.2198181152344,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 35.38188786701951,
+                "rmse_mg_dl": 43.69736736601487,
+                "bias_mg_dl": 14.920391694170167,
+                "patient_macro_mae": 35.287593989596935,
+                "patient_bootstrap_mae_ci95": [
+                  34.64720749716369,
+                  35.96095468424977
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 534.1410980224609,
+                "nonpositive_predictions": 0
+              }
+            }
+          }
+        },
+        "xgb-context": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 15.258724716791596,
+              "rmse_mg_dl": 21.225078819267058,
+              "bias_mg_dl": 3.9337312583215867,
+              "patient_macro_mae": 15.331914586475813,
+              "patient_bootstrap_mae_ci95": [
+                14.037607054437089,
+                16.715260073388844
+              ],
+              "window_coverage": 0.9999441543573563,
+              "whole_patient_coverage": 0.9,
+              "interval_width_mg_dl": 352.7664394378662,
+              "nonpositive_predictions": 0
+            },
+            "60": {
+              "mae_mg_dl": 25.367492536196817,
+              "rmse_mg_dl": 33.36547907880825,
+              "bias_mg_dl": 9.347902082924742,
+              "patient_macro_mae": 25.493860976603504,
+              "patient_bootstrap_mae_ci95": [
+                23.954912091504834,
+                27.093219667515232
+              ],
+              "window_coverage": 0.9998883087147126,
+              "whole_patient_coverage": 0.8,
+              "interval_width_mg_dl": 462.15961837768555,
+              "nonpositive_predictions": 0
+            },
+            "90": {
+              "mae_mg_dl": 32.13523274856923,
+              "rmse_mg_dl": 40.676382171302194,
+              "bias_mg_dl": 14.364045922886515,
+              "patient_macro_mae": 32.19539013313736,
+              "patient_bootstrap_mae_ci95": [
+                31.068615088471645,
+                33.393915529954185
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 556.0464172363281,
+              "nonpositive_predictions": 0
+            },
+            "120": {
+              "mae_mg_dl": 36.52918069776479,
+              "rmse_mg_dl": 45.144017337392896,
+              "bias_mg_dl": 17.97904276318033,
+              "patient_macro_mae": 36.44806011997823,
+              "patient_bootstrap_mae_ci95": [
+                35.65400996124315,
+                37.27503321912234
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 568.0408248901367,
+              "nonpositive_predictions": 0
+            }
+          },
+          "by_dataset": {
+            "physiocgm": {
+              "30": {
+                "mae_mg_dl": 15.258724716791596,
+                "rmse_mg_dl": 21.225078819267058,
+                "bias_mg_dl": 3.9337312583215867,
+                "patient_macro_mae": 15.331914586475813,
+                "patient_bootstrap_mae_ci95": [
+                  14.037607054437089,
+                  16.715260073388844
+                ],
+                "window_coverage": 0.9999441543573563,
+                "whole_patient_coverage": 0.9,
+                "interval_width_mg_dl": 352.7664394378662,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 25.367492536196817,
+                "rmse_mg_dl": 33.36547907880825,
+                "bias_mg_dl": 9.347902082924742,
+                "patient_macro_mae": 25.493860976603504,
+                "patient_bootstrap_mae_ci95": [
+                  23.954912091504834,
+                  27.093219667515232
+                ],
+                "window_coverage": 0.9998883087147126,
+                "whole_patient_coverage": 0.8,
+                "interval_width_mg_dl": 462.15961837768555,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 32.13523274856923,
+                "rmse_mg_dl": 40.676382171302194,
+                "bias_mg_dl": 14.364045922886515,
+                "patient_macro_mae": 32.19539013313736,
+                "patient_bootstrap_mae_ci95": [
+                  31.068615088471645,
+                  33.393915529954185
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 556.0464172363281,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 36.52918069776479,
+                "rmse_mg_dl": 45.144017337392896,
+                "bias_mg_dl": 17.97904276318033,
+                "patient_macro_mae": 36.44806011997823,
+                "patient_bootstrap_mae_ci95": [
+                  35.65400996124315,
+                  37.27503321912234
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 568.0408248901367,
+                "nonpositive_predictions": 0
+              }
+            }
+          }
+        }
+      },
+      "calibration_radii": {
+        "persistence": [
+          183.0,
+          249.0,
+          320.0,
+          344.0
+        ],
+        "linear": [
+          243.965034965035,
+          381.5104895104895,
+          569.7342657342657,
+          676.979020979021
+        ],
+        "ridge-cgm": [
+          206.2909405967407,
+          220.65452554467655,
+          290.86568117556465,
+          299.75046808995717
+        ],
+        "ridge-context": [
+          204.97756770736348,
+          258.49112793242733,
+          323.15574557151456,
+          428.93016990467186
+        ],
+        "xgb-cgm": [
+          179.41877055168152,
+          217.7124137878418,
+          256.1099090576172,
+          267.07054901123047
+        ],
+        "xgb-context": [
+          176.3832197189331,
+          231.07980918884277,
+          278.02320861816406,
+          284.02041244506836
+        ]
+      },
+      "artifact_sha256": {
+        "ridge-cgm.json": "162d554e7af6ebf543f6424cd90308d4beeedffd38590ce110060232a1112728",
+        "ridge-context.json": "9fa1ad117b1cdb488bdbfdc7799e51b337ea1af7dc8b66743fe4f1b1ee7df789",
+        "xgb-cgm.json": "6478cd8b9440d3cd5c4a0ee271517595fd19c8ff4e02192d54045493f4d4bcd7",
+        "xgb-context.json": "49e15c4975e348cd78764e4d155c06d072f9299184295fbbf3d440cb9b01a5f0"
+      }
+    },
+    "external-azt1d": {
+      "evaluation": "external-azt1d",
+      "feature_version": "offline-local12-context-mask-replay-v1",
+      "partitions": {
+        "fit": {
+          "windows": 22051,
+          "patients": 12,
+          "by_dataset": {
+            "ohio": 9097,
+            "physiocgm": 12954
+          }
+        },
+        "validation": {
+          "windows": 5481,
+          "patients": 12,
+          "by_dataset": {
+            "ohio": 2255,
+            "physiocgm": 3226
+          }
+        },
+        "calibration": {
+          "windows": 28286,
+          "patients": 10,
+          "by_dataset": {
+            "ohio": 8690,
+            "physiocgm": 19596
+          }
+        },
+        "test": {
+          "windows": 40900,
+          "patients": 24,
+          "by_dataset": {
+            "azt1d": 40900
+          }
+        }
+      },
+      "selected_on_validation": "xgb-context",
+      "selected_context_on_validation": "xgb-context",
+      "training": {
+        "persistence": {
+          "fit_and_evaluation_seconds": 0.003512600000249222,
+          "validation_dataset_patient_macro_mae": 31.740566804422215
+        },
+        "linear": {
+          "fit_and_evaluation_seconds": 0.010924799993517809,
+          "validation_dataset_patient_macro_mae": 51.129607571109425
+        },
+        "ridge-cgm": {
+          "fit_and_evaluation_seconds": 0.09707279999565799,
+          "validation_dataset_patient_macro_mae": 28.239339435636204
+        },
+        "ridge-context": {
+          "fit_and_evaluation_seconds": 0.2183770999981789,
+          "validation_dataset_patient_macro_mae": 27.968479816843995
+        },
+        "xgb-cgm": {
+          "fit_and_evaluation_seconds": 1.200629700004356,
+          "validation_dataset_patient_macro_mae": 28.243750247415058
+        },
+        "xgb-context": {
+          "fit_and_evaluation_seconds": 1.5181242999969982,
+          "validation_dataset_patient_macro_mae": 27.84671883376071
+        }
+      },
+      "source_fingerprint": "804ca642d6a32e9fb2e6baa0f2360ff52652fc3f53673466d8db89866dd4a0df",
+      "test_results": {
+        "persistence": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 16.95115892420538,
+              "rmse_mg_dl": 23.43745094077995,
+              "bias_mg_dl": 0.08026405867970629,
+              "patient_macro_mae": 17.023447143615584,
+              "patient_bootstrap_mae_ci95": [
+                16.012738684894114,
+                17.906135025502422
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 412.0,
+              "nonpositive_predictions": 0
+            },
+            "60": {
+              "mae_mg_dl": 27.707559902200487,
+              "rmse_mg_dl": 37.39489878001712,
+              "bias_mg_dl": 0.1390024449877748,
+              "patient_macro_mae": 27.846611227849564,
+              "patient_bootstrap_mae_ci95": [
+                25.969667560352605,
+                29.413122858899456
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 498.0,
+              "nonpositive_predictions": 0
+            },
+            "90": {
+              "mae_mg_dl": 35.20585819070905,
+              "rmse_mg_dl": 46.84169400555997,
+              "bias_mg_dl": 0.20914425427872843,
+              "patient_macro_mae": 35.393624093262794,
+              "patient_bootstrap_mae_ci95": [
+                32.939064674655505,
+                37.4996833231475
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 640.0,
+              "nonpositive_predictions": 0
+            },
+            "120": {
+              "mae_mg_dl": 40.368919315403424,
+              "rmse_mg_dl": 53.29645248450184,
+              "bias_mg_dl": 0.2834132029339852,
+              "patient_macro_mae": 40.62483503189434,
+              "patient_bootstrap_mae_ci95": [
+                37.8015005167236,
+                43.126725695531064
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 688.0,
+              "nonpositive_predictions": 0
+            }
+          },
+          "by_dataset": {
+            "azt1d": {
+              "30": {
+                "mae_mg_dl": 16.95115892420538,
+                "rmse_mg_dl": 23.43745094077995,
+                "bias_mg_dl": 0.08026405867970629,
+                "patient_macro_mae": 17.023447143615584,
+                "patient_bootstrap_mae_ci95": [
+                  16.012738684894114,
+                  17.906135025502422
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 412.0,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 27.707559902200487,
+                "rmse_mg_dl": 37.39489878001712,
+                "bias_mg_dl": 0.1390024449877748,
+                "patient_macro_mae": 27.846611227849564,
+                "patient_bootstrap_mae_ci95": [
+                  25.969667560352605,
+                  29.413122858899456
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 498.0,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 35.20585819070905,
+                "rmse_mg_dl": 46.84169400555997,
+                "bias_mg_dl": 0.20914425427872843,
+                "patient_macro_mae": 35.393624093262794,
+                "patient_bootstrap_mae_ci95": [
+                  32.939064674655505,
+                  37.4996833231475
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 640.0,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 40.368919315403424,
+                "rmse_mg_dl": 53.29645248450184,
+                "bias_mg_dl": 0.2834132029339852,
+                "patient_macro_mae": 40.62483503189434,
+                "patient_bootstrap_mae_ci95": [
+                  37.8015005167236,
+                  43.126725695531064
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 688.0,
+                "nonpositive_predictions": 0
+              }
+            }
+          }
+        },
+        "linear": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 20.1656811114188,
+              "rmse_mg_dl": 28.97722117749285,
+              "bias_mg_dl": 0.0043708886927805385,
+              "patient_macro_mae": 20.198676049442327,
+              "patient_bootstrap_mae_ci95": [
+                18.963525857575164,
+                21.331505052270142
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 513.0475251717974,
+              "nonpositive_predictions": 28
+            },
+            "60": {
+              "mae_mg_dl": 39.19022069978891,
+              "rmse_mg_dl": 54.97016635384949,
+              "bias_mg_dl": -0.012783894986076766,
+              "patient_macro_mae": 39.2448655231564,
+              "patient_bootstrap_mae_ci95": [
+                36.687140491522484,
+                41.36381736963004
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 838.8521639883621,
+              "nonpositive_predictions": 336
+            },
+            "90": {
+              "mae_mg_dl": 57.920265679584915,
+              "rmse_mg_dl": 79.87402553257002,
+              "bias_mg_dl": -0.018535255682049286,
+              "patient_macro_mae": 57.9811514312459,
+              "patient_bootstrap_mae_ci95": [
+                54.137228250730665,
+                61.20990192476798
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 1187.8741258741259,
+              "nonpositive_predictions": 1115
+            },
+            "120": {
+              "mae_mg_dl": 75.76278566113632,
+              "rmse_mg_dl": 103.56725693299823,
+              "bias_mg_dl": -0.020159477013718362,
+              "patient_macro_mae": 75.8903639439185,
+              "patient_bootstrap_mae_ci95": [
+                71.02709486462055,
+                80.06959340359218
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 1515.832167832168,
+              "nonpositive_predictions": 2253
+            }
+          },
+          "by_dataset": {
+            "azt1d": {
+              "30": {
+                "mae_mg_dl": 20.1656811114188,
+                "rmse_mg_dl": 28.97722117749285,
+                "bias_mg_dl": 0.0043708886927805385,
+                "patient_macro_mae": 20.198676049442327,
+                "patient_bootstrap_mae_ci95": [
+                  18.963525857575164,
+                  21.331505052270142
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 513.0475251717974,
+                "nonpositive_predictions": 28
+              },
+              "60": {
+                "mae_mg_dl": 39.19022069978891,
+                "rmse_mg_dl": 54.97016635384949,
+                "bias_mg_dl": -0.012783894986076766,
+                "patient_macro_mae": 39.2448655231564,
+                "patient_bootstrap_mae_ci95": [
+                  36.687140491522484,
+                  41.36381736963004
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 838.8521639883621,
+                "nonpositive_predictions": 336
+              },
+              "90": {
+                "mae_mg_dl": 57.920265679584915,
+                "rmse_mg_dl": 79.87402553257002,
+                "bias_mg_dl": -0.018535255682049286,
+                "patient_macro_mae": 57.9811514312459,
+                "patient_bootstrap_mae_ci95": [
+                  54.137228250730665,
+                  61.20990192476798
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 1187.8741258741259,
+                "nonpositive_predictions": 1115
+              },
+              "120": {
+                "mae_mg_dl": 75.76278566113632,
+                "rmse_mg_dl": 103.56725693299823,
+                "bias_mg_dl": -0.020159477013718362,
+                "patient_macro_mae": 75.8903639439185,
+                "patient_bootstrap_mae_ci95": [
+                  71.02709486462055,
+                  80.06959340359218
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 1515.832167832168,
+                "nonpositive_predictions": 2253
+              }
+            }
+          }
+        },
+        "ridge-cgm": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 14.660374496387071,
+              "rmse_mg_dl": 20.690948818851005,
+              "bias_mg_dl": -0.26009549925575326,
+              "patient_macro_mae": 14.75217958892405,
+              "patient_bootstrap_mae_ci95": [
+                13.976966829894476,
+                15.562542791952277
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 424.6851544859368,
+              "nonpositive_predictions": 0
+            },
+            "60": {
+              "mae_mg_dl": 24.20042092624727,
+              "rmse_mg_dl": 32.759987456553645,
+              "bias_mg_dl": -0.5327513353420518,
+              "patient_macro_mae": 24.325461193265387,
+              "patient_bootstrap_mae_ci95": [
+                23.02071531732637,
+                25.49473893702919
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 476.68153096917604,
+              "nonpositive_predictions": 0
+            },
+            "90": {
+              "mae_mg_dl": 29.9268539318804,
+              "rmse_mg_dl": 39.79377297720271,
+              "bias_mg_dl": -0.743253946117527,
+              "patient_macro_mae": 30.050736818256468,
+              "patient_bootstrap_mae_ci95": [
+                28.188441575754524,
+                31.62368677018813
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 588.8031008941614,
+              "nonpositive_predictions": 0
+            },
+            "120": {
+              "mae_mg_dl": 33.107915343850415,
+              "rmse_mg_dl": 43.64137100425469,
+              "bias_mg_dl": -0.9567253348251941,
+              "patient_macro_mae": 33.25332296356044,
+              "patient_bootstrap_mae_ci95": [
+                31.05809915304975,
+                35.150960746894484
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 611.4462971573943,
+              "nonpositive_predictions": 0
+            }
+          },
+          "by_dataset": {
+            "azt1d": {
+              "30": {
+                "mae_mg_dl": 14.660374496387071,
+                "rmse_mg_dl": 20.690948818851005,
+                "bias_mg_dl": -0.26009549925575326,
+                "patient_macro_mae": 14.75217958892405,
+                "patient_bootstrap_mae_ci95": [
+                  13.976966829894476,
+                  15.562542791952277
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 424.6851544859368,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 24.20042092624727,
+                "rmse_mg_dl": 32.759987456553645,
+                "bias_mg_dl": -0.5327513353420518,
+                "patient_macro_mae": 24.325461193265387,
+                "patient_bootstrap_mae_ci95": [
+                  23.02071531732637,
+                  25.49473893702919
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 476.68153096917604,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 29.9268539318804,
+                "rmse_mg_dl": 39.79377297720271,
+                "bias_mg_dl": -0.743253946117527,
+                "patient_macro_mae": 30.050736818256468,
+                "patient_bootstrap_mae_ci95": [
+                  28.188441575754524,
+                  31.62368677018813
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 588.8031008941614,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 33.107915343850415,
+                "rmse_mg_dl": 43.64137100425469,
+                "bias_mg_dl": -0.9567253348251941,
+                "patient_macro_mae": 33.25332296356044,
+                "patient_bootstrap_mae_ci95": [
+                  31.05809915304975,
+                  35.150960746894484
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 611.4462971573943,
+                "nonpositive_predictions": 0
+              }
+            }
+          }
+        },
+        "ridge-context": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 14.670221760663424,
+              "rmse_mg_dl": 20.878506299008343,
+              "bias_mg_dl": -0.6431774418572356,
+              "patient_macro_mae": 14.765938209518481,
+              "patient_bootstrap_mae_ci95": [
+                13.960122441849217,
+                15.564383798326519
+              ],
+              "window_coverage": 0.9999511002444987,
+              "whole_patient_coverage": 0.9583333333333334,
+              "interval_width_mg_dl": 423.48388123916857,
+              "nonpositive_predictions": 0
+            },
+            "60": {
+              "mae_mg_dl": 24.237880175935892,
+              "rmse_mg_dl": 33.22652019635889,
+              "bias_mg_dl": -2.3538122355957167,
+              "patient_macro_mae": 24.371986375129595,
+              "patient_bootstrap_mae_ci95": [
+                22.970796379934555,
+                25.608165562682004
+              ],
+              "window_coverage": 0.9999266503667482,
+              "whole_patient_coverage": 0.9583333333333334,
+              "interval_width_mg_dl": 480.903322020127,
+              "nonpositive_predictions": 0
+            },
+            "90": {
+              "mae_mg_dl": 29.994010475206583,
+              "rmse_mg_dl": 40.48745554859895,
+              "bias_mg_dl": -3.5541578682522634,
+              "patient_macro_mae": 30.122369692282046,
+              "patient_bootstrap_mae_ci95": [
+                28.135960305994917,
+                31.817189606171475
+              ],
+              "window_coverage": 0.9999022004889976,
+              "whole_patient_coverage": 0.9166666666666666,
+              "interval_width_mg_dl": 520.901316273554,
+              "nonpositive_predictions": 0
+            },
+            "120": {
+              "mae_mg_dl": 33.28653100955627,
+              "rmse_mg_dl": 44.47073852111603,
+              "bias_mg_dl": -4.0818573826303695,
+              "patient_macro_mae": 33.41685924869925,
+              "patient_bootstrap_mae_ci95": [
+                31.092802258766593,
+                35.52263719253237
+              ],
+              "window_coverage": 0.9999022004889976,
+              "whole_patient_coverage": 0.9583333333333334,
+              "interval_width_mg_dl": 551.6189440414581,
+              "nonpositive_predictions": 0
+            }
+          },
+          "by_dataset": {
+            "azt1d": {
+              "30": {
+                "mae_mg_dl": 14.670221760663424,
+                "rmse_mg_dl": 20.878506299008343,
+                "bias_mg_dl": -0.6431774418572356,
+                "patient_macro_mae": 14.765938209518481,
+                "patient_bootstrap_mae_ci95": [
+                  13.960122441849217,
+                  15.564383798326519
+                ],
+                "window_coverage": 0.9999511002444987,
+                "whole_patient_coverage": 0.9583333333333334,
+                "interval_width_mg_dl": 423.48388123916857,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 24.237880175935892,
+                "rmse_mg_dl": 33.22652019635889,
+                "bias_mg_dl": -2.3538122355957167,
+                "patient_macro_mae": 24.371986375129595,
+                "patient_bootstrap_mae_ci95": [
+                  22.970796379934555,
+                  25.608165562682004
+                ],
+                "window_coverage": 0.9999266503667482,
+                "whole_patient_coverage": 0.9583333333333334,
+                "interval_width_mg_dl": 480.903322020127,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 29.994010475206583,
+                "rmse_mg_dl": 40.48745554859895,
+                "bias_mg_dl": -3.5541578682522634,
+                "patient_macro_mae": 30.122369692282046,
+                "patient_bootstrap_mae_ci95": [
+                  28.135960305994917,
+                  31.817189606171475
+                ],
+                "window_coverage": 0.9999022004889976,
+                "whole_patient_coverage": 0.9166666666666666,
+                "interval_width_mg_dl": 520.901316273554,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 33.28653100955627,
+                "rmse_mg_dl": 44.47073852111603,
+                "bias_mg_dl": -4.0818573826303695,
+                "patient_macro_mae": 33.41685924869925,
+                "patient_bootstrap_mae_ci95": [
+                  31.092802258766593,
+                  35.52263719253237
+                ],
+                "window_coverage": 0.9999022004889976,
+                "whole_patient_coverage": 0.9583333333333334,
+                "interval_width_mg_dl": 551.6189440414581,
+                "nonpositive_predictions": 0
+              }
+            }
+          }
+        },
+        "xgb-cgm": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 14.577742125016986,
+              "rmse_mg_dl": 20.66436583680648,
+              "bias_mg_dl": -0.8217303502841521,
+              "patient_macro_mae": 14.647229339237322,
+              "patient_bootstrap_mae_ci95": [
+                13.826484518724953,
+                15.460959005838248
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 387.9546842575073,
+              "nonpositive_predictions": 0
+            },
+            "60": {
+              "mae_mg_dl": 23.76199599207503,
+              "rmse_mg_dl": 32.52547496093314,
+              "bias_mg_dl": -1.4298361865713018,
+              "patient_macro_mae": 23.879844072069158,
+              "patient_bootstrap_mae_ci95": [
+                22.416208839601413,
+                25.114455344073658
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 564.3296127319336,
+              "nonpositive_predictions": 0
+            },
+            "90": {
+              "mae_mg_dl": 29.459682771770982,
+              "rmse_mg_dl": 39.534266254902555,
+              "bias_mg_dl": -1.6889306090277116,
+              "patient_macro_mae": 29.571848576268835,
+              "patient_bootstrap_mae_ci95": [
+                27.643739336585753,
+                31.22330664289829
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 559.2303619384766,
+              "nonpositive_predictions": 0
+            },
+            "120": {
+              "mae_mg_dl": 32.747200956264486,
+              "rmse_mg_dl": 43.440089385184976,
+              "bias_mg_dl": -1.7425456226071192,
+              "patient_macro_mae": 32.89523177086584,
+              "patient_bootstrap_mae_ci95": [
+                30.705811330767748,
+                34.875185368748674
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 593.2218704223633,
+              "nonpositive_predictions": 0
+            }
+          },
+          "by_dataset": {
+            "azt1d": {
+              "30": {
+                "mae_mg_dl": 14.577742125016986,
+                "rmse_mg_dl": 20.66436583680648,
+                "bias_mg_dl": -0.8217303502841521,
+                "patient_macro_mae": 14.647229339237322,
+                "patient_bootstrap_mae_ci95": [
+                  13.826484518724953,
+                  15.460959005838248
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 387.9546842575073,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 23.76199599207503,
+                "rmse_mg_dl": 32.52547496093314,
+                "bias_mg_dl": -1.4298361865713018,
+                "patient_macro_mae": 23.879844072069158,
+                "patient_bootstrap_mae_ci95": [
+                  22.416208839601413,
+                  25.114455344073658
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 564.3296127319336,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 29.459682771770982,
+                "rmse_mg_dl": 39.534266254902555,
+                "bias_mg_dl": -1.6889306090277116,
+                "patient_macro_mae": 29.571848576268835,
+                "patient_bootstrap_mae_ci95": [
+                  27.643739336585753,
+                  31.22330664289829
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 559.2303619384766,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 32.747200956264486,
+                "rmse_mg_dl": 43.440089385184976,
+                "bias_mg_dl": -1.7425456226071192,
+                "patient_macro_mae": 32.89523177086584,
+                "patient_bootstrap_mae_ci95": [
+                  30.705811330767748,
+                  34.875185368748674
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 593.2218704223633,
+                "nonpositive_predictions": 0
+              }
+            }
+          }
+        },
+        "xgb-context": {
+          "all": {
+            "30": {
+              "mae_mg_dl": 14.544764072880335,
+              "rmse_mg_dl": 20.606757324862045,
+              "bias_mg_dl": -0.8793482997504798,
+              "patient_macro_mae": 14.621013476869614,
+              "patient_bootstrap_mae_ci95": [
+                13.815033281690823,
+                15.41037526666486
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 385.22429752349854,
+              "nonpositive_predictions": 0
+            },
+            "60": {
+              "mae_mg_dl": 23.599434340455133,
+              "rmse_mg_dl": 32.35178272971131,
+              "bias_mg_dl": -1.8770671494799305,
+              "patient_macro_mae": 23.725507271274875,
+              "patient_bootstrap_mae_ci95": [
+                22.257877966866655,
+                24.98950414204959
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 557.1723251342773,
+              "nonpositive_predictions": 0
+            },
+            "90": {
+              "mae_mg_dl": 29.349170057105738,
+              "rmse_mg_dl": 39.49865492801417,
+              "bias_mg_dl": -2.515033849809355,
+              "patient_macro_mae": 29.464806580652265,
+              "patient_bootstrap_mae_ci95": [
+                27.479762464647607,
+                31.182746038253125
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 564.0730514526367,
+              "nonpositive_predictions": 0
+            },
+            "120": {
+              "mae_mg_dl": 32.69838737305423,
+              "rmse_mg_dl": 43.55471304038586,
+              "bias_mg_dl": -3.039396834403727,
+              "patient_macro_mae": 32.82729088041861,
+              "patient_bootstrap_mae_ci95": [
+                30.482742338838126,
+                34.942967873387616
+              ],
+              "window_coverage": 1.0,
+              "whole_patient_coverage": 1.0,
+              "interval_width_mg_dl": 601.1143493652344,
+              "nonpositive_predictions": 0
+            }
+          },
+          "by_dataset": {
+            "azt1d": {
+              "30": {
+                "mae_mg_dl": 14.544764072880335,
+                "rmse_mg_dl": 20.606757324862045,
+                "bias_mg_dl": -0.8793482997504798,
+                "patient_macro_mae": 14.621013476869614,
+                "patient_bootstrap_mae_ci95": [
+                  13.815033281690823,
+                  15.41037526666486
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 385.22429752349854,
+                "nonpositive_predictions": 0
+              },
+              "60": {
+                "mae_mg_dl": 23.599434340455133,
+                "rmse_mg_dl": 32.35178272971131,
+                "bias_mg_dl": -1.8770671494799305,
+                "patient_macro_mae": 23.725507271274875,
+                "patient_bootstrap_mae_ci95": [
+                  22.257877966866655,
+                  24.98950414204959
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 557.1723251342773,
+                "nonpositive_predictions": 0
+              },
+              "90": {
+                "mae_mg_dl": 29.349170057105738,
+                "rmse_mg_dl": 39.49865492801417,
+                "bias_mg_dl": -2.515033849809355,
+                "patient_macro_mae": 29.464806580652265,
+                "patient_bootstrap_mae_ci95": [
+                  27.479762464647607,
+                  31.182746038253125
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 564.0730514526367,
+                "nonpositive_predictions": 0
+              },
+              "120": {
+                "mae_mg_dl": 32.69838737305423,
+                "rmse_mg_dl": 43.55471304038586,
+                "bias_mg_dl": -3.039396834403727,
+                "patient_macro_mae": 32.82729088041861,
+                "patient_bootstrap_mae_ci95": [
+                  30.482742338838126,
+                  34.942967873387616
+                ],
+                "window_coverage": 1.0,
+                "whole_patient_coverage": 1.0,
+                "interval_width_mg_dl": 601.1143493652344,
+                "nonpositive_predictions": 0
+              }
+            }
+          }
+        }
+      },
+      "calibration_radii": {
+        "persistence": [
+          206.0,
+          249.0,
+          320.0,
+          344.0
+        ],
+        "linear": [
+          256.5237625858987,
+          419.42608199418106,
+          593.9370629370629,
+          757.916083916084
+        ],
+        "ridge-cgm": [
+          212.3425772429684,
+          238.34076548458802,
+          294.4015504470807,
+          305.72314857869713
+        ],
+        "ridge-context": [
+          211.74194061958428,
+          240.4516610100635,
+          260.450658136777,
+          275.80947202072906
+        ],
+        "xgb-cgm": [
+          193.97734212875366,
+          282.1648063659668,
+          279.6151809692383,
+          296.61093521118164
+        ],
+        "xgb-context": [
+          192.61214876174927,
+          278.5861625671387,
+          282.03652572631836,
+          300.5571746826172
+        ]
+      },
+      "artifact_sha256": {
+        "ridge-cgm.json": "fd845f687439ab576787bd0cf9dbe334187284e157a8d0f43f082cb873168ede",
+        "ridge-context.json": "d9474447b158471562314e9dc8d4b9215f8f0747d14764f36233e7314f8056e5",
+        "xgb-cgm.json": "6bd306aa7b2ec10159ceba14f619650c174a8ea47e52ee4ba9bbc5e9f3f186c6",
+        "xgb-context.json": "16b76cf2492dbebc133f980e02c387f13f784846321a820d2c8154c2e59ce157"
+      }
+    }
+  },
+  "total_seconds": 144.82503619999625
+}

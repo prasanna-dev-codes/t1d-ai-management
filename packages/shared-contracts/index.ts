@@ -38,6 +38,74 @@ export type EventReceipt = {
   readonly event_ids: Array<string>;
 };
 
+export type Evidence = {
+  readonly episode_id: string;
+  readonly anchor_meal_id: string;
+  readonly source_revision_refs: Array<string>;
+  readonly event_time: string;
+  readonly available_at: string;
+  readonly score: number;
+  readonly nutrient_similarity: number;
+  readonly vector_similarity: number | null;
+  readonly graph_similarity: number | null;
+  readonly evidence_reasons: Array<string>;
+  readonly warnings: Array<string>;
+  readonly response: GlucoseResponse;
+};
+
+export type ForecastData = {
+  readonly prediction_id: string;
+  readonly model_version_id: string;
+  readonly artifact_sha256: string;
+  readonly input_snapshot_ref: string;
+  readonly source_revision_refs: Array<string>;
+  readonly points: Array<ForecastPoint>;
+  readonly evidence_refs: Array<string>;
+  readonly uncertainty_method: "synthetic-patient-max-split-residual-v1";
+  readonly nominal_coverage: number;
+};
+
+export type ForecastPoint = {
+  readonly horizon_minutes: 30 | 60 | 90 | 120;
+  readonly target_time: string;
+  readonly glucose_mg_dl: number;
+  readonly lower_mg_dl: number;
+  readonly upper_mg_dl: number;
+};
+
+export type ForecastRequest = {
+  readonly input_cutoff: string;
+  readonly horizons_minutes: Array<30 | 60 | 90 | 120>;
+  readonly model_profile: "persistence-v1" | "linear-v1" | "ridge-v1";
+};
+
+export type ForecastResult = {
+  readonly status: "eligible" | "abstained";
+  readonly experimental: true;
+  readonly review_required: true;
+  readonly input_cutoff: string;
+  readonly safety_evaluation_id: string;
+  readonly policy_version: "synthetic-research-grid5-fresh5-v2";
+  readonly model_profile: "persistence-v1" | "linear-v1" | "ridge-v1";
+  readonly feature_version: "cgm12-five-minute-age-aware-v1";
+  readonly reason_codes: Array<string>;
+  readonly assumptions: Array<string>;
+  readonly missing_data: Array<string>;
+  readonly warnings: Array<string>;
+  readonly data: ForecastData | null;
+};
+
+export type GlucoseResponse = {
+  readonly unit: "mg/dL";
+  readonly minimum: number;
+  readonly maximum: number;
+  readonly first: number;
+  readonly last: number;
+  readonly samples: number;
+  readonly observed_span_fraction: number;
+  readonly maximum_gap_minutes: number;
+};
+
 export type ImageQuality = {
   readonly status: "accepted" | "warning";
   readonly width: number;
@@ -68,6 +136,49 @@ export type ModelInfo = {
 
 export type ReadinessResponse = {
   readonly status: "ready";
+};
+
+export type RebuildRequest = {
+  readonly definition_version: "research-response120-context120-v1";
+};
+
+export type RebuildResult = {
+  readonly run_id: string;
+  readonly definition_version: string;
+  readonly inserted: number;
+  readonly retained: number;
+  readonly tombstoned: number;
+  readonly skipped_meals: number;
+  readonly graph_status: "synchronized" | "unavailable" | "not_configured";
+  readonly index_watermark: string;
+  readonly experimental: true;
+};
+
+export type RetrievalRequest = {
+  readonly input_cutoff: string;
+  readonly anchor_meal_id: string;
+  readonly limit: number;
+  readonly retrieval_profile_version: "structured-v1" | "vector-v1" | "hybrid-v1";
+};
+
+export type RetrievalResult = {
+  readonly schema_version: "1.0";
+  readonly retrieval_id: string;
+  readonly status: "evidence" | "abstained";
+  readonly experimental: true;
+  readonly review_required: true;
+  readonly input_cutoff: string;
+  readonly retrieval_profile_version: "structured-v1" | "vector-v1" | "hybrid-v1";
+  readonly definition_version: string;
+  readonly definition_hash: string;
+  readonly ranking_version: "nutrient-food-weights-v1";
+  readonly embedding_version: string | null;
+  readonly index_watermark: string | null;
+  readonly episodes: Array<Evidence>;
+  readonly reason_codes: Array<string>;
+  readonly warnings: Array<string>;
+  readonly audit_reference: string;
+  readonly degraded_mode: null;
 };
 
 export type Role = "researcher" | "clinician" | "participant" | "administrator";

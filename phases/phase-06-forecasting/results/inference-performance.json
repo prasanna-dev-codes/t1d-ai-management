@@ -1,0 +1,29 @@
+{
+  "scope": "Warm model computation on fictional features; excludes I/O, feature extraction, API and DB",
+  "models": {
+    "ridge-cgm": {
+      "artifact_bytes": 2364,
+      "repeats": 100,
+      "warm_single_prediction_p50_ms": 0.006800008122809231,
+      "warm_single_prediction_p95_ms": 0.007299997378140688
+    },
+    "ridge-context": {
+      "artifact_bytes": 5851,
+      "repeats": 100,
+      "warm_single_prediction_p50_ms": 0.006799993570894003,
+      "warm_single_prediction_p95_ms": 0.007200011168606579
+    },
+    "xgb-cgm": {
+      "artifact_bytes": 2967670,
+      "repeats": 100,
+      "warm_single_prediction_p50_ms": 0.3518499943311326,
+      "warm_single_prediction_p95_ms": 0.6087000074330717
+    },
+    "xgb-context": {
+      "artifact_bytes": 2846585,
+      "repeats": 100,
+      "warm_single_prediction_p50_ms": 0.396249997720588,
+      "warm_single_prediction_p95_ms": 0.5954999942332506
+    }
+  }
+}
